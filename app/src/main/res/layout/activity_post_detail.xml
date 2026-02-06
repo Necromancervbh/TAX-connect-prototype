@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/primary"
+        app:title="Post Details"
+        app:titleTextColor="@android:color/white"
+        app:navigationIcon="@drawable/ic_arrow_back" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar"
+        android:layout_marginBottom="60dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Post Content -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="2dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:id="@+id/tvPostAuthor"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="User Name"
+                            android:textStyle="bold"
+                            android:textSize="16sp" />
+                        
+                        <TextView
+                            android:id="@+id/tvPostRole"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="CA"
+                            android:textSize="10sp"
+                            android:background="@drawable/bg_role_badge"
+                            android:textColor="?attr/colorOnPrimary"
+                            android:paddingHorizontal="6dp"
+                            android:paddingVertical="2dp"
+                            android:layout_marginStart="8dp"
+                            android:visibility="gone" />
+
+                        <TextView
+                            android:id="@+id/tvPostTimestamp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="2h ago"
+                            android:textSize="12sp"
+                            android:textColor="@android:color/darker_gray" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tvPostContent"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="This is the post content."
+                        android:textSize="16sp"
+                        android:layout_marginTop="8dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="16dp">
+
+                        <TextView
+                            android:id="@+id/tvLikeCount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textSize="14sp"
+                            android:drawablePadding="4dp"
+                            app:drawableStartCompat="@drawable/ic_star"
+                            android:gravity="center_vertical" />
+
+                        <TextView
+                            android:id="@+id/tvCommentCount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textSize="14sp"
+                            android:layout_marginStart="16dp"
+                            android:drawablePadding="4dp"
+                            app:drawableStartCompat="@drawable/ic_chat_bubble"
+                            android:gravity="center_vertical" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Comments"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="8dp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvComments"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false" />
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:background="@color/surface"
+        android:elevation="8dp"
+        android:padding="8dp">
+
+        <EditText
+            android:id="@+id/etComment"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="Write a comment..."
+            android:padding="12dp"
+            android:background="@drawable/bg_rounded_gray_light"
+            android:maxLines="3"
+            android:inputType="textCapSentences|textMultiLine" />
+
+        <ImageButton
+            android:id="@+id/btnSendComment"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/ic_arrow_upward"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:tint="@color/primary" />
+    </LinearLayout>
+
+</RelativeLayout>

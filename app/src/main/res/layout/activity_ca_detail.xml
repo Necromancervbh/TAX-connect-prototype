@@ -1,0 +1,439 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipChildren="false"
+    android:background="@color/background">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        app:elevation="0dp">
+
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:contentScrim="@color/primary">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="80dp">
+
+                <!-- Header Background -->
+                <View
+                    android:id="@+id/viewHeader"
+                    android:layout_width="match_parent"
+                    android:layout_height="350dp"
+                    android:background="@drawable/bg_gradient_primary"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <!-- Profile Image -->
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/ivProfile"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginTop="80dp"
+                    android:background="@color/surface"
+                    android:padding="4dp"
+                    android:src="@drawable/ic_person"
+                    app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:scaleType="centerCrop"/>
+
+                <TextView
+                    android:id="@+id/tvName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="CA Name"
+                    style="@style/AppText.Headline"
+                    android:textColor="?attr/colorOnPrimary"
+                    android:textSize="22sp"
+                    app:layout_constraintTop_toBottomOf="@+id/ivProfile"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+                <ImageView
+                    android:id="@+id/ivVerifiedBadge"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_verified_badge"
+                    android:layout_marginStart="6dp"
+                    app:tint="?attr/colorOnPrimary"
+                    app:layout_constraintStart_toEndOf="@id/tvName"
+                    app:layout_constraintTop_toTopOf="@id/tvName"
+                    app:layout_constraintBottom_toBottomOf="@id/tvName"
+                    android:visibility="gone"/>
+
+                <TextView
+                    android:id="@+id/tvSpecialization"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Specialization"
+                    style="@style/AppText.Subhead"
+                    android:textColor="?attr/colorOnPrimary"
+                    android:alpha="0.8"
+                    app:layout_constraintTop_toBottomOf="@+id/tvName"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+                
+                <TextView
+                    android:id="@+id/tvExperience"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="Experience"
+                    style="@style/AppText.Body"
+                    android:textSize="12sp"
+                    android:textColor="?attr/colorOnPrimary"
+                    android:alpha="0.7"
+                    app:layout_constraintTop_toBottomOf="@+id/tvSpecialization"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"
+                app:navigationIcon="@drawable/ic_arrow_back"
+                app:title=" "
+                app:navigationIconTint="?attr/colorOnPrimary"/>
+
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:clipChildren="false"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:paddingHorizontal="16dp"
+            android:paddingBottom="100dp">
+
+            <!-- Stats Card (Overlapping Header) -->
+            <com.google.android.material.card.MaterialCardView
+                style="@style/AppCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-32dp"
+                android:layout_marginBottom="24dp"
+                android:elevation="8dp"
+                app:cardElevation="4dp"
+                app:strokeWidth="0dp"
+                app:cardBackgroundColor="@color/surface">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingVertical="20dp"
+                    android:paddingHorizontal="8dp"
+                    android:baselineAligned="false">
+
+                    <!-- Clients -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tvClientStat"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="150+"
+                            style="@style/AppText.Headline"
+                            android:textSize="20sp"
+                            android:textColor="@color/primary"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Clients"
+                            style="@style/AppText.Body"
+                            android:textSize="12sp"/>
+                    </LinearLayout>
+
+                    <!-- Experience -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tvExperienceStat"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="5+"
+                            style="@style/AppText.Headline"
+                            android:textSize="20sp"
+                            android:textColor="@color/primary"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Years Exp."
+                            style="@style/AppText.Body"
+                            android:textSize="12sp"/>
+                    </LinearLayout>
+
+                    <!-- Rating -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+                            <TextView
+                                android:id="@+id/tvRatingStat"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="4.8"
+                                style="@style/AppText.Headline"
+                                android:textSize="20sp"
+                                android:textColor="@color/primary"/>
+                            <ImageView
+                                android:layout_width="16dp"
+                                android:layout_height="16dp"
+                                android:src="@drawable/ic_star"
+                                app:tint="#F59E0B"
+                                android:layout_marginStart="4dp"/>
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Rating"
+                            style="@style/AppText.Body"
+                            android:textSize="12sp"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- About Section -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:text="About Me"
+                style="@style/AppText.Title"/>
+
+            <TextView
+                android:id="@+id/tvBio"
+                style="@style/AppText.Body"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Experienced Chartered Accountant specializing in GST and Income Tax filing. Helping businesses grow with compliance."
+                android:layout_marginBottom="16dp"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnWatchIntro"
+                style="@style/AppButton.Outlined"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:text="Watch Introduction Video"
+                app:icon="@drawable/ic_visibility"
+                app:iconGravity="textStart"
+                android:visibility="gone"/>
+
+            <!-- Certificates Section -->
+            <TextView
+                android:id="@+id/tvCertificatesTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:text="Certificates &amp; Credentials"
+                style="@style/AppText.Title"
+                android:visibility="gone"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvCertificates"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                android:layout_marginBottom="24dp"
+                android:visibility="gone"/>
+
+            <!-- Services Section -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:text="Services"
+                style="@style/AppText.Title"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvServices"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                android:layout_marginBottom="24dp"/>
+
+            <!-- Pricing Section -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:text="Consultation Fees"
+                style="@style/AppText.Title"/>
+
+            <com.google.android.material.card.MaterialCardView
+                style="@style/AppCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                app:cardBackgroundColor="@color/surface"
+                app:strokeColor="@color/stroke"
+                app:strokeWidth="1dp"
+                app:cardElevation="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <!-- Minimum Charge -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:padding="16dp">
+
+                        <ImageView
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:src="@drawable/ic_wallet"
+                            app:tint="@color/secondary"
+                            android:background="@drawable/bg_circle_light_primary"
+                            android:padding="12dp"/>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:layout_marginStart="16dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Minimum Charge"
+                                android:textSize="16sp"
+                                android:textStyle="bold"
+                                android:textColor="@color/text_main"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Base service fee"
+                                android:textSize="14sp"
+                                android:textColor="@color/text_muted"/>
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/tvMinCharges"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="₹ 500"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/text_main"/>
+                    </LinearLayout>
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Ratings Section -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="12dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Client Reviews"
+                    style="@style/AppText.Title"/>
+                
+                <TextView
+                    android:id="@+id/tvRating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="4.8 (12)"
+                    style="@style/AppText.Body"
+                    android:layout_marginEnd="8dp"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnRateCa"
+                    style="@style/AppButton.Outlined"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Write a Review"
+                    app:strokeColor="@color/primary"
+                    android:textColor="@color/primary"/>
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvRatings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"/>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- Bottom Action Bar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:background="@color/surface"
+        android:elevation="16dp">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnConnect"
+            style="@style/AppButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="12dp"
+            android:text="Request Assistance"
+            android:textSize="16sp"/>
+    </LinearLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

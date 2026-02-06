@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
+    android:paddingHorizontal="16dp"
+    android:paddingVertical="12dp">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/ivProfile"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:background="@drawable/bg_circle_gray"
+        android:padding="0dp"
+        android:src="@drawable/ic_person"
+        android:scaleType="centerCrop"
+        app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <TextView
+        android:id="@+id/tvUserName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="8dp"
+        android:text="User Name"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="@color/text_main"
+        android:maxLines="1"
+        android:ellipsize="end"
+        app:layout_constraintStart_toEndOf="@+id/ivProfile"
+        app:layout_constraintTop_toTopOf="@+id/ivProfile"
+        app:layout_constraintEnd_toStartOf="@+id/tvTime" />
+
+    <TextView
+        android:id="@+id/tvTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="10:00 AM"
+        android:textSize="12sp"
+        android:textColor="@color/text_muted"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tvUserName"
+        app:layout_constraintBottom_toBottomOf="@+id/tvUserName" />
+
+    <TextView
+        android:id="@+id/tvLastMessage"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:text="Last message content..."
+        android:textSize="14sp"
+        android:textColor="@color/text_muted"
+        android:maxLines="1"
+        android:ellipsize="end"
+        app:layout_constraintStart_toEndOf="@+id/ivProfile"
+        app:layout_constraintEnd_toStartOf="@+id/tvUnreadBadge"
+        app:layout_constraintTop_toBottomOf="@+id/tvUserName"
+        android:layout_marginStart="16dp"/>
+
+    <TextView
+        android:id="@+id/tvStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:text="Discussion"
+        android:textSize="11sp"
+        android:textStyle="bold"
+        android:textColor="@color/text_main"
+        android:background="@drawable/bg_rounded_chip"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="4dp"
+        app:layout_constraintStart_toEndOf="@+id/ivProfile"
+        app:layout_constraintTop_toBottomOf="@+id/tvLastMessage"
+        android:layout_marginStart="16dp"/>
+
+    <TextView
+        android:id="@+id/tvUnreadBadge"
+        android:layout_width="22dp"
+        android:layout_height="22dp"
+        android:background="@drawable/bg_circle_gray"
+        android:backgroundTint="@color/primary"
+        android:text="1"
+        android:textColor="?attr/colorOnPrimary"
+        android:textSize="11sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvTime"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="4dp"/>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="@color/divider"
+        app:layout_constraintStart_toStartOf="@+id/tvUserName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="12dp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

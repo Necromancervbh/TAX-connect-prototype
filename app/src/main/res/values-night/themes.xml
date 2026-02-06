@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Theme.MyApplication" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Main theme colors -->
+        <item name="colorPrimary">@color/md_theme_light_primary</item>
+        <item name="colorOnPrimary">@color/md_theme_light_onPrimary</item>
+        <item name="colorPrimaryContainer">@color/md_theme_light_primaryContainer</item>
+        <item name="colorOnPrimaryContainer">@color/md_theme_light_onPrimaryContainer</item>
+        
+        <item name="colorSecondary">@color/md_theme_light_secondary</item>
+        <item name="colorOnSecondary">@color/md_theme_light_onSecondary</item>
+        <item name="colorSecondaryContainer">@color/md_theme_light_secondaryContainer</item>
+        <item name="colorOnSecondaryContainer">@color/md_theme_light_onSecondaryContainer</item>
+
+        <!-- Dark Mode Status Bar -->
+        <item name="android:statusBarColor">@color/background</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:navigationBarColor">@color/background</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">false</item>
+
+        <!-- Standard Typography -->
+        <item name="textAppearanceHeadlineMedium">@style/AppText.Headline</item>
+        <item name="textAppearanceTitleLarge">@style/AppText.Title</item>
+        <item name="textAppearanceBodyMedium">@style/AppText.Body</item>
+
+        <!-- Standard Component Styles -->
+        <item name="materialButtonStyle">@style/AppButton</item>
+        <item name="textInputStyle">@style/AppTextInputLayout</item>
+        <item name="materialCardViewStyle">@style/AppCard</item>
+
+        <!-- Fix for "White on White" Options/Menus -->
+        <item name="popupMenuBackground">@color/surface</item>
+        <item name="actionModeBackground">@color/surface</item>
+    </style>
+</resources>

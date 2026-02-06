@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Systematic 4dp-based spacing scale -->
+    <dimen name="space_1x">4dp</dimen>   <!-- Micro spacing -->
+    <dimen name="space_2x">8dp</dimen>   <!-- Small spacing -->
+    <dimen name="space_3x">12dp</dimen>  <!-- Compact spacing -->
+    <dimen name="space_4x">16dp</dimen>  <!-- Default spacing -->
+    <dimen name="space_5x">20dp</dimen>  <!-- Medium spacing -->
+    <dimen name="space_6x">24dp</dimen>  <!-- Large spacing -->
+    <dimen name="space_8x">32dp</dimen>   <!-- Extra large spacing -->
+    <dimen name="space_10x">40dp</dimen>  <!-- Huge spacing -->
+    <dimen name="space_12x">48dp</dimen> <!-- Massive spacing -->
+
+    <!-- Component-specific spacing -->
+    <dimen name="card_padding">@dimen/space_4x</dimen>
+    <dimen name="card_elevation">2dp</dimen>
+    <dimen name="card_corner_radius">16dp</dimen>
+    
+    <dimen name="button_padding_vertical">@dimen/space_3x</dimen>
+    <dimen name="button_padding_horizontal">@dimen/space_6x</dimen>
+    <dimen name="button_min_height">48dp</dimen>
+    <dimen name="button_corner_radius">12dp</dimen>
+    
+    <dimen name="input_padding_vertical">@dimen/space_4x</dimen>
+    <dimen name="input_padding_horizontal">@dimen/space_4x</dimen>
+    <dimen name="input_min_height">56dp</dimen>
+    
+    <dimen name="chip_padding_horizontal">@dimen/space_3x</dimen>
+    <dimen name="chip_padding_vertical">@dimen/space_2x</dimen>
+    <dimen name="chip_min_height">32dp</dimen>
+    
+    <!-- Touch target minimums for accessibility -->
+    <dimen name="touch_target_min">48dp</dimen>
+    <dimen name="touch_target_compact">40dp</dimen>
+    
+    <!-- Layout margins -->
+    <dimen name="screen_margin_horizontal">@dimen/space_4x</dimen>
+    <dimen name="screen_margin_vertical">@dimen/space_4x</dimen>
+    <dimen name="component_margin_vertical">@dimen/space_3x</dimen>
+    <dimen name="component_margin_horizontal">@dimen/space_2x</dimen>
+</resources>

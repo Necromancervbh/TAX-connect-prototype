@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_gradient_primary"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@android:color/transparent"
+            app:title="Chat"
+            app:titleCentered="true"
+            app:titleTextColor="?attr/colorOnPrimary"
+            app:navigationIcon="@drawable/ic_arrow_back"
+            app:navigationIconTint="?attr/colorOnPrimary">
+
+            <ImageButton
+                android:id="@+id/btnVideoCall"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="end"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@android:drawable/presence_video_online"
+                android:layout_marginEnd="8dp"
+                android:contentDescription="Start video call"
+                app:tint="?attr/colorOnPrimary" />
+
+        </com.google.android.material.appbar.MaterialToolbar>
+        
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="8dp"
+            app:cardCornerRadius="16dp"
+            app:cardBackgroundColor="#20FFFFFF"
+            app:strokeWidth="0dp">
+            
+            <TextView
+                android:id="@+id/tvWorkflowStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="4dp"
+                android:text="Status: Discussion"
+                android:textColor="?attr/colorOnPrimary"
+                android:textStyle="bold"
+                android:textSize="12sp" />
+        </com.google.android.material.card.MaterialCardView>
+            
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <HorizontalScrollView
+        android:id="@+id/actionContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/appBar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@color/surface"
+        android:padding="8dp"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnToggleVideoCall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Enable Video Calls"
+                android:layout_marginEnd="8dp"
+                android:visibility="gone"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnCreateProposal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Create Proposal"
+                android:layout_marginEnd="8dp"
+                android:visibility="gone" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnRequestDocs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Request Docs"
+                android:layout_marginEnd="8dp"
+                android:visibility="gone" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnCompleteJob"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Complete Job"
+                android:backgroundTint="@color/emerald_600"
+                android:layout_marginEnd="8dp"
+                android:visibility="gone" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnLeaveFeedback"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Leave Feedback"
+                android:layout_marginEnd="8dp"
+                android:visibility="gone" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnBookAppointment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Book Appointment"
+                android:backgroundTint="@color/primary"
+                android:textColor="?attr/colorOnPrimary"
+                android:layout_marginEnd="8dp"
+                android:visibility="gone" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnCustomerVideoCall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Video Call"
+                android:icon="@drawable/ic_video_call"
+                android:layout_marginEnd="8dp"
+                android:visibility="gone" />
+
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvChatMessages"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:paddingBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/layoutInput"
+        app:layout_constraintTop_toBottomOf="@+id/actionContainer"
+        tools:listitem="@layout/item_chat_received" />
+
+    <TextView
+        android:id="@+id/tvEmptyState"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No messages yet. Start the conversation."
+        android:textColor="@color/text_muted"
+        android:textSize="14sp"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@+id/actionContainer"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/layoutInput"
+        android:layout_marginTop="16dp" />
+
+    <LinearLayout
+        android:id="@+id/layoutInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        android:gravity="bottom"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            app:cardCornerRadius="24dp"
+            app:cardElevation="2dp"
+            app:strokeWidth="0dp"
+            app:cardBackgroundColor="@color/surface">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="4dp">
+
+                <ImageButton
+                    android:id="@+id/btnAttach"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@android:drawable/ic_menu_add"
+                    android:padding="8dp"
+                    app:tint="@color/text_muted" />
+
+                <EditText
+                    android:id="@+id/etMessage"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:hint="Message..."
+                    android:inputType="textCapSentences|textMultiLine"
+                    android:maxLines="4"
+                    android:minHeight="40dp"
+                    android:paddingHorizontal="8dp"
+                    android:paddingVertical="8dp"
+                    android:textSize="15sp" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/btnSend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="Send"
+            app:fabSize="normal"
+            app:elevation="2dp"
+            app:backgroundTint="@color/primary"
+            app:tint="@color/on_primary"
+            android:src="@android:drawable/ic_menu_send" />
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,58 @@
+.app {
+  min-height: 100vh;
+  padding: 40px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: center;
+}
+
+h1 {
+  margin: 0;
+  font-size: 28px;
+}
+
+.primary,
+.secondary {
+  border: none;
+  border-radius: 999px;
+  padding: 12px 20px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.1s ease, box-shadow 0.2s ease;
+}
+
+.primary {
+  background: #38bdf8;
+  color: #0f172a;
+}
+
+.secondary {
+  background: #1f2937;
+  color: #f8fafc;
+}
+
+.primary:active,
+.secondary:active {
+  transform: scale(0.97);
+}
+
+.incoming,
+.active {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+}
+
+.incoming-actions,
+.remote-state {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.incoming-text {
+  font-size: 18px;
+}

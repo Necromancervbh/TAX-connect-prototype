@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/ic_home"
+            android:title="Home" />
+        <item
+            android:id="@+id/nav_profile"
+            android:icon="@drawable/ic_person"
+            android:title="My Profile" />
+        <item
+            android:id="@+id/nav_wallet"
+            android:icon="@drawable/ic_wallet"
+            android:title="My Wallet" />
+        <item
+            android:id="@+id/nav_chats"
+            android:icon="@drawable/ic_chat_bubble"
+            android:title="Conversations" />
+        <item
+            android:id="@+id/nav_requests"
+            android:icon="@drawable/ic_person"
+            android:title="Requests" />
+        <item
+            android:id="@+id/nav_bookings"
+            android:icon="@drawable/ic_calendar"
+            android:title="My Bookings" />
+        <item
+            android:id="@+id/nav_explore"
+            android:icon="@drawable/ic_search"
+            android:title="Explore CAs" />
+        <item
+            android:id="@+id/nav_docs"
+            android:icon="@drawable/ic_document"
+            android:title="My Documents" />
+        <item
+            android:id="@+id/nav_community"
+            android:icon="@drawable/ic_chat_bubble"
+            android:title="Community Forum" />
+    </group>
+
+    <item android:title="Appearance">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/nav_theme_light"
+                    android:icon="@drawable/ic_light_mode"
+                    android:title="Light Theme" />
+                <item
+                    android:id="@+id/nav_theme_dark"
+                    android:icon="@drawable/ic_dark_mode"
+                    android:title="Dark Theme" />
+                <item
+                    android:id="@+id/nav_theme_system"
+                    android:icon="@drawable/ic_settings"
+                    android:title="System Default" />
+            </group>
+        </menu>
+    </item>
+
+    <item android:title="Support">
+        <menu>
+            <item
+                android:id="@+id/nav_help"
+                android:icon="@drawable/ic_help"
+                android:title="Help &amp; Feedback" />
+            <item
+                android:id="@+id/nav_logout"
+                android:icon="@drawable/ic_logout"
+                android:title="Logout" />
+        </menu>
+    </item>
+</menu>

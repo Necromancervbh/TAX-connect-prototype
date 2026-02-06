@@ -1,0 +1,29 @@
+{ 
+   "project_info": { 
+     "project_number": "805184652608", 
+     "project_id": "trae1-d90c2", 
+     "storage_bucket": "trae1-d90c2.firebasestorage.app" 
+   }, 
+   "client": [ 
+     { 
+       "client_info": { 
+         "mobilesdk_app_id": "1:805184652608:android:3c0a05fc1b70fa9beee6a5", 
+         "android_client_info": { 
+           "package_name": "com.example.taxconnect" 
+         } 
+       }, 
+       "oauth_client": [], 
+       "api_key": [ 
+         { 
+           "current_key": "AIzaSyCKX7Yd-zF2jhbsu5DchV2bRtWJEs1reHg" 
+         } 
+       ], 
+       "services": { 
+         "appinvite_service": { 
+           "other_platform_oauth_client": [] 
+         } 
+       } 
+     } 
+   ], 
+   "configuration_version": "1" 
+ }
