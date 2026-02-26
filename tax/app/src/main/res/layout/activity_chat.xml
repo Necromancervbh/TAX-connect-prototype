@@ -1,0 +1,448 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_gradient_primary"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@android:color/transparent"
+            app:title="Chat"
+            app:titleCentered="true"
+            app:titleTextColor="?attr/colorOnPrimary"
+            app:navigationIcon="@drawable/ic_arrow_back"
+            app:navigationIconTint="?attr/colorOnPrimary">
+
+            <ImageButton
+                android:id="@+id/btnVideoCall"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="end"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@android:drawable/presence_video_online"
+                android:layout_marginEnd="8dp"
+                android:contentDescription="Start video call"
+                app:tint="?attr/colorOnPrimary" />
+
+        </com.google.android.material.appbar.MaterialToolbar>
+        
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="8dp"
+            app:cardCornerRadius="@dimen/corner_radius_medium"
+            app:cardBackgroundColor="#20FFFFFF"
+            app:strokeWidth="0dp">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="6dp">
+
+                <TextView
+                    android:id="@+id/tvWorkflowStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Current: Discussion in progress"
+                    android:textColor="?attr/colorOnPrimary"
+                    android:textStyle="bold"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/tvWorkflowNext"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="Next: Share requirements"
+                    android:textColor="?attr/colorOnPrimary"
+                    android:textSize="11sp"
+                    android:alpha="0.85" />
+
+                <TextView
+                    android:id="@+id/tvPaymentProgress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="Payment progress: Awaiting acceptance"
+                    android:textColor="?attr/colorOnPrimary"
+                    android:textSize="11sp"
+                    android:alpha="0.85" />
+
+                <TextView
+                    android:id="@+id/tvRejectionPreview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="Last rejection: Budget too high"
+                    android:textColor="?attr/colorOnPrimary"
+                    android:textSize="11sp"
+                    android:alpha="0.85"
+                    android:visibility="gone" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnReviseHeader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Revise proposal"
+                    android:visibility="gone"
+                    android:textColor="?attr/colorOnPrimary"
+                    app:backgroundTint="@android:color/transparent"
+                    style="@style/Widget.Material3.Button.TextButton" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardPaymentIssue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/screen_margin_horizontal"
+            android:layout_marginBottom="8dp"
+            app:cardCornerRadius="@dimen/corner_radius_small"
+            app:cardBackgroundColor="@color/surface"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/space_3x">
+
+                <TextView
+                    android:id="@+id/tvPaymentIssue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Payment failed. Try again or contact support."
+                    android:textColor="@color/text_main"
+                    android:textSize="13sp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnPaymentRetry"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Retry"
+                        android:layout_marginEnd="8dp"
+                        android:backgroundTint="@color/emerald_600"
+                        android:textColor="@android:color/white"
+                        style="@style/Widget.Material3.Button.TextButton" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnPaymentSupport"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Support"
+                        android:textColor="@color/primary"
+                        app:backgroundTint="@color/primary_container"
+                        style="@style/Widget.Material3.Button.TextButton" />
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+            
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <HorizontalScrollView
+        android:id="@+id/actionContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/appBar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@color/primary_container"
+        android:paddingVertical="@dimen/space_2x"
+        android:paddingHorizontal="@dimen/screen_margin_horizontal"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnToggleVideoCall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Enable Video Calls"
+                android:layout_marginEnd="8dp"
+                android:visibility="gone"
+                android:textColor="@color/primary"
+                app:backgroundTint="@color/primary_container"
+                style="@style/Widget.Material3.Button.TextButton"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnCreateProposal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Create Proposal"
+                android:layout_marginEnd="8dp"
+                android:visibility="gone"
+                android:textColor="@color/primary"
+                app:backgroundTint="@color/primary_container"
+                style="@style/Widget.Material3.Button.TextButton" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnRequestDocs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Request Docs"
+                android:layout_marginEnd="8dp"
+                android:visibility="gone"
+                android:textColor="@color/primary"
+                app:backgroundTint="@color/primary_container"
+                style="@style/Widget.Material3.Button.TextButton" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnCompleteJob"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Complete Job"
+                android:backgroundTint="@color/emerald_600"
+                android:layout_marginEnd="8dp"
+                android:visibility="gone"
+                style="@style/Widget.Material3.Button.TextButton" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnPayFinal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pay Final"
+                android:backgroundTint="@color/emerald_600"
+                android:layout_marginEnd="8dp"
+                android:visibility="gone"
+                style="@style/Widget.Material3.Button.TextButton" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnLeaveFeedback"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Leave Feedback"
+                android:layout_marginEnd="8dp"
+                android:visibility="gone"
+                android:textColor="@color/primary"
+                app:backgroundTint="@color/primary_container"
+                style="@style/Widget.Material3.Button.TextButton" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnRequestAgain"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Request Assistance Again"
+                android:layout_marginEnd="8dp"
+                android:visibility="gone"
+                android:textColor="@color/primary"
+                app:backgroundTint="@color/primary_container"
+                style="@style/Widget.Material3.Button.TextButton" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnViewHistory"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="View History"
+                android:layout_marginEnd="8dp"
+                android:visibility="gone"
+                android:textColor="@color/primary"
+                app:backgroundTint="@color/primary_container"
+                style="@style/Widget.Material3.Button.TextButton" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnBookAppointment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Book Appointment"
+                android:backgroundTint="@color/primary"
+                android:textColor="?attr/colorOnPrimary"
+                android:layout_marginEnd="8dp"
+                android:visibility="gone"
+                style="@style/Widget.Material3.Button.TextButton" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnCustomerVideoCall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Video Call"
+                android:icon="@drawable/ic_video_call"
+                android:layout_marginEnd="8dp"
+                android:visibility="gone"
+                android:textColor="@color/primary"
+                app:backgroundTint="@color/primary_container"
+                app:iconTint="@color/primary"
+                style="@style/Widget.Material3.Button.TextButton" />
+
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardServiceHistory"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/screen_margin_horizontal"
+        android:layout_marginTop="@dimen/space_3x"
+        android:visibility="gone"
+        app:cardCornerRadius="@dimen/corner_radius_medium"
+        app:cardElevation="1dp"
+        app:cardBackgroundColor="@color/surface"
+        app:layout_constraintTop_toBottomOf="@id/actionContainer"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/space_4x">
+
+            <TextView
+                android:id="@+id/tvServiceHistoryTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Service History"
+                android:textColor="@color/text_main"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvServiceHistoryEmpty"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_2x"
+                android:text="No previous services yet."
+                android:textColor="@color/text_secondary"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:id="@+id/layoutServiceHistory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_2x"
+                android:orientation="vertical" />
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvChatMessages"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:paddingHorizontal="@dimen/screen_margin_horizontal"
+        android:paddingTop="@dimen/space_4x"
+        android:paddingBottom="@dimen/space_6x"
+        app:layout_constraintBottom_toTopOf="@+id/chatInputDivider"
+        app:layout_constraintTop_toBottomOf="@+id/cardServiceHistory"
+        tools:listitem="@layout/item_chat_received" />
+
+    <View
+        android:id="@+id/chatInputDivider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="@color/divider"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rvChatMessages"
+        app:layout_constraintBottom_toTopOf="@+id/layoutInput" />
+
+    <TextView
+        android:id="@+id/tvEmptyState"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No messages yet. Start the conversation."
+        android:textColor="@color/text_muted"
+        android:textSize="14sp"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@+id/actionContainer"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/layoutInput"
+        android:layout_marginTop="16dp" />
+
+    <LinearLayout
+        android:id="@+id/layoutInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/surface"
+        android:orientation="horizontal"
+        android:paddingVertical="@dimen/space_3x"
+        android:paddingHorizontal="@dimen/screen_margin_horizontal"
+        android:gravity="bottom"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            app:cardCornerRadius="@dimen/corner_radius_pill"
+            app:cardElevation="0dp"
+            app:strokeWidth="1dp"
+            app:strokeColor="@color/primary"
+            app:cardBackgroundColor="@color/surface_variant">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="@dimen/space_2x"
+                android:paddingVertical="@dimen/space_1x">
+
+                <ImageButton
+                    android:id="@+id/btnAttach"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:background="@drawable/bg_circle_light_primary"
+                    android:src="@drawable/ic_add_circle"
+                    android:padding="6dp"
+                    android:contentDescription="Attach files"
+                    app:tint="@color/primary" />
+
+                <EditText
+                    android:id="@+id/etMessage"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:hint="Message..."
+                    android:inputType="textCapSentences|textMultiLine"
+                    android:maxLines="4"
+                    android:minHeight="44dp"
+                    android:paddingHorizontal="8dp"
+                    android:paddingVertical="8dp"
+                    android:textSize="15sp"
+                    android:textColor="@color/text_main"
+                    android:textColorHint="@color/text_muted" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/btnSend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="Send"
+        app:fabSize="normal"
+            app:elevation="2dp"
+        app:backgroundTint="@color/secondary"
+        app:tint="@color/on_secondary"
+            android:src="@android:drawable/ic_menu_send" />
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
+

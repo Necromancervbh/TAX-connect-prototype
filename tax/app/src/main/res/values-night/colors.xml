@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Dark Mode Palette -->
+    <color name="primary">#E2E8F0</color> <!-- Slate 200 -->
+    <color name="primary_variant">#94A3B8</color> <!-- Slate 400 -->
+    <color name="on_primary">#0F172A</color> <!-- Slate 900 -->
+    <color name="secondary">#60A5FA</color> <!-- Blue 400 -->
+    <color name="on_secondary">#0F172A</color> <!-- Slate 900 -->
+    <color name="accent">#34D399</color> <!-- Emerald 400 -->
+
+    <color name="background">#0F172A</color> <!-- Slate 900 -->
+    <color name="surface">#1E293B</color> <!-- Slate 800 -->
+    <color name="surface_variant">#334155</color> <!-- Slate 700 -->
+    
+    <color name="text_main">#F8FAFC</color> <!-- Slate 50 -->
+    <color name="text_secondary">#CBD5E1</color> <!-- Slate 300 -->
+    <color name="text_muted">#94A3B8</color> <!-- Slate 400 -->
+    
+    <color name="divider">#334155</color> <!-- Slate 700 -->
+    <color name="stroke">#334155</color> <!-- Slate 700 -->
+    <color name="stroke_strong">#475569</color> <!-- Slate 600 -->
+
+    <!-- Semantic Color Overrides for Visibility -->
+    <color name="amber_600">#FBBF24</color> <!-- Amber 400 (Brighter for Dark Mode) -->
+    <color name="emerald_600">#34D399</color> <!-- Emerald 400 (Brighter for Dark Mode) -->
+    <color name="rose_600">#FB7185</color> <!-- Rose 400 (Brighter for Dark Mode) -->
+    
+    <!-- Slate Scale Inversion for Hardcoded Layouts -->
+    <!-- Maps dark slates to light slates and vice versa to ensure visibility -->
+    <color name="slate_900">#F8FAFC</color> <!-- Slate 50 -->
+    <color name="slate_800">#F1F5F9</color> <!-- Slate 100 -->
+    <color name="slate_700">#E2E8F0</color> <!-- Slate 200 -->
+    <color name="slate_600">#CBD5E1</color> <!-- Slate 300 -->
+    <color name="slate_500">#94A3B8</color> <!-- Slate 400 -->
+    <color name="slate_400">#64748B</color> <!-- Slate 500 -->
+    <color name="slate_300">#475569</color> <!-- Slate 600 -->
+    <color name="slate_200">#334155</color> <!-- Slate 700 -->
+    <color name="slate_100">#1E293B</color> <!-- Slate 800 -->
+    <color name="slate_50">#0F172A</color>  <!-- Slate 900 -->
+
+    <!-- Material 3 Overrides for Dark Mode -->
+    <color name="md_theme_light_primary">#E2E8F0</color>
+    <color name="md_theme_light_onPrimary">#0F172A</color>
+    <color name="md_theme_light_primaryContainer">#334155</color>
+    <color name="md_theme_light_onPrimaryContainer">#E2E8F0</color>
+
+    <color name="md_theme_light_secondary">#60A5FA</color>
+    <color name="md_theme_light_onSecondary">#0F172A</color>
+    <color name="md_theme_light_secondaryContainer">#1E3A8A</color>
+    <color name="md_theme_light_onSecondaryContainer">#DBEAFE</color>
+
+    <color name="error_color">@color/md_theme_error</color>
+    
+    <color name="primary_blue">@color/secondary</color>
+    
+    <!-- UI Component Colors -->
+    <color name="chip_background">@color/surface_variant</color>
+</resources>
