@@ -392,45 +392,101 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(), PaymentResultListener 
         if (conversation == null) return
         
         val state = conversation.workflowState
-        binding.tvWorkflowStatus.text = "Status: $state"
+        binding.tvWorkflowStatus.text = "Status: ${getWorkflowLabel(state)}"
         
-        // Update tvPaymentProgress based on state
-        when (state) {
-            ConversationModel.STATE_DISCUSSION -> {
-                binding.tvPaymentProgress.text = "Payment: No active request"
-                binding.tvWorkflowNext.text = "Next: Send proposal or payment request"
-            }
-            ConversationModel.STATE_PAYMENT_PENDING -> {
-                binding.tvPaymentProgress.text = "Payment: Awaiting client action"
-                binding.tvWorkflowNext.text = "Next: Client to pay or decline"
-            }
-            ConversationModel.STATE_ADVANCE_PAYMENT -> {
-                binding.tvPaymentProgress.text = "Payment: Advance Paid ✅"
-                binding.tvWorkflowNext.text = "Next: CA work & document delivery"
-            }
-            ConversationModel.STATE_DOCS_PENDING -> {
-                binding.tvPaymentProgress.text = "Payment: Advance Paid ✅"
-                binding.tvWorkflowNext.text = "Next: Final payment request"
-            }
-            ConversationModel.STATE_COMPLETED -> {
-                binding.tvPaymentProgress.text = "Payment: Fully Paid ✅"
-                binding.tvWorkflowNext.text = "Status: Project successfully completed"
-                binding.tvWorkflowNext.setTextColor(ContextCompat.getColor(this, R.color.status_online))
-                
-                // Trigger rating dialog for client
-                val otherUser = (viewModel.otherUserState.value as? Resource.Success)?.data
-                if (otherUser?.role == "CA") {
-                    showRateCaDialog(otherUser)
+        val showStepper = state in listOf(
+            ConversationModel.STATE_PAYMENT_PENDING,
+            ConversationModel.STATE_ADVANCE_PAYMENT,
+            ConversationModel.STATE_DOCS_PENDING,
+            ConversationModel.STATE_COMPLETED
+        )
+        
+        if (showStepper) {
+            binding.tvPaymentProgress.visibility = View.GONE
+            binding.layoutStepper.visibility = View.VISIBLE
+            binding.layoutStepperLabels.visibility = View.VISIBLE
+            
+            // Default inactive
+            binding.step1Icon.setImageResource(R.drawable.ic_check_circle)
+            binding.step1Line.alpha = 0.3f
+            binding.step2Icon.setImageResource(R.drawable.ic_circle_outline)
+            binding.step2Line.alpha = 0.3f
+            binding.step3Icon.setImageResource(R.drawable.ic_circle_outline)
+            
+            // Reset text styling
+            binding.tvStep1Label.alpha = 1.0f
+            binding.tvStep2Label.alpha = 0.5f
+            binding.tvStep3Label.alpha = 0.5f
+            
+            when (state) {
+                ConversationModel.STATE_PAYMENT_PENDING -> {
+                    // Proposal sent/accepted, waiting for advance payment
+                    binding.step1Icon.setImageResource(R.drawable.ic_circle_outline) // pending completion of step 1
+                    binding.tvWorkflowNext.text = getString(R.string.next_client_pay)
+                }
+                ConversationModel.STATE_ADVANCE_PAYMENT, ConversationModel.STATE_DOCS_PENDING -> {
+                    // Advance paid
+                    binding.step1Line.alpha = 1.0f
+                    binding.step2Icon.setImageResource(R.drawable.ic_check_circle)
+                    binding.tvStep2Label.alpha = 1.0f
+                    
+                    if (state == ConversationModel.STATE_ADVANCE_PAYMENT) {
+                        binding.tvWorkflowNext.text = getString(R.string.next_ca_work)
+                    } else {
+                        binding.tvWorkflowNext.text = getString(R.string.next_final_request)
+                    }
+                }
+                ConversationModel.STATE_COMPLETED -> {
+                    // Fully paid
+                    binding.step1Line.alpha = 1.0f
+                    binding.step2Icon.setImageResource(R.drawable.ic_check_circle)
+                    binding.step2Line.alpha = 1.0f
+                    binding.step3Icon.setImageResource(R.drawable.ic_check_circle)
+                    
+                    binding.tvStep2Label.alpha = 1.0f
+                    binding.tvStep3Label.alpha = 1.0f
+                    
+                    binding.tvWorkflowNext.text = getString(R.string.status_project_completed)
+                    binding.tvWorkflowNext.setTextColor(ContextCompat.getColor(this, R.color.status_online))
+                    
+                    // Trigger rating dialog for client
+                    val otherUser = (viewModel.otherUserState.value as? Resource.Success)?.data
+                    if (otherUser?.role == "CA") {
+                        showRateCaDialog(otherUser)
+                    }
                 }
             }
-            ConversationModel.STATE_REQUESTED -> {
-                binding.tvPaymentProgress.text = "Payment: Not started"
-                binding.tvWorkflowNext.text = "Next: Accept or decline request"
-            }
-            else -> {
-                binding.tvWorkflowNext.text = "Next: Continue discussion"
+        } else {
+            binding.tvPaymentProgress.visibility = View.VISIBLE
+            binding.layoutStepper.visibility = View.GONE
+            binding.layoutStepperLabels.visibility = View.GONE
+            
+            when (state) {
+                ConversationModel.STATE_DISCUSSION -> {
+                    binding.tvPaymentProgress.text = getString(R.string.payment_no_active_request)
+                    binding.tvWorkflowNext.text = getString(R.string.next_send_proposal)
+                }
+                ConversationModel.STATE_REQUESTED -> {
+                    binding.tvPaymentProgress.text = getString(R.string.payment_not_started)
+                    binding.tvWorkflowNext.text = getString(R.string.next_accept_decline)
+                }
+                else -> {
+                    binding.tvPaymentProgress.text = getString(R.string.payment_not_started)
+                    binding.tvWorkflowNext.text = getString(R.string.next_continue_discussion)
+                }
             }
         }
+    }
+
+    private fun getWorkflowLabel(state: String?): String {
+        if (state.isNullOrBlank()) return "Discussion"
+        // If it contains underscores, it's a raw enum like ADVANCE_PAYMENT — convert to title case
+        if (state.contains("_")) {
+            return state.split("_").joinToString(" ") { word ->
+                word.lowercase().replaceFirstChar { it.uppercase() }
+            }
+        }
+        return state
     }
 
     private var ratingDialog: androidx.appcompat.app.AlertDialog? = null

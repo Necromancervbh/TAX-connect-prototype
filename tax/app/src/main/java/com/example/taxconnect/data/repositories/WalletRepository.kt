@@ -1,5 +1,6 @@
 package com.example.taxconnect.data.repositories
 
+import com.example.taxconnect.data.models.ConversationModel
 import com.example.taxconnect.data.models.TransactionModel
 import com.example.taxconnect.data.models.UserModel
 import com.google.firebase.Timestamp
@@ -222,14 +223,14 @@ class WalletRepository @Inject constructor() {
                     updates["proposalAdvancePaid"] = true
                     updates["proposalPaymentStage"] = "FINAL_DUE"
                     updates["paymentRequestStatus"] = "ADVANCE_PAID"
-                    transaction.update(conversationRef, "workflowState", "ADVANCE_PAYMENT")
+                    transaction.update(conversationRef, "workflowState", ConversationModel.STATE_ADVANCE_PAYMENT)
                 }
                 "FINAL_PAID" -> {
                     updates["proposalStatus"] = "COMPLETED"
                     updates["proposalFinalPaid"] = true
                     updates["proposalPaymentStage"] = "COMPLETED"
                     updates["paymentRequestStatus"] = "FINAL_PAID"
-                    transaction.update(conversationRef, "workflowState", "COMPLETED")
+                    transaction.update(conversationRef, "workflowState", ConversationModel.STATE_COMPLETED)
                     transaction.update(conversationRef, "lastServiceCompletedAt", System.currentTimeMillis())
                 }
                 "PAID" -> updates["paymentRequestStatus"] = "PAID"
@@ -280,14 +281,14 @@ class WalletRepository @Inject constructor() {
                     updates["proposalAdvancePaid"] = true
                     updates["proposalPaymentStage"] = "FINAL_DUE"
                     updates["paymentRequestStatus"] = "ADVANCE_PAID"
-                    transaction.update(conversationRef, "workflowState", "ADVANCE_PAYMENT")
+                    transaction.update(conversationRef, "workflowState", ConversationModel.STATE_ADVANCE_PAYMENT)
                 }
                 "FINAL_PAID" -> {
                     updates["proposalStatus"] = "COMPLETED"
                     updates["proposalFinalPaid"] = true
                     updates["proposalPaymentStage"] = "COMPLETED"
                     updates["paymentRequestStatus"] = "FINAL_PAID"
-                    transaction.update(conversationRef, "workflowState", "COMPLETED")
+                    transaction.update(conversationRef, "workflowState", ConversationModel.STATE_COMPLETED)
                     transaction.update(conversationRef, "lastServiceCompletedAt", System.currentTimeMillis())
                 }
                 "PAID" -> updates["paymentRequestStatus"] = "PAID"

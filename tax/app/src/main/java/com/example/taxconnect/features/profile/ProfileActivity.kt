@@ -78,6 +78,9 @@ class ProfileActivity : BaseActivity<ActivityProfileBinding>() {
             return
         }
         
+        setupServiceList()
+        setupCertificatesList()
+        
         currentUserId?.let { viewModel.fetchUser(it) }
     }
 
@@ -125,9 +128,6 @@ class ProfileActivity : BaseActivity<ActivityProfileBinding>() {
         binding.btnUploadCertificate.setOnClickListener { pickCertificateLauncher.launch("application/pdf") }
         
         binding.btnRequestVerification.setOnClickListener { requestVerification() }
-
-        setupServiceList()
-        setupCertificatesList()
     }
 
     private fun setupObservers() {

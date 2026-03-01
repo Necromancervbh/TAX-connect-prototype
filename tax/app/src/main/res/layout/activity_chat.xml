@@ -76,10 +76,41 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
-                    android:text="Payment progress: Awaiting acceptance"
+                    android:text="@string/payment_progress_default"
                     android:textColor="?attr/colorOnPrimary"
                     android:textSize="11sp"
                     android:alpha="0.85" />
+
+                <!-- Payment Progress Stepper -->
+                <LinearLayout
+                    android:id="@+id/layoutStepper"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="12dp"
+                    android:gravity="center_vertical"
+                    android:visibility="gone">
+                    
+                    <ImageView android:id="@+id/step1_icon" android:layout_width="16dp" android:layout_height="16dp" android:src="@drawable/ic_check_circle" app:tint="?attr/colorOnPrimary"/>
+                    <View android:id="@+id/step1_line" android:layout_width="0dp" android:layout_weight="1" android:layout_height="2dp" android:background="?attr/colorOnPrimary" android:alpha="0.3"/>
+                    
+                    <ImageView android:id="@+id/step2_icon" android:layout_width="16dp" android:layout_height="16dp" android:src="@drawable/ic_circle_outline" app:tint="?attr/colorOnPrimary" android:alpha="0.5"/>
+                    <View android:id="@+id/step2_line" android:layout_width="0dp" android:layout_weight="1" android:layout_height="2dp" android:background="?attr/colorOnPrimary" android:alpha="0.3"/>
+                    
+                    <ImageView android:id="@+id/step3_icon" android:layout_width="16dp" android:layout_height="16dp" android:src="@drawable/ic_circle_outline" app:tint="?attr/colorOnPrimary" android:alpha="0.5"/>
+                </LinearLayout>
+                
+                <LinearLayout
+                    android:id="@+id/layoutStepperLabels"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="4dp"
+                    android:visibility="gone">
+                    <TextView android:id="@+id/tvStep1Label" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="@string/payment_step_proposal" android:textSize="10sp" android:textColor="?attr/colorOnPrimary" android:gravity="start"/>
+                    <TextView android:id="@+id/tvStep2Label" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/payment_step_advance" android:textSize="10sp" android:textColor="?attr/colorOnPrimary" android:gravity="center"/>
+                    <TextView android:id="@+id/tvStep3Label" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="@string/payment_step_completed" android:textSize="10sp" android:textColor="?attr/colorOnPrimary" android:gravity="end"/>
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/tvRejectionPreview"

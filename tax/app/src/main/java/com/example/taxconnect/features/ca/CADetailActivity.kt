@@ -243,7 +243,7 @@ class CADetailActivity : BaseActivity<ActivityCaDetailBinding>() {
         binding.tvExperienceStat.text = "${user.experience}+"
         binding.tvClientStat.text = "${user.clientCount}+"
         binding.tvRatingStat.text = String.format(Locale.getDefault(), "%.1f", user.rating)
-        binding.tvBio.text = user.bio ?: "No bio available."
+        binding.tvBio.text = if (user.bio.isNullOrBlank()) "This CA hasn't added a bio yet." else user.bio
 
         // Bind Pricing
         binding.tvMinCharges.text = if (!user.minCharges.isNullOrEmpty()) "₹ ${user.minCharges}" else "Contact for Price"

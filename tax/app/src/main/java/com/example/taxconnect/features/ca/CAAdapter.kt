@@ -114,7 +114,7 @@ class CAAdapter(
         private val tvCity: TextView? = itemView.findViewById(R.id.tvCity)
         private val tvRating: TextView? = itemView.findViewById(R.id.tvRating)
         private val tvMinCharges: TextView? = itemView.findViewById(R.id.tvMinCharges)
-        private val tvVerifiedTag: TextView? = itemView.findViewById(R.id.tvVerifiedTag)
+
         private val tvClientCount: TextView? = itemView.findViewById(R.id.tvClientCount)
         private val chipStatus: Chip? = itemView.findViewById(R.id.chipStatus)
         private val btnConnect: Button? = itemView.findViewById(R.id.btnConnect)
@@ -131,17 +131,8 @@ class CAAdapter(
             tvSpecialization?.text = ca.specialization
             tvExperience?.text = "${ca.experience} years"
             
-            val uid = ca.uid
             observerJob?.cancel()
-            if (uid != null) {
-                observerJob = itemView.findViewTreeLifecycleOwner()?.lifecycleScope?.launch {
-                    UserRepository.getInstance().observeUser(uid).collect { user ->
-                        updateOnlineStatusUI(user.isOnline)
-                    }
-                }
-            } else {
-                updateOnlineStatusUI(ca.isOnline)
-            }
+            updateOnlineStatusUI(ca.isOnline)
             
             tvCity?.text = ca.city ?: "N/A"
             tvRating?.text = String.format(Locale.getDefault(), "★ %.1f (%d)", ca.rating, ca.ratingCount)
@@ -155,7 +146,7 @@ class CAAdapter(
                 }
             }
             
-            tvVerifiedTag?.visibility = if (ca.isVerified) View.VISIBLE else View.GONE
+
             
             tvClientCount?.let {
                 val count = ca.clientCount
@@ -203,13 +194,13 @@ class CAAdapter(
         
         private fun updateOnlineStatusUI(isOnline: Boolean) {
             tvStatus?.let {
-                it.text = if (isOnline) "\u25CF Online" else "\u25CF Offline"
+                it.text = if (isOnline) context.getString(R.string.status_online) else context.getString(R.string.status_offline)
                 val color = if (isOnline) context.getColor(R.color.emerald_600) else context.getColor(R.color.slate_500)
                 it.setTextColor(color)
             }
 
             chipStatus?.let {
-                it.text = if (isOnline) "Online" else "Offline"
+                it.text = if (isOnline) context.getString(R.string.online) else context.getString(R.string.offline)
                 val color = if (isOnline) context.getColor(R.color.emerald_600) else context.getColor(R.color.slate_500)
                 it.setTextColor(color)
                 it.setChipIconTintResource(if (isOnline) R.color.emerald_600 else R.color.slate_500)

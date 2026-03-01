@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="@dimen/space_3x"
+    android:gravity="center_vertical">
+
+    <!-- Avatar Placeholder -->
+    <View
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:background="@drawable/bg_circle_gray"
+        android:backgroundTint="?attr/colorSurfaceVariant" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_3x"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <!-- Name -->
+            <View
+                android:layout_width="100dp"
+                android:layout_height="16dp"
+                android:background="?attr/colorSurfaceVariant" />
+            
+            <View android:layout_width="0dp" android:layout_height="0dp" android:layout_weight="1"/>
+            
+            <!-- Time -->
+            <View
+                android:layout_width="40dp"
+                android:layout_height="12dp"
+                android:background="?attr/colorSurfaceVariant" />
+        </LinearLayout>
+
+        <!-- Message Preview -->
+        <View
+            android:layout_width="180dp"
+            android:layout_height="14dp"
+            android:layout_marginTop="@dimen/space_1x"
+            android:background="?attr/colorSurfaceVariant" />
+    </LinearLayout>
+
+</LinearLayout>

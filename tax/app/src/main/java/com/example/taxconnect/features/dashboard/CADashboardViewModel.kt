@@ -67,6 +67,19 @@ class CADashboardViewModel @Inject constructor(
         fetchRequests(uid)
         fetchBookings(uid)
         fetchWallet(uid)
+        listenToUnreadMessages(uid)
+    }
+
+    private fun listenToUnreadMessages(uid: String) {
+        viewModelScope.launch {
+            try {
+                repository.getUnreadCountFlow(uid).collect { count ->
+                    _messageStatsState.value = MessageStats(count)
+                }
+            } catch (e: Exception) {
+                // Ignore flow failure gracefully
+            }
+        }
     }
 
     fun fetchUser(uid: String) {
@@ -107,14 +120,9 @@ class CADashboardViewModel @Inject constructor(
                         active++
                     }
                     
-                    // Count unread
-                    val counts = conv.unreadCounts
-                    if (counts.containsKey(uid)) {
-                        unreadTotal += counts[uid] ?: 0
-                    }
+                    // Count unread - removed, handled by real-time flow
                 }
                 _clientStatsState.value = ClientStats(active, returning)
-                _messageStatsState.value = MessageStats(unreadTotal)
             } catch (e: Exception) {
                 // Ignore
             }

@@ -143,6 +143,8 @@
     <string name="new_bookings_count_dynamic">%1$d New Bookings</string>
     <string name="online">Online</string>
     <string name="offline">Offline</string>
+    <string name="status_online">Online</string>
+    <string name="status_offline">Offline</string>
 
     <!-- CA Detail & Booking -->
     <string name="loading_dots">Loading…</string>
@@ -321,4 +323,33 @@
     <string name="no_expenses">No expenses yet</string>
     <string name="total_expenses">Total Expenses</string>
     <string name="track_expenses">Track Expenses</string>
+
+    <!-- UI Polish Additions -->
+    <string name="profile_nudge_desc">Please update your profile to build trust with clients and get more booking requests.</string>
+    <string name="action_update">Update</string>
+    <string name="revenue_graph_disclaimer">* Data is simulated. Actual revenue is calculated based on completed work.</string>
+    <string name="profile_completeness_format">Profile is %1$d%% complete</string>
+    <string name="payment_step_proposal">Proposal</string>
+    <string name="payment_step_advance">Advance</string>
+    <string name="payment_step_completed">Completed</string>
+    <string name="payment_progress_default">Payment progress: Awaiting acceptance</string>
+    <string name="payment_no_active_request">Payment: No active request</string>
+    <string name="next_send_proposal">Next: Send proposal or payment request</string>
+    <string name="payment_awaiting_client">Payment: Awaiting client action</string>
+    <string name="next_client_pay">Next: Client to pay or decline</string>
+    <string name="payment_advance_paid_success">Payment: Advance Paid ✅</string>
+    <string name="next_ca_work">Next: CA work &amp; document delivery</string>
+    <string name="next_final_request">Next: Final payment request</string>
+    <string name="payment_fully_paid">Payment: Fully Paid ✅</string>
+    <string name="status_project_completed">Status: Project successfully completed</string>
+    <string name="payment_not_started">Payment: Not started</string>
+    <string name="next_accept_decline">Next: Accept or decline request</string>
+    <string name="next_continue_discussion">Next: Continue discussion</string>
+    <string name="notification_header_today">Today</string>
+    <string name="notification_header_yesterday">Yesterday</string>
+    <string name="notification_header_older">Older</string>
+    <string name="notification_call_from">Call from %1$s</string>
+    <string name="notification_default_title">Notification</string>
+    <string name="no_requests_title">No Requests</string>
+    <string name="no_requests_desc">You have no pending requests to show here.</string>
 </resources>

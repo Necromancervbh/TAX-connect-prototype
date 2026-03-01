@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    
+    <!-- Background Circle -->
+    <path
+        android:fillColor="@color/primary"
+        android:pathData="M54,54m-54,0a54,54 0,1 1,108 0a54,54 0,1 1,-108 0"/>
+    
+    <!-- Tax Connect Icon - Modern Material 3 Style -->
+    <path
+        android:fillColor="@color/on_primary"
+        android:pathData="M54,30L30,42v24c0,12 8,24 24,28c16,-4 24,-16 24,-28V42L54,30zM54,34.5L72,43.5v21c0,10.5 -7,21 -18,24.5c-11,-3.5 -18,-14 -18,-24.5V43.5z"/>
+    
+    <!-- T Letter - Modern Design -->
+    <path
+        android:fillColor="@color/on_primary"
+        android:pathData="M42,54h24v3h-24zM48,48h12v3h-12z"/>
+    
+    <!-- C Letter - Modern Design -->
+    <path
+        android:fillColor="@color/on_primary"
+        android:pathData="M54,60c0,3 2,5 4,5s4,-2 4,-5h-8zM54,63c0,1.5 1,2.5 2.5,2.5s2.5,-1 2.5,-2.5c0,-1.5 -1,-2.5 -2.5,-2.5S54,61.5 54,63z"/>
+    
+    <!-- Checkmark - Symbolizing Verification -->
+    <path
+        android:fillColor="?attr/colorTertiary"
+        android:pathData="M48,72l-3,-3l1.5,-1.5L48,69l4.5,-4.5l1.5,1.5L48,72z"/>
+    
+    <!-- Professional Accent Lines -->
+    <path
+        android:fillColor="?attr/colorOnPrimaryContainer"
+        android:pathData="M36,36h3v3h-3zM69,36h3v3h-3zM36,69h3v3h-3zM69,69h3v3h-3z"/>
+    
+    <!-- Dynamic Color Support -->
+    <path
+        android:fillColor="?attr/colorSecondaryContainer"
+        android:pathData="M30,30h6v6h-6zM72,30h6v6h-6zM30,72h6v6h-6zM72,72h6v6h-6z"/>
+</vector>

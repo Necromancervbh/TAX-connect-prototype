@@ -26,6 +26,10 @@ class DashboardRepository @Inject constructor(
         return conversationRepository.getConversations(uid)
     }
 
+    fun getUnreadCountFlow(uid: String): kotlinx.coroutines.flow.Flow<Int> {
+        return conversationRepository.getUnreadCountFlow(uid)
+    }
+
     suspend fun getRequests(uid: String): List<ConversationModel> {
         return conversationRepository.getRequests(uid)
     }

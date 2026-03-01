@@ -94,6 +94,18 @@ class RequestsActivity : BaseActivity<ActivityRequestsBinding>(), RequestsAdapte
         bookingRequests.forEach { model ->
             allRequests.add(RequestItem(RequestItem.TYPE_BOOKING, model))
         }
+
+        if (allRequests.isEmpty()) {
+            binding.rvRequests.visibility = android.view.View.GONE
+            binding.layoutEmptyState.root.visibility = android.view.View.VISIBLE
+            binding.layoutEmptyState.tvEmptyTitle.text = getString(R.string.no_requests_title)
+            binding.layoutEmptyState.tvEmptyDescription.text = getString(R.string.no_requests_desc)
+            binding.layoutEmptyState.btnEmptyAction.visibility = android.view.View.GONE
+        } else {
+            binding.rvRequests.visibility = android.view.View.VISIBLE
+            binding.layoutEmptyState.root.visibility = android.view.View.GONE
+        }
+
         updateAdapter()
         enrichRequestsWithUserData()
     }

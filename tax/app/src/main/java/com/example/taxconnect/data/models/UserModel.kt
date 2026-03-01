@@ -1,5 +1,6 @@
 package com.example.taxconnect.data.models
 
+import com.google.firebase.firestore.PropertyName
 import java.io.Serializable
 
 data class UserModel(
@@ -8,6 +9,8 @@ data class UserModel(
     var name: String? = null,
     var role: String? = null, // "CUSTOMER" or "CA"
     var city: String? = null,
+    @get:PropertyName("online")
+    @set:PropertyName("online")
     var isOnline: Boolean = false,
     var rating: Double = 0.0,
     var ratingCount: Int = 0,
@@ -32,13 +35,13 @@ data class UserModel(
     var notifyRequests: Boolean = true,
     var notifyBookings: Boolean = true,
     var quietHoursEnabled: Boolean = false,
-    var quietHoursStart: String = "22:00",
-    var quietHoursEnd: String = "07:00",
+    var quietHoursStart: String? = "22:00",
+    var quietHoursEnd: String? = "07:00",
     var certificates: List<CertificateModel>? = null,
     var walletBalance: Double = 0.0,
     var isVerified: Boolean = false,
     var isVerificationRequested: Boolean = false,
-    var phoneNumber: String = "",
+    var phoneNumber: String? = null,
     
     // Archival and Audit Fields
     var isArchived: Boolean = false,

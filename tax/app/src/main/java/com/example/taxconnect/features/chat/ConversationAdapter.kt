@@ -52,7 +52,7 @@ class ConversationAdapter(
 
         fun bind(conversation: ConversationModel) {
             binding.tvUserName.text = conversation.otherUserName ?: "Unknown User"
-            binding.tvLastMessage.text = conversation.lastMessage
+            binding.tvLastMessage.text = formatLastMessage(conversation.lastMessage)
             binding.tvTime.text = formatTime(conversation.lastMessageTimestamp)
 
             // Load Profile Image
@@ -113,6 +113,20 @@ class ConversationAdapter(
             }
         }
 
+        private fun formatLastMessage(message: String?): String {
+            if (message.isNullOrBlank()) return ""
+            val lower = message.lowercase()
+            return when {
+                lower.startsWith("http") && (lower.contains(".jpg") || lower.contains(".jpeg") ||
+                    lower.contains(".png") || lower.contains(".gif") || lower.contains(".webp")) -> "📷 Photo"
+                lower.startsWith("http") && (lower.contains(".pdf") || lower.contains(".doc") ||
+                    lower.contains(".xls") || lower.contains(".ppt") || lower.contains("file")) -> "📎 Document"
+                lower.startsWith("http") && lower.contains("cloudinary") -> "📎 Attachment"
+                lower.startsWith("http") -> "🔗 Link"
+                else -> message
+            }
+        }
+
         private fun getWorkflowLabel(state: String): String {
             return when (state) {
                 ConversationModel.STATE_REQUESTED -> "Request pending"
@@ -123,7 +137,16 @@ class ConversationAdapter(
                 ConversationModel.STATE_DOCS_REQUEST -> "Documents requested"
                 ConversationModel.STATE_FINAL_PAYMENT -> "Final payment due"
                 ConversationModel.STATE_COMPLETED -> "Completed"
-                else -> "Discussion"
+                else -> {
+                    // Handle raw enum strings like ADVANCE_PAYMENT from old Firestore data
+                    if (state.contains("_")) {
+                        state.split("_").joinToString(" ") { word ->
+                            word.lowercase().replaceFirstChar { it.uppercase() }
+                        }
+                    } else {
+                        "Discussion"
+                    }
+                }
             }
         }
 

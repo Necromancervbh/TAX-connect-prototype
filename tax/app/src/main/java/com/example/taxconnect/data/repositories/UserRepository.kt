@@ -130,10 +130,9 @@ class UserRepository @Inject constructor() {
     suspend fun updateUserStatus(uid: String, isOnline: Boolean, context: Context? = null) {
         clearUserCache(uid)
         if (context != null && !NetworkUtils.isNetworkAvailable(context)) {
-            enqueueSync(context, "UPDATE_USER_STATUS", mapOf("uid" to uid, "is_online" to isOnline))
-            return
+            throw Exception("No network connection available to update status.")
         }
-        firestore.collection("users").document(uid).update("isOnline", isOnline).await()
+        firestore.collection("users").document(uid).update("online", isOnline).await()
     }
 
     fun updateFcmToken(token: String) {

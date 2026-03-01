@@ -381,12 +381,11 @@ class DataRepository private constructor() {
     fun updateUserStatus(uid: String, isOnline: Boolean, callback: DataCallback<Void?>) {
         clearUserCache(uid)
         if (appContext != null && !NetworkUtils.isNetworkAvailable(appContext!!)) {
-            enqueueSync("UPDATE_USER_STATUS", mapOf("uid" to uid, "is_online" to isOnline))
-            callback.onSuccess(null)
+            callback.onError("No network connection available to update status.")
             return
         }
         firestore.collection("users").document(uid)
-            .update("isOnline", isOnline)
+            .update("online", isOnline)
             .addOnSuccessListener { callback.onSuccess(null) }
             .addOnFailureListener { e -> callback.onError(e.message) }
     }

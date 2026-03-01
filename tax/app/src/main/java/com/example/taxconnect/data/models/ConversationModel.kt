@@ -8,7 +8,7 @@ data class ConversationModel(
     var otherUserName: String? = null, // Cached name for display
     var otherUserEmail: String? = null, // Cached email
     var otherUserProfileImage: String? = null, // Cached profile image
-    var workflowState: String = STATE_DISCUSSION,
+    var workflowState: String? = STATE_DISCUSSION,
     var isVideoCallAllowed: Boolean = false, // Default disabled
     var callStatus: String? = null, // ACTIVE, REJECTED, ENDED
     var currentServiceCycleId: String? = null,

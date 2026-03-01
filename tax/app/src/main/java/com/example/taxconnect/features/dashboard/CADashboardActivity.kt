@@ -98,6 +98,7 @@ class CADashboardActivity : BaseActivity<ActivityCaDashboardBinding>() {
         // Initial Load
         currentUserId?.let { uid ->
             viewModel.loadDashboardData(uid)
+            com.example.taxconnect.data.services.PresenceManager.getInstance().setupPresence()
         }
 
         askNotificationPermission()
@@ -125,8 +126,12 @@ class CADashboardActivity : BaseActivity<ActivityCaDashboardBinding>() {
                 if (resource is Resource.Success) {
                     val user = resource.data
                     if (user != null) {
+                        binding.shimmerViewContainer.stopShimmer()
+                        binding.shimmerViewContainer.visibility = View.GONE
+                        binding.layoutMainContent.visibility = View.VISIBLE
                         updateNavHeaderUI(user)
                         updateOnlineStatusUI(user.isOnline)
+                        checkProfileCompleteness(user)
                     }
                 }
             }
@@ -201,10 +206,26 @@ class CADashboardActivity : BaseActivity<ActivityCaDashboardBinding>() {
 
         lifecycleScope.launch {
             viewModel.statusUpdateState.collect { resource ->
-                if (resource is Resource.Error) {
-                    showToast(resource.message ?: "Unknown error", Toast.LENGTH_SHORT)
-                    // Revert UI if needed, but for now we assume optimistic update or just toast error
-                    // To revert, we'd need to fetch user again or toggle back
+                when (resource) {
+                    is Resource.Loading -> {
+                        binding.switchStatusToggle.isEnabled = false
+                        binding.switchStatusToggle.alpha = 0.5f
+                    }
+                    is Resource.Success -> {
+                        binding.switchStatusToggle.isEnabled = true
+                        binding.switchStatusToggle.alpha = 1.0f
+                    }
+                    is Resource.Error -> {
+                        binding.switchStatusToggle.isEnabled = true
+                        binding.switchStatusToggle.alpha = 1.0f
+                        showToast(resource.message ?: "Failed to update status", Toast.LENGTH_SHORT)
+                        
+                        // Revert UI to the last known good state from the user model
+                        val userResource = viewModel.userState.value
+                        if (userResource is Resource.Success) {
+                            userResource.data?.let { updateOnlineStatusUI(it.isOnline) }
+                        }
+                    }
                 }
             }
         }
@@ -362,6 +383,7 @@ class CADashboardActivity : BaseActivity<ActivityCaDashboardBinding>() {
         binding.cardQuickBookings.setOnClickListener { startActivity(Intent(this, MyBookingsActivity::class.java)) }
         binding.cardQuickWallet.setOnClickListener { startActivity(Intent(this, WalletActivity::class.java)) }
         binding.cardQuickChats.setOnClickListener { startActivity(Intent(this, MyChatsActivity::class.java)) }
+        binding.btnCompleteProfile.setOnClickListener { startActivity(Intent(this, ProfileActivity::class.java)) }
         
         binding.ivHelp.setOnClickListener { showDashboardHelpDialog() }
         
@@ -499,7 +521,7 @@ class CADashboardActivity : BaseActivity<ActivityCaDashboardBinding>() {
             binding.tvRating.text = String.format(Locale.getDefault(), "%.1f", user.rating)
             binding.tvRatingCount.text = getString(R.string.rating_count_format, user.ratingCount)
         }
-
+        
         Glide.with(this)
             .load(user.profileImageUrl)
             .placeholder(R.drawable.ic_launcher_foreground)
@@ -509,6 +531,41 @@ class CADashboardActivity : BaseActivity<ActivityCaDashboardBinding>() {
 
         // Set initial status state
         updateOnlineStatusUI(user.isOnline)
+    }
+
+    private fun checkProfileCompleteness(user: UserModel) {
+        var completedFields = 0
+        var totalFields = 0
+        
+        fun checkField(value: Any?) {
+            totalFields++
+            if (value is String) {
+                if (value.isNotBlank()) completedFields++
+            } else if (value is List<*>) {
+                if (value.isNotEmpty()) completedFields++
+            } else if (value != null) {
+                completedFields++
+            }
+        }
+        
+        checkField(user.name)
+        checkField(user.email)
+        checkField(user.phoneNumber)
+        checkField(user.city)
+        checkField(user.bio)
+        checkField(user.specialization)
+        checkField(user.experience)
+        checkField(user.profileImageUrl)
+        checkField(user.caNumber) // Important for CA
+        
+        val percentage = if (totalFields > 0) (completedFields * 100) / totalFields else 0
+        binding.tvProfileCompleteness.text = getString(R.string.profile_completeness_format, percentage)
+        
+        if (percentage < 100) {
+            binding.cardProfileNudge.visibility = View.VISIBLE
+        } else {
+            binding.cardProfileNudge.visibility = View.GONE
+        }
     }
 
     private fun handleStatusChange(isOnline: Boolean) {
@@ -524,15 +581,16 @@ class CADashboardActivity : BaseActivity<ActivityCaDashboardBinding>() {
         binding.switchStatusToggle.isChecked = isOnline
         
         if (isOnline) {
-            binding.switchStatusToggle.text = "Online"
+            binding.switchStatusToggle.text = getString(R.string.online)
             binding.switchStatusToggle.setTextColor(ContextCompat.getColor(this, R.color.emerald_600))
         } else {
-            binding.switchStatusToggle.text = "Offline"
+            binding.switchStatusToggle.text = getString(R.string.offline)
             binding.switchStatusToggle.setTextColor(ContextCompat.getColor(this, R.color.text_muted))
         }
         
         // Reattach listener
         binding.switchStatusToggle.setOnCheckedChangeListener { _, isChecked ->
+            if (!binding.switchStatusToggle.isEnabled) return@setOnCheckedChangeListener
             val userResource = viewModel.userState.value
             if (userResource is Resource.Success) {
                 val currentUser = userResource.data
@@ -586,15 +644,17 @@ class CADashboardActivity : BaseActivity<ActivityCaDashboardBinding>() {
                 resources.getDimensionPixelSize(R.dimen.space_1x)
             )
             
-            // Simple animation-like effect (immediate but structured)
-            params.height = targetHeight
-            view.layoutParams = params
-            
-            // Highlight Thursday as peak day in simulation
-            if (index == 3 && weeklyTotal > 0) {
-                view.backgroundTintList = android.content.res.ColorStateList.valueOf(primaryColor)
-            } else {
-                view.backgroundTintList = android.content.res.ColorStateList.valueOf(containerColor)
+            // Post to ensure layout is ready before setting heights
+            view.post {
+                params.height = targetHeight
+                view.layoutParams = params
+                
+                // Highlight Thursday as peak day in simulation
+                if (index == 3 && weeklyTotal > 0) {
+                    view.backgroundTintList = android.content.res.ColorStateList.valueOf(primaryColor)
+                } else {
+                    view.backgroundTintList = android.content.res.ColorStateList.valueOf(containerColor)
+                }
             }
         }
     }
