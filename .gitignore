@@ -18,3 +18,11 @@ keystore.properties
 *.hprof
 java_pid*.hprof
 heapdump*.hprof
+
+# JVM crash logs
+hs_err_pid*.log
+replay_pid*.log
+
+# Sensitive files (should not be in version control)
+google-services.json
+*.jks

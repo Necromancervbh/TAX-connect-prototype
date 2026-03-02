@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.taxconnect.R
 import com.example.taxconnect.data.models.MessageModel
+import com.example.taxconnect.data.repositories.ConversationRepository
 import com.example.taxconnect.core.base.BaseActivity
 import com.google.firebase.auth.FirebaseAuth
 import java.text.SimpleDateFormat
@@ -475,20 +476,35 @@ class MessageAdapter(
         private val layoutDocument: LinearLayout? = itemView.findViewById(R.id.layoutDocument)
         private val tvDocName: TextView? = itemView.findViewById(R.id.tvDocName)
         private val ivDocThumbnail: ImageView? = itemView.findViewById(R.id.ivDocThumbnail)
+        private val layoutCallActions: LinearLayout? = itemView.findViewById(R.id.layoutCallActions)
+        private val btnAnswerCall: View? = itemView.findViewById(R.id.btnAnswerCall)
+        private val btnDeclineCall: View? = itemView.findViewById(R.id.btnDeclineCall)
 
         fun bind(message: MessageModel, callListener: OnCallActionListener?) {
             // Reset visibilities
             tvMessage.visibility = View.GONE
             cardPreview.visibility = View.GONE
             layoutDocument?.visibility = View.GONE
+            layoutCallActions?.visibility = View.GONE
 
             if ("CALL" == message.type || "call" == message.type) {
                 tvMessage.visibility = View.VISIBLE
                 tvMessage.text = itemView.context.getString(R.string.incoming_video_call)
                 tvMessage.typeface = Typeface.DEFAULT_BOLD
                 tvMessage.setTextColor(ContextCompat.getColor(itemView.context, android.R.color.holo_blue_dark))
-                tvMessage.setOnClickListener {
+                tvMessage.setOnClickListener(null)
+                
+                layoutCallActions?.visibility = View.VISIBLE
+                btnAnswerCall?.setOnClickListener {
                     callListener?.onJoinCall(message)
+                }
+                btnDeclineCall?.setOnClickListener {
+                    message.chatId?.let { chatId ->
+                        ConversationRepository.getInstance().updateCallStatus(chatId, "REJECTED", null)
+                    }
+                    layoutCallActions?.visibility = View.GONE
+                    tvMessage.text = "Call Declined"
+                    tvMessage.setTextColor(ContextCompat.getColor(itemView.context, R.color.text_muted))
                 }
             } else if ("DOCUMENT" == message.type) {
                 if (layoutDocument != null) {

@@ -54,7 +54,18 @@
 For detailed information on user flows, architecture, and feature implementation, please refer to the internal documentation:
 
 *   **[APP_WORKFLOWS.md](APP_WORKFLOWS.md):** Comprehensive guide on user navigation, activity transitions, and specific feature logic.
-*   **[PROJECT_OVERVIEW.md](PROJECT_OVERVIEW.md):** High-level architectural overview and concept definitions.
+*   **[PROJECT_OVERVIEW.md](docs/PROJECT_OVERVIEW.md):** High-level architectural overview and concept definitions.
+*   **[DESIGN_SYSTEM_GUIDE.md](docs/DESIGN_SYSTEM_GUIDE.md):** Design tokens, components, and UI standards.
+*   **[PERFORMANCE_ACCESSIBILITY_AUDIT.md](docs/PERFORMANCE_ACCESSIBILITY_AUDIT.md):** Performance and accessibility findings.
+*   **[VIDEO_CALL_AUDIT_REPORT.md](docs/VIDEO_CALL_AUDIT_REPORT.md):** Video call quality and risk audit.
+*   **[VIDEO_CALL_DEPLOYMENT_GUIDE.md](docs/VIDEO_CALL_DEPLOYMENT_GUIDE.md):** Deployment steps for call features.
+
+---
+
+## 💳 Payment Platform
+
+*   **Webhook retries:** POST `/agreements/webhooks/retry?limit=25` with `x-user-id` and `x-role` headers to replay failed accounting webhooks stored in `notifications`.
+*   **Authentication:** All payment-platform routes require `x-user-id` and `x-role` headers.
 
 ---
 

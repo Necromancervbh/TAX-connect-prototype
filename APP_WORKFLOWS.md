@@ -52,6 +52,7 @@ This document provides a comprehensive overview of the TaxConnect application's 
 - **Sorting Options**: By rating, price, experience, distance.
 - **CA Cards**: Compact view with key information and quick actions.
 - **Search Results**: Real-time filtering and pagination.
+- **Quick Toggles**: Verified only, Favorites, My city.
 
 ### C. CAProfileActivity
 - **Profile Information**: Name, photo, verification status, ratings.
@@ -77,6 +78,8 @@ This document provides a comprehensive overview of the TaxConnect application's 
 - **Milestone Tracking**: Progress updates for ongoing services.
 - **Payment Status**: Track payments and refunds.
 - **Action Buttons**: Reschedule, cancel, or contact CA.
+- **Data Fetching**: Indexed query on `appointmentTimestamp` with client-side sort fallback when index is missing; user-friendly error on fetch failure.
+- **Retry UX**: Automatic short retries on load failure and a Try again action for manual retry.
 
 ### G. WalletActivity
 - **Balance Display**: Current wallet balance and transaction history.
@@ -111,6 +114,12 @@ This document provides a comprehensive overview of the TaxConnect application's 
 2. **Repository Layer**: Handles data operations and Firebase calls.
 3. **LiveData**: Updates UI with new data states.
 4. **Error Handling**: Centralized error management and user feedback.
+
+### B.1 Payment Workflow Decisions
+- **Two-step capture**: Proposal payments are split into advance and final amounts with a default 30/70 ratio and stored on the proposal message.
+- **Stage tracking**: Proposal messages carry `ADVANCE_DUE`, `ADVANCE_PAID`, `FINAL_DUE`, and `FINAL_PAID` stages to keep UI and repository updates consistent.
+- **State transitions**: Advance payment moves conversations to `DOCS_REQUEST`, job completion triggers `FINAL_PAYMENT`, and final payment completes the workflow.
+- **Backward compatibility**: If split values are missing, the app derives them at runtime from the total and updates the message record.
 
 ### C. Navigation
 - **Navigation Component**: Type-safe navigation with arguments.
@@ -210,19 +219,37 @@ This document provides a comprehensive overview of the TaxConnect application's 
 |---------------|-----------------|--------------|
 | `HomeActivity` | Main dashboard | CA browsing, search, quick actions |
 | `ExploreCAsActivity` | CA discovery | Advanced filtering, sorting, search |
-| `CAProfileActivity` | CA details | Profile info, services, reviews, booking |
-| `BookingActivity` | Appointment scheduling | Service selection, calendar, payment |
+| `CADetailActivity` | CA details | Profile info, services, reviews, booking |
 | `ChatActivity` | Communication | Real-time messaging, file sharing |
 | `MyBookingsActivity` | Booking management | Status tracking, milestones, actions |
 | `WalletActivity` | Financial management | Balance, transactions, withdrawals |
-| `TaxLockerActivity` | Document management | Secure storage, categorization |
 | `CommunityActivity` | User forum | Posts, discussions, engagement |
 | `CADashboardActivity` | CA dashboard | Revenue, bookings, analytics |
-| `MyClientsActivity` | Client management | Client list, history, communications |
+| `MyChatsActivity` | Client management | Client list, history, communications |
 | `BalanceSheetActivity` | Financial tracking | Revenue, expenses, statistics |
 | `MilestonesActivity` | Service progress | Milestone tracking, updates |
 
-## 10. Data Models (Firestore)
+## 10. File Organization Map
+
+- **app/src/main/java/com/example/taxconnect**: Activities and app-level controllers.
+- **app/src/main/java/com/example/taxconnect/adapter**: RecyclerView adapters.
+- **app/src/main/java/com/example/taxconnect/model**: Firestore-backed data models.
+- **app/src/main/java/com/example/taxconnect/repository**: Domain repositories and data access.
+- **app/src/main/java/com/example/taxconnect/services**: Notifications, calls, media, and payment helpers.
+- **app/src/main/java/com/example/taxconnect/utils**: Shared helpers and utilities.
+- **app/src/main/res/layout**: Activity, item, and dialog XML layouts.
+- **app/src/main/res/drawable**: UI shapes, icons, and state drawables.
+- **app/src/main/res/menu**: Toolbar and screen menu resources.
+- **app/src/test**: Unit tests.
+- **app/src/androidTest**: Instrumentation tests.
+- **docs**: Product, design, and audit documentation.
+- **functions**: Firebase Cloud Functions backend.
+- **web**: Web UI, Storybook, and tests.
+- **gradle / settings.gradle.kts / build.gradle.kts**: Build configuration.
+- **firebase.json / firestore.rules**: Firebase config and security rules.
+- **cleanup_fs.py**: File system cleanup utility with dry-run, logging, and backup queue.
+
+## 11. Data Models (Firestore)
 
 - **`users`**: Stores user profile (Role, Name, Email, Bio, Ratings, `isVerified`, `isVerificationRequested`, etc.).
   - Subcollection: **`ratings`** (Stores individual user ratings).
@@ -236,7 +263,7 @@ This document provides a comprehensive overview of the TaxConnect application's 
 - **`posts`**: Community forum posts.
   - Subcollection: **`comments`**: Comments on posts.
 
-## 11. Technical Configuration & Optimization
+## 12. Technical Configuration & Optimization
 
 ### A. Performance Optimizations
 - **Image Loading:** Advanced Glide caching with memory and disk optimization
@@ -275,7 +302,10 @@ This document provides a comprehensive overview of the TaxConnect application's 
 - **Resources:** `resConfigs` restricted to "en" to strip unused language strings.
 - **Code Shrinking:** ProGuard/R8 enabled for release builds (`isMinifyEnabled = true`) with optimized rules.
 
-## 12. Performance Metrics & Monitoring
+### G. Maintenance Utilities
+- **Cleanup Utility**: `cleanup_fs.py` scans directories, applies criteria-based cleanup (age, size, unused time, duplicates), supports dry-run, logs actions with a backup queue, and preserves critical secrets by default. Root scans require explicit `--allow-root`.
+
+## 13. Performance Metrics & Monitoring
 
 ### A. Performance Improvements
 - **Cold Start Time:** Reduced from 2.8s to 1.9s (32% improvement)

@@ -733,6 +733,12 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(), PaymentResultListener 
         intent.putExtra("ROOM_UUID", currentChatId)
         intent.putExtra("CALLER_NAME", otherUserName)
         
+        // Reset the call status before starting to prevent instant finish from previous calls
+        currentChatId?.let { chatId ->
+            com.example.taxconnect.data.repositories.ConversationRepository.getInstance()
+                .updateCallStatus(chatId, "INITIATED", null)
+        }
+        
         // Notify the other user via Firestore that a call has started
         viewModel.sendCallMessage()
         

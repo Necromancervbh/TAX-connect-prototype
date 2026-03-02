@@ -98,6 +98,39 @@
             android:lineSpacingExtra="4dp"
             android:fontFamily="sans-serif"/>
 
+        <LinearLayout
+            android:id="@+id/layoutCallActions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            android:layout_marginTop="@dimen/space_2x"
+            android:gravity="center_vertical"
+            android:weightSum="2">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnDeclineCall"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="4dp"
+                android:text="Decline"
+                android:textColor="@color/error"
+                app:backgroundTint="@color/error_container"
+                style="@style/Widget.Material3.Button.TonalButton"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnAnswerCall"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="4dp"
+                android:text="Answer"
+                android:textColor="@color/white"
+                app:backgroundTint="@color/status_online"
+                style="@style/Widget.Material3.Button"/>
+        </LinearLayout>
+
         <TextView
             android:id="@+id/tvChatTime"
             android:layout_width="wrap_content"

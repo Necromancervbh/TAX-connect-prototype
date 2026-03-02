@@ -34,12 +34,12 @@ exports.sendChatNotification = functions.firestore
 
     try {
       // 1. Get sender's name
-      const senderDoc = await admin.firestore().collection("users").document(senderId).get();
+      const senderDoc = await admin.firestore().collection("users").doc(senderId).get();
       const senderName = senderDoc.exists ? senderDoc.data().name : "Someone";
       const senderAvatar = senderDoc.exists ? senderDoc.data().profileImageUrl : null;
 
-      // 2. Get receiver's FCM token
-      const receiverDoc = await admin.firestore().collection("users").document(receiverId).get();
+      // 2. Get receiver's FCM token and preferences
+      const receiverDoc = await admin.firestore().collection("users").doc(receiverId).get();
       if (!receiverDoc.exists) return null;
 
       const receiverData = receiverDoc.data();
@@ -53,13 +53,25 @@ exports.sendChatNotification = functions.firestore
       let body = messageText;
       let notificationType = "message";
       let title = senderName;
+      let channelId = "channel_messages";
 
       if (type === "IMAGE") body = "📷 Sent an image";
       if (type === "PROPOSAL") body = "📄 Sent a proposal";
       if (type === "CALL") {
-          body = "Incoming Video Call...";
-          title = senderName;
-          notificationType = "call";
+        body = "Incoming Video Call...";
+        title = senderName;
+        notificationType = "call";
+        channelId = "channel_calls";
+      }
+
+      // Check preferences
+      if (notificationType === "message" && receiverData.notifyMessages === false) {
+        console.log(`User ${receiverId} has disabled message notifications`);
+        return null;
+      }
+      if (notificationType === "call" && receiverData.notifyCalls === false) {
+        console.log(`User ${receiverId} has disabled call notifications`);
+        return null;
       }
 
       const payload = {
@@ -75,21 +87,13 @@ exports.sendChatNotification = functions.firestore
           body: body
         },
         android: {
-          priority: "high",
-          notification: {
-            channelId: "tax_connect_notifications"
-          }
+          priority: "high"
         }
       };
 
       if (notificationType === "call") {
         payload.data.channelName = context.params.chatId;
         payload.data.roomUuid = context.params.chatId;
-      } else {
-        payload.notification = {
-          title: title,
-          body: body
-        };
       }
 
       return sendAndLogNotification(payload, {
@@ -122,85 +126,180 @@ exports.sendRequestNotification = functions.firestore
       newData.workflowState === "Requested" &&
       (!oldData || oldData.workflowState !== "Requested")
     ) {
-      // Identify the sender and receiver (CA)
-      // In a request, the one who initiated the "lastMessage" is likely the sender (User)
-      // The other participant is the CA.
-      // However, we don't strictly know who is who from participantIds list order.
-      // But we know the sender of the last message (User) is the one requesting.
-      
-      // We can use the logic: The one who is NOT the author of the last update is the target.
-      // But we don't have "author" field easily.
-      // Let's assume the user is the one initiating.
-      
-      // A better way: The conversation document doesn't store "senderId" of the request explicitly 
-      // other than implied by "lastMessage".
-      // But we can infer from participants. 
-      // We need to fetch both users to find who is the CA.
-      
       const participants = newData.participantIds;
       if (!participants || participants.length < 2) return null;
 
       try {
         const userDocs = await Promise.all(
-            participants.map(uid => admin.firestore().collection("users").document(uid).get())
+          participants.map(uid => admin.firestore().collection("users").doc(uid).get())
         );
-        
+
         let senderName = "A User";
+        let senderId = null;
         let caToken = null;
         let caId = null;
+        let caData = null;
 
-        // Find which user is CA and which is Customer
-        // Logic: The one receiving the request is the CA.
-        // But what if both are CAs?
-        // Let's look at who SENT the request. 
-        // We can't know for sure without an explicit "requesterId" field in ConversationModel.
-        // BUT, usually the User requests the CA.
-        
-        // Let's iterate and find the one with role="CA".
-        // If both are CAs, this might be ambiguous, but usually User -> CA.
-        
         for (const doc of userDocs) {
-            if (!doc.exists) continue;
-            const data = doc.data();
-            if (data.role === "CA") {
-                caToken = data.fcmToken;
-                caId = doc.id;
-            } else {
-                senderName = data.name;
-            }
+          if (!doc.exists) continue;
+          const data = doc.data();
+          if (data.role === "CA") {
+            caToken = data.fcmToken;
+            caId = doc.id;
+            caData = data;
+          } else {
+            senderName = data.name;
+            senderId = doc.id;
+          }
         }
-        
-        if (caToken) {
-             const payload = {
-                token: caToken,
-                notification: {
-                  title: "New Assistance Request",
-                  body: `${senderName} has requested your assistance.`,
-                },
-                data: {
-                  type: "request",
-                  requestId: context.params.chatId,
-                },
-                android: {
-                    priority: "high",
-                    notification: {
-                        channelId: "tax_connect_notifications"
-                    }
-                }
-              };
 
-              return sendAndLogNotification(payload, {
-                category: "request",
-                notificationType: "request",
-                chatId: context.params.chatId,
-                caId,
-                senderName,
-              });
+        if (caToken) {
+          // Check CA preferences
+          if (caData && caData.notifyRequests === false) {
+            console.log(`CA ${caId} has disabled request notifications`);
+            return null;
+          }
+
+          const payload = {
+            token: caToken,
+            data: {
+              type: "request",
+              requestId: context.params.chatId,
+              title: "New Assistance Request",
+              body: `${senderName} has requested your assistance.`,
+              senderId: senderId || ""
+            },
+            android: {
+              priority: "high"
+            }
+          };
+
+          return sendAndLogNotification(payload, {
+            category: "request",
+            notificationType: "request",
+            chatId: context.params.chatId,
+            caId,
+            senderName,
+          });
         }
-        
+
       } catch (error) {
-          console.error("Error sending request notification:", error);
+        console.error("Error sending request notification:", error);
       }
     }
+    return null;
+  });
+
+/**
+ * Triggered when a new booking is created or updated.
+ * Sends a notification to the relevant user.
+ */
+exports.sendBookingNotification = functions.firestore
+  .document("bookings/{bookingId}")
+  .onWrite(async (change, context) => {
+    const newData = change.after.exists ? change.after.data() : null;
+    const oldData = change.before.exists ? change.before.data() : null;
+
+    if (!newData) return null; // Deletion
+
+    const bookingId = context.params.bookingId;
+    const caId = newData.caId;
+    const userId = newData.userId;
+    const status = newData.status;
+
+    // 1. If newly created, notify the CA
+    if (!oldData) {
+      try {
+        const [caDoc, userDoc] = await Promise.all([
+          admin.firestore().collection("users").doc(caId).get(),
+          admin.firestore().collection("users").doc(userId).get()
+        ]);
+
+        if (caDoc.exists && caDoc.data().fcmToken) {
+          const caData = caDoc.data();
+          const userName = userDoc.exists ? userDoc.data().name : "A user";
+
+          if (caData.notifyBookings === false) return null;
+
+          const payload = {
+            token: caData.fcmToken,
+            data: {
+              type: "booking",
+              bookingId: bookingId,
+              isRequest: "true",
+              title: "New Booking Request",
+              body: `${userName} has requested a booking.`
+            },
+            android: {
+              priority: "high"
+            }
+          };
+
+          return sendAndLogNotification(payload, {
+            category: "booking",
+            notificationType: "new_booking",
+            bookingId,
+            caId,
+            userId
+          });
+        }
+      } catch (error) {
+        console.error("Error sending new booking notification:", error);
+      }
+    }
+
+    // 2. If status changed, notify the User (e.g. Accepted, Rejected)
+    if (oldData && oldData.status !== status) {
+      try {
+        const [userDoc, caDoc] = await Promise.all([
+          admin.firestore().collection("users").doc(userId).get(),
+          admin.firestore().collection("users").doc(caId).get()
+        ]);
+
+        if (userDoc.exists && userDoc.data().fcmToken) {
+          const userData = userDoc.data();
+          const caName = caDoc.exists ? caDoc.data().name : "Chartered Accountant";
+
+          if (userData.notifyBookings === false) return null;
+
+          let title = "Booking Update";
+          let body = `Your booking status has been updated to ${status}.`;
+
+          if (status === "ACCEPTED") {
+            title = "Booking Accepted";
+            body = `${caName} has accepted your booking request.`;
+          } else if (status === "REJECTED") {
+            title = "Booking Declined";
+            body = `${caName} has declined your booking request.`;
+          }
+
+          const payload = {
+            token: userData.fcmToken,
+            data: {
+              type: "booking",
+              bookingId: bookingId,
+              status: status,
+              title: title,
+              body: body
+            },
+            android: {
+              priority: "high"
+            }
+          };
+
+          return sendAndLogNotification(payload, {
+            category: "booking",
+            notificationType: "status_update",
+            bookingId,
+            caId,
+            userId,
+            status
+          });
+        }
+      } catch (error) {
+        console.error("Error sending booking status update notification:", error);
+      }
+    }
+
     return null;
   });

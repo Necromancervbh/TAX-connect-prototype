@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: payment-platform-config
+data:
+  S3_BUCKET: "{{ .Values.envConfig.S3_BUCKET }}"
+  AWS_REGION: "{{ .Values.envConfig.AWS_REGION }}"
+  AGREEMENT_STORAGE_DIR: "{{ .Values.envConfig.AGREEMENT_STORAGE_DIR }}"

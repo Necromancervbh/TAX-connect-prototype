@@ -1,0 +1,3 @@
+./gradlew : e: file:///
+  ed: (e: file:///D:   
+e: file:///D:/mediascro

@@ -445,7 +445,14 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
                 return
             }
         }
-        NotificationManagerCompat.from(this).notify(notificationId, builder.build())
+
+        try {
+            val notificationManager = NotificationManagerCompat.from(this)
+            notificationManager.notify(notificationId, builder.build())
+            android.util.Log.d("FCMService", "Call notification posted successfully")
+        } catch (e: Exception) {
+            android.util.Log.e("FCMService", "Error posting call notification", e)
+        }
     }
 
     private fun sendNotification(title: String?, body: String?, intent: Intent?, channelId: String, groupKey: String) {
