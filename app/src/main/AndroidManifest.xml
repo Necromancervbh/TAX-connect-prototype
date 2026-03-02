@@ -13,6 +13,9 @@
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     
+    <!-- Required for Call Notifications to wake screen / pop up -->
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+    
     <!-- Declare features as not required to support ChromeOS and large screens -->
     <uses-feature android:name="android.hardware.camera" android:required="false" />
     <uses-feature android:name="android.hardware.microphone" android:required="false" />
@@ -75,6 +78,8 @@
             android:supportsPictureInPicture="true"
             android:launchMode="singleTop"
             android:showOnLockScreen="true"
+            android:showWhenLocked="true"
+            android:turnScreenOn="true"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation" />
         <activity android:name=".features.ca.CADetailActivity" />
         <activity android:name=".features.chat.MyChatsActivity" />
