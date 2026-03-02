@@ -22,10 +22,17 @@
             app:title="My Verification Documents"
             app:titleCentered="true"
             app:titleTextColor="?attr/colorOnPrimary"
-            app:navigationIcon="@drawable/ic_arrow_back"
+            app:navigationIcon="@drawable/ic_arrow_back_material3"
             app:navigationIconTint="?attr/colorOnPrimary"/>
 
     </com.google.android.material.appbar.AppBarLayout>
+
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/uploadProgress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:visibility="gone" />
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -41,7 +48,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp"
-                app:cardCornerRadius="20dp"
+                app:cardCornerRadius="@dimen/card_corner_radius"
                 app:cardElevation="2dp"
                 app:strokeWidth="0dp">
 
@@ -84,12 +91,12 @@
                         android:text="Select Document"
                         app:cornerRadius="12dp" />
 
-                    <ProgressBar
-                        android:id="@+id/uploadProgress"
+                    <include
+                        android:id="@+id/shimmerViewContainer"
+                        layout="@layout/shimmer_documents"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
-                        android:indeterminate="true"
                         android:visibility="gone" />
 
                 </LinearLayout>
@@ -119,17 +126,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:nestedScrollingEnabled="false"
+                android:layoutAnimation="@anim/layout_animation_fall_down"
                 tools:listitem="@android:layout/simple_list_item_1" />
 
-            <TextView
-                android:id="@+id/tvEmptyState"
+            <include
+                android:id="@+id/layoutEmptyState"
+                layout="@layout/component_empty_state"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:gravity="center"
-                android:text="No documents uploaded yet."
-                android:visibility="gone"
-                android:textAppearance="@style/TextAppearance.Material3.BodyMedium" />
+                android:visibility="gone" />
+
+            <include
+                android:id="@+id/layoutErrorState"
+                layout="@layout/component_error_state"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:visibility="gone" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background">
@@ -15,7 +16,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="@dimen/screen_margin_vertical"
+            android:paddingHorizontal="@dimen/screen_margin_horizontal"
+            android:paddingTop="@dimen/screen_margin_vertical"
+            android:paddingBottom="@dimen/space_2x"
             app:layout_scrollFlags="scroll|enterAlways">
 
             <LinearLayout
@@ -27,9 +30,9 @@
 
                 <ImageView
                     android:id="@+id/ivBack"
-                    android:layout_width="@dimen/touch_target_compact"
-                    android:layout_height="@dimen/touch_target_compact"
-                    android:src="@drawable/ic_arrow_back"
+                    android:layout_width="@dimen/touch_target_min"
+                    android:layout_height="@dimen/touch_target_min"
+                    android:src="@drawable/ic_arrow_back_material3"
                     android:background="@drawable/bg_circle_gray"
                     android:backgroundTint="@color/surface"
                     android:padding="@dimen/space_3x"
@@ -48,32 +51,24 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Explore CAs"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/text_main"/>
+                        style="@style/TextAppearance.Material3.TitleLarge"/>
                         
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Network with peers"
-                        android:textSize="12sp"
-                        android:textColor="@color/text_muted"/>
+                        style="@style/TextAppearance.Material3.BodySmall"/>
                 </LinearLayout>
 
             </LinearLayout>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/searchLayout"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/space_5x"
-                app:boxCornerRadiusTopStart="24dp"
-                app:boxCornerRadiusTopEnd="24dp"
-                app:boxCornerRadiusBottomStart="24dp"
-                app:boxCornerRadiusBottomEnd="24dp"
-                app:boxStrokeColor="@color/primary"
-                app:startIconDrawable="@drawable/ic_search"
+                app:startIconDrawable="@drawable/ic_search_material3"
                 android:hint="Search CAs or City">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -103,71 +98,124 @@
                 android:id="@+id/statsRow"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
+                android:orientation="vertical"
                 android:layout_marginTop="@dimen/space_4x">
 
-                <TextView
-                    android:id="@+id/tvRegisteredCount"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="0 Registered CAs"
-                    android:textSize="14sp"
-                    android:textColor="@color/text_muted" />
-
                 <LinearLayout
-                    android:id="@+id/layoutSort"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:background="@drawable/bg_rounded_chip"
-                    android:paddingHorizontal="@dimen/space_3x"
-                    android:paddingVertical="@dimen/space_2x">
+                    android:gravity="center_vertical">
 
-                    <ImageView
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
-                        android:src="@drawable/ic_filter"
-                        app:tint="@color/text_main"
-                        android:layout_marginEnd="@dimen/space_2x"/>
-                    
-                    <Spinner
-                        android:id="@+id/spinnerSort"
+                    <TextView
+                        android:id="@+id/tvRegisteredCount"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="0 Registered CAs"
+                        android:textAppearance="?attr/textAppearanceLabelLarge"
+                        android:textColor="?attr/colorOnSurfaceVariant" />
+
+                    <LinearLayout
+                        android:id="@+id/layoutSort"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@null"
-                        android:spinnerMode="dropdown"
-                        android:layout_gravity="center_vertical" />
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:minHeight="@dimen/chip_min_height"
+                        android:background="@drawable/bg_rounded_chip"
+                        android:paddingHorizontal="@dimen/space_3x"
+                        android:paddingVertical="@dimen/space_2x">
+
+                        <ImageView
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:src="@drawable/ic_filter"
+                            app:tint="@color/text_main"
+                            android:layout_marginEnd="@dimen/space_2x"/>
+                        
+                        <Spinner
+                            android:id="@+id/spinnerSort"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@null"
+                            android:spinnerMode="dropdown"
+                            android:layout_gravity="center_vertical" />
+                    </LinearLayout>
                 </LinearLayout>
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipVerified"
-                    style="@style/Widget.Material3.Chip.Filter"
-                    android:layout_width="wrap_content"
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/space_2x"
-                    android:text="Verified only"
-                    android:checkable="true"
-                    android:checked="false"/>
+                    android:layout_marginTop="@dimen/space_2x"
+                    android:scrollbars="none">
 
-                <ImageView
-                    android:id="@+id/btnFilter"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:src="@drawable/ic_filter"
-                    android:padding="@dimen/space_2x"
-                    app:tint="@color/primary"
-                    android:background="@drawable/bg_circle_gray"
-                    android:layout_marginStart="@dimen/space_2x"
-                    android:contentDescription="Filter" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipVerified"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Verified only"
+                            android:checkable="true"
+                            android:checked="false"/>
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipFavorites"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/space_2x"
+                            android:text="Favorites"
+                            android:checkable="true"
+                            android:checked="false"/>
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipMyCity"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/space_2x"
+                            android:text="My city"
+                            android:checkable="true"
+                            android:checked="false"/>
+
+                        <ImageView
+                            android:id="@+id/btnFilter"
+                            android:layout_width="@dimen/touch_target_min"
+                            android:layout_height="@dimen/touch_target_min"
+                            android:src="@drawable/ic_filter"
+                            android:padding="@dimen/space_2x"
+                            app:tint="@color/primary"
+                            android:background="@drawable/bg_circle_gray"
+                            android:layout_marginStart="@dimen/space_2x"
+                            android:contentDescription="Filter" />
+                    </LinearLayout>
+                </HorizontalScrollView>
 
             </LinearLayout>
 
         </LinearLayout>
 
     </com.google.android.material.appbar.AppBarLayout>
+
+    <LinearLayout
+        android:id="@+id/shimmerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/screen_margin_horizontal"
+        android:visibility="gone"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        <include layout="@layout/item_ca_shimmer" />
+        <include layout="@layout/item_ca_shimmer" />
+        <include layout="@layout/item_ca_shimmer" />
+    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvCAList"
@@ -185,14 +233,31 @@
         android:layout_gravity="center"
         android:visibility="gone"/>
 
-    <TextView
-        android:id="@+id/tvEmptyState"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="No CAs found"
-        android:textSize="16sp"
-        android:textColor="@color/text_muted"
-        android:visibility="gone"/>
+    <LinearLayout
+        android:id="@+id/layoutEmptyState"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <ImageView
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:src="@drawable/ic_search_material3"
+            app:tint="@color/text_muted"
+            android:alpha="0.5"
+            android:contentDescription="No results" />
+
+        <TextView
+            android:id="@+id/tvEmptyState"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="No CAs found"
+            android:textSize="16sp"
+            android:textColor="@color/text_muted"/>
+    </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
+

@@ -1,232 +1,273 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/space_4x"
-    android:layout_marginHorizontal="0dp"
+    android:layout_marginBottom="@dimen/space_3x"
+    android:layout_marginHorizontal="@dimen/space_1x"
     app:cardCornerRadius="@dimen/card_corner_radius"
-    app:cardElevation="@dimen/card_elevation"
-    app:strokeColor="@color/surface_variant"
+    app:cardElevation="2dp"
+    app:strokeColor="?attr/colorOutlineVariant"
     app:strokeWidth="1dp"
-    app:cardBackgroundColor="@color/surface"
+    app:cardBackgroundColor="?attr/colorSurface"
     android:clickable="true"
     android:focusable="true"
     android:foreground="?attr/selectableItemBackground">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
         <!-- Profile Image Section -->
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="220dp">
-            
-            <ImageView
-                android:id="@+id/ivProfileImage"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="centerCrop"
-                android:background="@color/surface_variant" />
-            
-            <!-- Gradient Overlay for better text visibility -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="80dp"
-                android:layout_gravity="bottom"
-                android:background="@drawable/gradient_overlay" />
+        <ImageView
+            android:id="@+id/ivProfileImage"
+            android:layout_width="0dp"
+            android:layout_height="200dp"
+            android:scaleType="centerCrop"
+            android:background="?attr/colorSurfaceVariant"
+            android:contentDescription="@null"
+            android:importantForAccessibility="no"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-            <!-- Status Badge -->
-            <TextView
-                android:id="@+id/tvStatus"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="top|end"
-                android:layout_margin="@dimen/space_3x"
-                android:text="● Online"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:textColor="@color/emerald_600"
-                android:background="@drawable/bg_rounded_chip"
-                android:paddingHorizontal="@dimen/space_2x"
-                android:paddingVertical="@dimen/space_1x"/>
-        </FrameLayout>
+        <!-- Gradient Overlay -->
+        <View
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            android:background="@drawable/gradient_overlay"
+            app:layout_constraintBottom_toBottomOf="@id/ivProfileImage"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- Status Chip -->
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipStatus"
+            style="@style/Widget.Material3.Chip.Suggestion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/space_2x"
+            android:text="@string/online"
+            android:textColor="@color/emerald_600"
+            app:chipIcon="@drawable/ic_check"
+            app:chipIconTint="@color/emerald_600"
+            app:chipIconSize="12dp"
+            app:chipBackgroundColor="?attr/colorSurface"
+            app:chipStrokeWidth="0dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <!-- Content Section -->
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/contentLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/card_padding"
-            android:orientation="vertical">
+            app:layout_constraintTop_toBottomOf="@id/ivProfileImage"
+            app:layout_constraintBottom_toBottomOf="parent">
 
-            <!-- Name and Rating Row -->
-            <LinearLayout
-                android:layout_width="match_parent"
+            <!-- Name -->
+            <TextView
+                android:id="@+id/tvCAName"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
+                android:text="CA Name"
+                android:textAppearance="?attr/textAppearanceTitleLarge"
+                android:textColor="?attr/colorOnSurface"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/chipRating"
+                app:layout_constraintHorizontal_bias="0.0" />
 
-                <TextView
-                    android:id="@+id/tvCAName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="CA Name"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/text_main"
-                    android:fontFamily="sans-serif-medium"/>
+            <!-- Verified Badge -->
+            <ImageView
+                android:id="@+id/ivVerifiedBadge"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="@dimen/space_1x"
+                android:src="@drawable/ic_verified_badge"
+                android:visibility="gone"
+                android:contentDescription="@string/verified"
+                app:tint="?attr/colorPrimary"
+                app:layout_constraintStart_toEndOf="@id/tvCAName"
+                app:layout_constraintBottom_toBottomOf="@id/tvCAName"
+                app:layout_constraintTop_toTopOf="@id/tvCAName" />
 
-                <ImageView
-                    android:id="@+id/ivVerifiedBadge"
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:layout_marginStart="@dimen/space_1x"
-                    android:src="@drawable/ic_verified_badge"
-                    android:visibility="gone"
-                    app:tint="@color/primary"/>
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"/>
-
-                <TextView
-                    android:id="@+id/tvRating"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="★ 4.5"
-                    android:textSize="14sp"
-                    android:textColor="@color/amber_600"
-                    android:textStyle="bold"
-                    android:background="@drawable/bg_tag_light"
-                    android:paddingHorizontal="@dimen/space_1x"
-                    android:paddingVertical="0dp"/>
-            </LinearLayout>
+            <!-- Rating Chip -->
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipRating"
+                style="@style/Widget.Material3.Chip.Assist"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="4.5"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                app:chipIcon="@drawable/ic_star"
+                app:chipIconTint="@color/amber_600"
+                app:chipMinTouchTargetSize="32dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="@id/tvCAName" />
 
             <!-- Specialization -->
             <TextView
                 android:id="@+id/tvSpecialization"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/space_1x"
                 android:text="GST • Income Tax • Auditing"
-                android:textSize="14sp"
-                android:textColor="@color/text_muted" 
+                android:textAppearance="?attr/textAppearanceBodyMedium"
+                android:textColor="?attr/colorOnSurfaceVariant"
                 android:maxLines="1"
-                android:ellipsize="end"/>
+                android:ellipsize="end"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvCAName" />
 
-            <!-- Location and Experience Row -->
+            <!-- Details Row (Location, Exp) -->
             <LinearLayout
-                android:layout_width="match_parent"
+                android:id="@+id/detailsRow"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/space_2x"
                 android:orientation="horizontal"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvSpecialization">
 
                 <ImageView
                     android:layout_width="16dp"
                     android:layout_height="16dp"
-                    android:src="@drawable/ic_home" 
-                    app:tint="@color/text_muted"
-                    android:layout_marginEnd="@dimen/space_1x"/>
-                
+                    android:src="@drawable/ic_home"
+                    app:tint="?attr/colorOnSurfaceVariant"
+                    android:contentDescription="@null"
+                    android:importantForAccessibility="no"
+                    android:layout_marginEnd="@dimen/space_1x" />
+
                 <TextView
                     android:id="@+id/tvCity"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Mumbai"
-                    android:textSize="13sp"
-                    android:textColor="@color/text_muted"
-                    android:layout_marginEnd="@dimen/space_4x"/>
+                    android:textAppearance="?attr/textAppearanceBodySmall"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:layout_marginEnd="@dimen/space_3x" />
 
                 <ImageView
                     android:layout_width="16dp"
                     android:layout_height="16dp"
                     android:src="@drawable/ic_person"
-                    app:tint="@color/text_muted"
-                    android:layout_marginEnd="@dimen/space_1x"/>
+                    app:tint="?attr/colorOnSurfaceVariant"
+                    android:contentDescription="@null"
+                    android:importantForAccessibility="no"
+                    android:layout_marginEnd="@dimen/space_1x" />
 
                 <TextView
                     android:id="@+id/tvExperience"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="5 Yrs Exp."
-                    android:textSize="13sp"
-                    android:textColor="@color/text_muted" />
+                    android:textAppearance="?attr/textAppearanceBodySmall"
+                    android:textColor="?attr/colorOnSurfaceVariant" />
             </LinearLayout>
+
+            <!-- Tags Row -->
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chipGroupTags"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_2x"
+                app:singleLine="true"
+                app:chipSpacingHorizontal="@dimen/space_1x"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/detailsRow">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipVerified"
+                    style="@style/Widget.Material3.Chip.Assist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Verified CA"
+                    android:textColor="?attr/colorPrimary"
+                    app:chipIcon="@drawable/ic_verified_badge"
+                    app:chipIconTint="?attr/colorPrimary"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipClients"
+                    style="@style/Widget.Material3.Chip.Assist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="120 clients"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+
+            </com.google.android.material.chip.ChipGroup>
 
             <!-- Divider -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/divider"
-                android:layout_marginTop="@dimen/space_4x"
-                android:layout_marginBottom="@dimen/space_3x"/>
-
-            <!-- Action Buttons Row -->
-            <LinearLayout
+            <com.google.android.material.divider.MaterialDivider
+                android:id="@+id/divider"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:layout_marginTop="@dimen/space_3x"
+                android:layout_marginBottom="@dimen/space_3x"
+                app:layout_constraintTop_toBottomOf="@id/chipGroupTags" />
 
-                <!-- Pricing Info -->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-                    
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Consultation"
-                        android:textSize="12sp"
-                        android:textColor="@color/text_muted"/>
-                        
-                    <TextView
-                        android:id="@+id/tvMinCharges"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="₹ 500"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/text_main" />
-                </LinearLayout>
+            <!-- Pricing and Actions -->
+            <TextView
+                android:id="@+id/tvStartingFeeLabel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_2x"
+                android:text="Starting fee"
+                android:textAppearance="?attr/textAppearanceLabelSmall"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btnSave"
+                app:layout_constraintTop_toBottomOf="@id/divider" />
 
-                <!-- Action Buttons -->
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnConnect"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Connect"
-                    android:paddingHorizontal="@dimen/button_padding_horizontal"
-                    android:paddingVertical="@dimen/button_padding_vertical"
-                    app:icon="@drawable/ic_chat_bubble"
-                    app:iconSize="16dp"
-                    app:iconGravity="textStart"
-                    app:iconPadding="@dimen/space_2x"
-                    app:strokeColor="@color/primary"
-                    android:textColor="@color/primary"
-                    app:iconTint="@color/primary"/>
+            <TextView
+                android:id="@+id/tvMinCharges"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Starts at ₹ 500"
+                android:textAppearance="?attr/textAppearanceTitleMedium"
+                android:textColor="?attr/colorOnSurface"
+                android:layout_marginEnd="@dimen/space_1x"
+                android:maxLines="1"
+                android:ellipsize="end"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btnSave"
+                app:layout_constraintTop_toBottomOf="@id/tvStartingFeeLabel"
+                app:layout_constraintBottom_toBottomOf="parent" />
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnSave"
-                    style="@style/Widget.MaterialComponents.Button.TextButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Save"
-                    android:textColor="@color/primary"
-                    android:layout_marginStart="@dimen/space_2x"
-                    android:paddingHorizontal="@dimen/space_3x"
-                    android:paddingVertical="@dimen/space_2x"/>
-            </LinearLayout>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnConnect"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Request"
+                app:icon="@drawable/ic_chat_bubble"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/divider"
+                app:layout_constraintBottom_toBottomOf="parent" />
 
-        </LinearLayout>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSave"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Save"
+                android:layout_marginEnd="@dimen/space_1x"
+                app:layout_constraintEnd_toStartOf="@id/btnConnect"
+                app:layout_constraintTop_toTopOf="@id/btnConnect"
+                app:layout_constraintBottom_toBottomOf="@id/btnConnect" />
 
-    </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </com.google.android.material.card.MaterialCardView>

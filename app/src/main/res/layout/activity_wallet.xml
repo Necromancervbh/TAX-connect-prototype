@@ -20,7 +20,7 @@
             app:title="My Wallet"
             app:titleCentered="true"
             app:titleTextColor="?attr/colorOnPrimary"
-            app:navigationIcon="@drawable/ic_arrow_back"
+            app:navigationIcon="@drawable/ic_arrow_back_material3"
             app:navigationIconTint="?attr/colorOnPrimary"/>
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -33,28 +33,31 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="20dp">
+            android:paddingHorizontal="@dimen/screen_margin_horizontal"
+            android:paddingTop="@dimen/space_5x"
+            android:paddingBottom="@dimen/space_6x">
 
             <!-- Premium Gradient Balance Card -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
-                app:cardCornerRadius="24dp"
-                app:cardElevation="8dp"
+                android:layout_marginBottom="@dimen/space_6x"
+                app:cardCornerRadius="@dimen/card_corner_radius"
+                app:cardElevation="0dp"
                 app:strokeWidth="0dp">
                 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/primary"
-                    android:padding="24dp">
+                    android:background="@drawable/bg_gradient_primary"
+                    android:padding="@dimen/space_6x">
 
                     <TextView
                         android:id="@+id/labelBalance"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Total Balance"
+                        style="@style/TextAppearance.Material3.BodySmall"
                         android:textColor="?attr/colorOnPrimary"
                         android:alpha="0.8"
                         android:letterSpacing="0.05"
@@ -65,8 +68,8 @@
                         android:layout_below="@id/labelBalance"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="₹ 0.00"
+                        android:layout_marginTop="@dimen/space_2x"
+                        android:text="â‚¹ 0.00"
                         android:textColor="?attr/colorOnPrimary"
                         android:textSize="36sp"
                         android:textStyle="bold" />
@@ -76,7 +79,8 @@
                         android:layout_height="80dp"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
-                        android:src="@drawable/ic_wallet"
+                        android:src="@drawable/ic_wallet_material3"
+                        android:contentDescription="Wallet icon"
                         android:alpha="0.2"
                         app:tint="?attr/colorOnPrimary" />
                 </RelativeLayout>
@@ -88,32 +92,32 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:weightSum="2"
-                android:layout_marginBottom="32dp">
+                android:layout_marginBottom="@dimen/space_8x">
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnDeposit"
-                    style="@style/AppButton"
+                    style="@style/Widget.Material3.Button"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:minHeight="56dp"
+                    android:minHeight="@dimen/button_min_height"
                     android:layout_weight="1"
-                    android:layout_marginEnd="8dp"
+                    android:layout_marginEnd="@dimen/space_2x"
                     android:text="Add Money"
                     android:textSize="16sp"
                     android:textColor="?attr/colorOnPrimary"
                     app:icon="@drawable/ic_add_circle"
                     app:iconTint="?attr/colorOnPrimary"
                     app:iconGravity="textStart"
-                    app:cornerRadius="16dp"/>
+                    app:cornerRadius="@dimen/button_corner_radius"/>
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnWithdraw"
-                    style="@style/AppButton.Outlined"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:minHeight="56dp"
+                    android:minHeight="@dimen/button_min_height"
                     android:layout_weight="1"
-                    android:layout_marginStart="8dp"
+                    android:layout_marginStart="@dimen/space_2x"
                     android:text="Withdraw"
                     android:textSize="16sp"
                     android:textColor="@color/primary"
@@ -121,37 +125,48 @@
                     app:icon="@drawable/ic_arrow_upward"
                     app:iconTint="@color/primary"
                     app:iconGravity="textStart"
-                    app:cornerRadius="16dp"/>
+                    app:cornerRadius="@dimen/button_corner_radius"/>
 
             </LinearLayout>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="@dimen/space_3x"
                 android:text="Recent Transactions"
-                android:textStyle="bold"
-                android:textSize="18sp"
-                android:textColor="@color/text_main"/>
+                style="@style/TextAppearance.Material3.TitleLarge"
+                android:textSize="18sp"/>
+
+            <include
+                android:id="@+id/shimmerViewContainer"
+                layout="@layout/shimmer_transactions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvTransactions"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:nestedScrollingEnabled="false"
+                android:layoutAnimation="@anim/layout_animation_fall_down"
                 tools:listitem="@layout/item_transaction"/>
 
-            <TextView
-                android:id="@+id/tvEmptyState"
+            <include
+                android:id="@+id/layoutEmptyState"
+                layout="@layout/component_empty_state"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="No transactions yet"
-                android:gravity="center"
-                android:padding="32dp"
-                android:visibility="gone"
-                android:textColor="@color/text_muted"
-                android:textSize="16sp"/>
+                android:visibility="gone" />
+
+            <include
+                android:id="@+id/layoutErrorState"
+                layout="@layout/component_error_state"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
+

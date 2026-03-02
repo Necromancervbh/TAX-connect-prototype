@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="12dp"
     android:layout_marginHorizontal="4dp"
-    app:cardCornerRadius="12dp"
+    app:cardCornerRadius="@dimen/card_corner_radius"
     app:cardElevation="2dp"
     app:cardBackgroundColor="@color/white">
 
@@ -62,6 +62,16 @@
             android:textSize="14sp"
             android:textColor="@color/text_secondary"
             android:layout_marginTop="8dp"
+            android:layout_marginStart="40dp"/>
+
+        <TextView
+            android:id="@+id/tvDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Date"
+            android:textSize="12sp"
+            android:textColor="@color/text_muted"
+            android:layout_marginTop="4dp"
             android:layout_marginStart="40dp"/>
             
     </LinearLayout>

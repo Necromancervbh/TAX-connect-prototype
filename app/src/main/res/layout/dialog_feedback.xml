@@ -1,75 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="24dp">
 
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Rate your experience"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:textColor="@color/text_main"
+        android:textAppearance="?attr/textAppearanceTitleMedium"
         android:layout_marginBottom="8dp"/>
-        
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="How was your session with the CA?"
-        android:textColor="@color/text_secondary"
-        android:layout_marginBottom="24dp"/>
 
     <RatingBar
         android:id="@+id/ratingBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
         android:numStars="5"
         android:stepSize="1.0"
-        android:rating="0"
-        android:progressTint="@color/amber_500"
-        android:secondaryProgressTint="@color/amber_200"
-        android:layout_marginBottom="24dp"/>
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="16dp"
+        style="?android:attr/ratingBarStyleIndicator"
+        android:isIndicator="false"/>
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
-        android:hint="Leave a comment (optional)"
-        app:boxBackgroundColor="@color/surface">
+        android:hint="Tell us more...">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/etComment"
+            android:id="@+id/etFeedback"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textCapSentences|textMultiLine"
-            android:minLines="3"/>
+            android:gravity="top"
+            android:inputType="textMultiLine"
+            android:lines="4" />
+
     </com.google.android.material.textfield.TextInputLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="end"
-        android:orientation="horizontal">
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnCancel"
-            style="@style/Widget.Material3.Button.TextButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Skip"
-            android:textColor="@color/text_secondary"/>
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnSubmitFeedback"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="Submit Feedback"/>
-
-    </LinearLayout>
 
 </LinearLayout>

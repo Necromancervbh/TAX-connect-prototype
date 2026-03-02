@@ -12,7 +12,7 @@
         android:background="@color/primary"
         app:title="Post Details"
         app:titleTextColor="@android:color/white"
-        app:navigationIcon="@drawable/ic_arrow_back" />
+        app:navigationIcon="@drawable/ic_arrow_back_material3" />
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -30,7 +30,7 @@
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="8dp"
+                app:cardCornerRadius="@dimen/card_corner_radius"
                 app:cardElevation="2dp">
 
                 <LinearLayout
@@ -97,7 +97,7 @@
                             android:text="0"
                             android:textSize="14sp"
                             android:drawablePadding="4dp"
-                            app:drawableStartCompat="@drawable/ic_star"
+                            app:drawableStartCompat="@drawable/ic_star_material3"
                             android:gravity="center_vertical" />
 
                         <TextView
@@ -108,7 +108,7 @@
                             android:textSize="14sp"
                             android:layout_marginStart="16dp"
                             android:drawablePadding="4dp"
-                            app:drawableStartCompat="@drawable/ic_chat_bubble"
+                            app:drawableStartCompat="@drawable/ic_chat_bubble_material3"
                             android:gravity="center_vertical" />
                     </LinearLayout>
                 </LinearLayout>

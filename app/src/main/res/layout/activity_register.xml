@@ -21,7 +21,7 @@
         android:textColor="?attr/colorOnPrimary"
         android:textSize="32sp"
         android:textStyle="bold"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="@dimen/space_12x"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -33,7 +33,7 @@
         android:textColor="?attr/colorOnPrimary"
         android:alpha="0.8"
         android:textSize="16sp"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="@dimen/space_1x"
         app:layout_constraintTop_toBottomOf="@+id/tvAppTitle"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -42,11 +42,11 @@
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginHorizontal="24dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginBottom="24dp"
-        app:cardCornerRadius="16dp"
-        app:cardElevation="8dp"
+        android:layout_marginHorizontal="@dimen/space_6x"
+        android:layout_marginTop="@dimen/space_8x"
+        android:layout_marginBottom="@dimen/space_6x"
+        app:cardCornerRadius="@dimen/card_corner_radius"
+        app:cardElevation="4dp"
         app:cardBackgroundColor="@color/surface"
         app:layout_constraintTop_toBottomOf="@+id/tvAppTitle"
         app:layout_constraintBottom_toBottomOf="parent">
@@ -60,29 +60,29 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="24dp">
+                android:padding="@dimen/space_6x">
 
                 <TextView
-                    style="@style/AppText.Title"
+                    style="@style/TextAppearance.Material3.TitleLarge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Create Account"
                     android:textSize="24sp"
-                    android:layout_marginBottom="16dp" />
+                    android:layout_marginBottom="@dimen/space_4x" />
 
                 <TextView
-                    style="@style/AppText.Subhead"
+                    style="@style/TextAppearance.Material3.TitleMedium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="I am a:"
-                    android:layout_marginBottom="8dp" />
+                    android:layout_marginBottom="@dimen/space_2x" />
 
                 <LinearLayout
                     android:id="@+id/rgRole"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:layout_marginBottom="16dp"
+                    android:layout_marginBottom="@dimen/space_4x"
                     android:baselineAligned="false"
                     android:gravity="center">
 
@@ -91,8 +91,8 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:layout_marginEnd="8dp"
-                        app:cardCornerRadius="12dp"
+                        android:layout_marginEnd="@dimen/space_2x"
+                        app:cardCornerRadius="@dimen/corner_radius_small"
                         app:cardElevation="0dp"
                         app:strokeWidth="1dp"
                         app:strokeColor="@color/primary"
@@ -108,8 +108,9 @@
                             <ImageView
                                 android:layout_width="32dp"
                                 android:layout_height="32dp"
-                                android:src="@drawable/ic_person"
+                                android:src="@drawable/ic_person_material3"
                                 app:tint="@color/primary"
+                                android:contentDescription="Client Icon"
                                 android:layout_marginBottom="8dp"/>
 
                             <TextView
@@ -134,7 +135,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:layout_marginStart="8dp"
-                        app:cardCornerRadius="12dp"
+                        app:cardCornerRadius="@dimen/corner_radius_small"
                         app:cardElevation="0dp"
                         app:strokeWidth="1dp"
                         app:strokeColor="@color/text_muted"
@@ -152,6 +153,7 @@
                                 android:layout_height="32dp"
                                 android:src="@drawable/ic_certificate"
                                 app:tint="@color/text_muted"
+                                android:contentDescription="Expert Icon"
                                 android:layout_marginBottom="8dp"/>
 
                             <TextView
@@ -171,11 +173,11 @@
                 </LinearLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    style="@style/AppTextInputLayout"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Full Name"
-                    app:startIconDrawable="@drawable/ic_person">
+                    app:startIconDrawable="@drawable/ic_person_material3">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etName"
@@ -185,12 +187,12 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    style="@style/AppTextInputLayout"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:hint="Email Address"
-                    app:startIconDrawable="@drawable/ic_email">
+                    app:startIconDrawable="@drawable/ic_email_material3">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etEmail"
@@ -200,7 +202,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    style="@style/AppTextInputLayout"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
@@ -215,7 +217,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    style="@style/AppTextInputLayout"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
@@ -249,7 +251,7 @@
                     android:visibility="gone">
 
                     <TextView
-                        style="@style/AppText.Title"
+                        style="@style/TextAppearance.Material3.TitleLarge"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="24dp"
@@ -259,7 +261,7 @@
 
                     <!-- Profile Picture Upload -->
                     <TextView
-                        style="@style/AppText.Subhead"
+                        style="@style/TextAppearance.Material3.TitleMedium"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
@@ -276,9 +278,10 @@
                             android:id="@+id/ivProfilePreview"
                             android:layout_width="60dp"
                             android:layout_height="60dp"
-                            android:src="@drawable/ic_person"
+                            android:src="@drawable/ic_person_material3"
                             android:background="@color/surface_variant"
                             android:padding="12dp"
+                            android:contentDescription="Profile Picture Preview"
                             app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full" />
 
                         <Button
@@ -292,7 +295,7 @@
 
                     <!-- Intro Video Upload -->
                     <TextView
-                        style="@style/AppText.Subhead"
+                        style="@style/TextAppearance.Material3.TitleMedium"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
@@ -315,6 +318,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:visibility="gone"
+                                android:contentDescription="Video Preview"
                                 android:src="@android:drawable/ic_media_play" />
 
                             <TextView
@@ -337,7 +341,7 @@
                     </LinearLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
-                        style="@style/AppTextInputLayout"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
@@ -351,12 +355,12 @@
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
-                        style="@style/AppTextInputLayout"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
                         android:hint="Years of Experience"
-                        app:startIconDrawable="@drawable/ic_work">
+                        app:startIconDrawable="@drawable/ic_work_material3">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etExperience"
@@ -366,12 +370,12 @@
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
-                        style="@style/AppTextInputLayout"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
                         android:hint="Specialization (e.g. GST)"
-                        app:startIconDrawable="@drawable/ic_star">
+                        app:startIconDrawable="@drawable/ic_star_material3">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etSpecialization"
@@ -380,11 +384,11 @@
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
-                        style="@style/AppTextInputLayout"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
-                        android:hint="Min Charges (₹)"
+                        android:hint="Min Charges (â‚¹)"
                         app:startIconDrawable="@drawable/ic_rupee">
 
                         <com.google.android.material.textfield.TextInputEditText
@@ -397,7 +401,7 @@
 
                 <Button
                     android:id="@+id/btnRegister"
-                    style="@style/AppButton"
+                    style="@style/Widget.Material3.Button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="32dp"

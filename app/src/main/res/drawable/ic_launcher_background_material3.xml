@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    
+    <!-- Background - Adaptive to Theme -->
+    <path
+        android:fillColor="?attr/colorPrimaryContainer"
+        android:pathData="M54,54m-54,0a54,54 0,1 1,108 0a54,54 0,1 1,-108 0"/>
+    
+    <!-- Modern Shield Design -->
+    <path
+        android:fillColor="?attr/colorOnPrimaryContainer"
+        android:pathData="M54,25L25,40v29c0,14.5 10,29 29,34c19,-5 29,-19.5 29,-34V40L54,25zM54,30L75,42v27c0,12 -8.5,25 -21,29.5c-12.5,-4.5 -21,-17.5 -21,-29.5V42z"/>
+    
+    <!-- Modern T Letter -->
+    <path
+        android:fillColor="?attr/colorOnPrimaryContainer"
+        android:pathData="M45,48h18v4h-18zM50,42h8v4h-8z"/>
+    
+    <!-- Modern C Letter -->
+    <path
+        android:fillColor="?attr/colorOnPrimaryContainer"
+        android:pathData="M54,58c0,2 1.5,3.5 3.5,3.5s3.5,-1.5 3.5,-3.5h-7zM54,60.5c0,1 0.5,1.5 1.5,1.5s1.5,-0.5 1.5,-1.5c0,-1 -0.5,-1.5 -1.5,-1.5S54,59.5 54,60.5z"/>
+    
+    <!-- Verification Checkmark -->
+    <path
+        android:fillColor="?attr/colorTertiary"
+        android:pathData="M48,70l-2.5,-2.5l1.2,-1.2L48,67.5l3.8,-3.8l1.2,1.2L48,70z"/>
+    
+    <!-- Professional Grid Pattern -->
+    <path
+        android:fillColor="?attr/colorOnPrimaryContainer"
+        android:pathData="M35,35h2v2h-2zM71,35h2v2h-2zM35,71h2v2h-2zM71,71h2v2h-2z"/>
+    
+    <!-- Dynamic Color Accents -->
+    <path
+        android:fillColor="?attr/colorSecondaryContainer"
+        android:pathData="M30,30h4v4h-4zM74,30h4v4h-4zM30,74h4v4h-4zM74,74h4v4h-4z"/>
+</vector>

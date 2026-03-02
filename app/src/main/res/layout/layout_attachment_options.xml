@@ -114,6 +114,34 @@
                 android:layout_marginTop="8dp"/>
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/btnOptionPayment"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="?attr/selectableItemBackground"
+            android:padding="12dp"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/ic_wallet_material3"
+                android:padding="10dp"
+                android:background="@drawable/circle_background"
+                app:tint="@color/primary"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Payment"
+                android:textSize="14sp"
+                android:textColor="@color/text_main"
+                android:layout_marginTop="8dp"/>
+        </LinearLayout>
+
     </LinearLayout>
 
 </LinearLayout>

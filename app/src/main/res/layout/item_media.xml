@@ -5,8 +5,8 @@
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="16dp"
     android:layout_marginVertical="8dp"
-    app:cardCornerRadius="16dp"
-    app:cardElevation="4dp"
+    app:cardCornerRadius="@dimen/corner_radius_medium"
+    app:cardElevation="@dimen/card_elevation"
     app:strokeWidth="0dp">
 
     <RelativeLayout
@@ -38,7 +38,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Financial Insights"
-                android:textAppearance="@style/AppText.Title"
+                android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
                 android:textColor="@android:color/white"
                 android:textSize="18sp" />
 
@@ -48,7 +48,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:text="Expert advice on tax planning and investments."
-                android:textAppearance="@style/AppText.Body"
+                android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                 android:textColor="#E2E8F0"
                 android:textSize="13sp" />
         </LinearLayout>
@@ -64,3 +64,4 @@
 
     </RelativeLayout>
 </com.google.android.material.card.MaterialCardView>
+

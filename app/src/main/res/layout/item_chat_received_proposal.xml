@@ -4,30 +4,30 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="8dp"
+    android:padding="@dimen/space_2x"
     android:gravity="start">
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="260dp"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="16dp"
-        app:cardElevation="2dp"
-        app:cardBackgroundColor="@color/surface"
+        app:cardCornerRadius="@dimen/corner_radius_medium"
+        app:cardElevation="0dp"
+        app:cardBackgroundColor="@color/primary_container"
         app:strokeWidth="1dp"
-        app:strokeColor="@color/divider">
+        app:strokeColor="@color/primary">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="@dimen/space_4x">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Professional Service Proposal"
-                android:textColor="@color/text_muted"
-                android:textSize="12sp"
+                android:textColor="@color/text_secondary"
+                android:textSize="11sp"
                 android:textStyle="bold"
                 android:textAllCaps="true" />
 
@@ -37,8 +37,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:text="₹ 0.00"
-                android:textColor="@color/primary"
-                android:textSize="24sp"
+                android:textColor="@color/primary_variant"
+                android:textSize="22sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -46,14 +46,15 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:text="Pay 20% advance to start the project."
-                android:textColor="@color/text_muted"
+                android:textColor="@color/text_secondary"
                 android:textSize="12sp" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginVertical="12dp"
-                android:background="@color/divider" />
+                android:background="@color/primary_variant"
+                android:alpha="0.15" />
 
             <LinearLayout
                 android:id="@+id/proposalActions"
@@ -93,7 +94,8 @@
                 android:layout_marginTop="8dp"
                 android:text="12:00 PM"
                 android:textColor="@color/text_muted"
-                android:textSize="10sp" />
+                android:textSize="10sp"
+                android:alpha="0.8" />
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 </LinearLayout>

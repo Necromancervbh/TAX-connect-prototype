@@ -23,6 +23,7 @@
     <!-- Semantic Color Overrides for Visibility -->
     <color name="amber_600">#FBBF24</color> <!-- Amber 400 (Brighter for Dark Mode) -->
     <color name="emerald_600">#34D399</color> <!-- Emerald 400 (Brighter for Dark Mode) -->
+    <color name="rose_600">#FB7185</color> <!-- Rose 400 (Brighter for Dark Mode) -->
     
     <!-- Slate Scale Inversion for Hardcoded Layouts -->
     <!-- Maps dark slates to light slates and vice versa to ensure visibility -->
@@ -48,13 +49,7 @@
     <color name="md_theme_light_secondaryContainer">#1E3A8A</color>
     <color name="md_theme_light_onSecondaryContainer">#DBEAFE</color>
 
-    <!-- Status Colors -->
-    <color name="status_online">#4ADE80</color> <!-- Green 400 -->
-    <color name="status_offline">#64748B</color> <!-- Slate 500 -->
-    
-    <!-- Fix for White/Black hardcoded usage -->
-    <color name="white">#0F172A</color> <!-- Invert white to dark if used for background -->
-    <color name="black">#F8FAFC</color> <!-- Invert black to light if used for text -->
+    <color name="error_color">@color/md_theme_error</color>
     
     <color name="primary_blue">@color/secondary</color>
     

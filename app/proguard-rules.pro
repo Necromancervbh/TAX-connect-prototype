@@ -8,11 +8,9 @@
 # -- Android & AndroidX --
 # Removed broad keep rules to allow shrinking
 
-# -- Retrofit & OkHttp --
+# -- OkHttp (used transitively) --
 -dontwarn okhttp3.**
 -dontwarn okio.**
--dontwarn retrofit2.**
--keep class retrofit2.** { *; }
 
 # -- Gson --
 -keep class com.google.gson.** { *; }
@@ -27,16 +25,21 @@
 # -- Cloudinary --
 -keep class com.cloudinary.** { *; }
 
+# -- Picasso (transitive dependency of Cloudinary) --
+-keep class com.squareup.picasso.** { *; }
+-dontwarn com.squareup.picasso.**
+
+# -- Desugar (for ThrowableExtension) --
+-keep class com.google.devtools.build.android.desugar.runtime.ThrowableExtension { *; }
+-dontwarn com.google.devtools.build.android.desugar.runtime.ThrowableExtension
+
 # -- Razorpay --
 -keep class com.razorpay.** { *; }
 -dontwarn com.razorpay.**
 
 # -- App Specific --
 # Keep Data Models (Critical for Firestore/Gson serialization)
--keep class com.example.taxconnect.model.** { *; }
-
-# Keep Network Interfaces (Retrofit)
--keep class com.example.taxconnect.network.** { *; }
+-keep class com.example.taxconnect.data.models.** { *; }
 
 # Keep Application class
 -keep class com.example.taxconnect.MyApplication { *; }

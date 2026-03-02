@@ -42,6 +42,7 @@
                     android:background="@color/surface"
                     android:padding="4dp"
                     android:src="@drawable/ic_person"
+                    android:contentDescription="CA Profile Image"
                     app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -54,7 +55,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:text="CA Name"
-                    style="@style/AppText.Headline"
+                    style="@style/TextAppearance.Material3.HeadlineMedium"
                     android:textColor="?attr/colorOnPrimary"
                     android:textSize="22sp"
                     app:layout_constraintTop_toBottomOf="@+id/ivProfile"
@@ -66,6 +67,7 @@
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:src="@drawable/ic_verified_badge"
+                    android:contentDescription="Verified CA badge"
                     android:layout_marginStart="6dp"
                     app:tint="?attr/colorOnPrimary"
                     app:layout_constraintStart_toEndOf="@id/tvName"
@@ -79,7 +81,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:text="Specialization"
-                    style="@style/AppText.Subhead"
+                    style="@style/TextAppearance.Material3.TitleMedium"
                     android:textColor="?attr/colorOnPrimary"
                     android:alpha="0.8"
                     app:layout_constraintTop_toBottomOf="@+id/tvName"
@@ -92,7 +94,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
                     android:text="Experience"
-                    style="@style/AppText.Body"
+                    style="@style/TextAppearance.Material3.BodyMedium"
                     android:textSize="12sp"
                     android:textColor="?attr/colorOnPrimary"
                     android:alpha="0.7"
@@ -132,7 +134,7 @@
 
             <!-- Stats Card (Overlapping Header) -->
             <com.google.android.material.card.MaterialCardView
-                style="@style/AppCard"
+                style="@style/Widget.Material3.CardView.Elevated"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="-32dp"
@@ -163,7 +165,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="150+"
-                            style="@style/AppText.Headline"
+                            style="@style/TextAppearance.Material3.HeadlineMedium"
                             android:textSize="20sp"
                             android:textColor="@color/primary"/>
 
@@ -171,7 +173,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Clients"
-                            style="@style/AppText.Body"
+                            style="@style/TextAppearance.Material3.BodyMedium"
                             android:textSize="12sp"/>
                     </LinearLayout>
 
@@ -188,7 +190,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="5+"
-                            style="@style/AppText.Headline"
+                            style="@style/TextAppearance.Material3.HeadlineMedium"
                             android:textSize="20sp"
                             android:textColor="@color/primary"/>
 
@@ -196,7 +198,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Years Exp."
-                            style="@style/AppText.Body"
+                            style="@style/TextAppearance.Material3.BodyMedium"
                             android:textSize="12sp"/>
                     </LinearLayout>
 
@@ -218,7 +220,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="4.8"
-                                style="@style/AppText.Headline"
+                                style="@style/TextAppearance.Material3.HeadlineMedium"
                                 android:textSize="20sp"
                                 android:textColor="@color/primary"/>
                             <ImageView
@@ -233,7 +235,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Rating"
-                            style="@style/AppText.Body"
+                            style="@style/TextAppearance.Material3.BodyMedium"
                             android:textSize="12sp"/>
                     </LinearLayout>
                 </LinearLayout>
@@ -245,11 +247,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
                 android:text="About Me"
-                style="@style/AppText.Title"/>
+                style="@style/TextAppearance.Material3.TitleLarge"/>
 
             <TextView
                 android:id="@+id/tvBio"
-                style="@style/AppText.Body"
+                style="@style/TextAppearance.Material3.BodyMedium"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Experienced Chartered Accountant specializing in GST and Income Tax filing. Helping businesses grow with compliance."
@@ -257,7 +259,7 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnWatchIntro"
-                style="@style/AppButton.Outlined"
+                style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp"
@@ -273,7 +275,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
                 android:text="Certificates &amp; Credentials"
-                style="@style/AppText.Title"
+                style="@style/TextAppearance.Material3.TitleLarge"
                 android:visibility="gone"/>
 
             <androidx.recyclerview.widget.RecyclerView
@@ -290,7 +292,16 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
                 android:text="Services"
-                style="@style/AppText.Title"/>
+                style="@style/TextAppearance.Material3.TitleLarge"/>
+
+            <TextView
+                android:id="@+id/tvServicesSubtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:text="Pick a service to request instantly."
+                android:textColor="@color/text_muted"
+                style="@style/TextAppearance.Material3.BodyMedium"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvServices"
@@ -299,16 +310,26 @@
                 android:nestedScrollingEnabled="false"
                 android:layout_marginBottom="24dp"/>
 
+            <TextView
+                android:id="@+id/tvServicesEmpty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:text="No services listed yet. Send a request to discuss your needs."
+                android:textColor="@color/text_muted"
+                style="@style/TextAppearance.Material3.BodyMedium"
+                android:visibility="gone"/>
+
             <!-- Pricing Section -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
                 android:text="Consultation Fees"
-                style="@style/AppText.Title"/>
+                style="@style/TextAppearance.Material3.TitleLarge"/>
 
             <com.google.android.material.card.MaterialCardView
-                style="@style/AppCard"
+                style="@style/Widget.Material3.CardView.Elevated"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp"
@@ -365,7 +386,7 @@
                             android:id="@+id/tvMinCharges"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="₹ 500"
+                            android:text="â‚¹ 500"
                             android:textSize="18sp"
                             android:textStyle="bold"
                             android:textColor="@color/text_main"/>
@@ -387,19 +408,19 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Client Reviews"
-                    style="@style/AppText.Title"/>
+                    style="@style/TextAppearance.Material3.TitleLarge"/>
                 
                 <TextView
                     android:id="@+id/tvRating"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="4.8 (12)"
-                    style="@style/AppText.Body"
+                    style="@style/TextAppearance.Material3.BodyMedium"
                     android:layout_marginEnd="8dp"/>
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnRateCa"
-                    style="@style/AppButton.Outlined"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Write a Review"
@@ -428,12 +449,23 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnConnect"
-            style="@style/AppButton"
+            style="@style/Widget.Material3.Button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingVertical="12dp"
-            android:text="Request Assistance"
+            android:text="Request assistance"
             android:textSize="16sp"/>
+
+        <TextView
+            android:id="@+id/tvRequestStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Request pending approval."
+            android:textColor="@color/text_muted"
+            style="@style/TextAppearance.Material3.BodySmall"
+            android:visibility="gone"/>
     </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
+

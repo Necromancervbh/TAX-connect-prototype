@@ -21,7 +21,7 @@
             app:title="Requests"
             app:titleCentered="true"
             app:titleTextColor="?attr/colorOnPrimary"
-            app:navigationIcon="@drawable/ic_arrow_back"
+            app:navigationIcon="@drawable/ic_arrow_back_material3"
             app:navigationIconTint="?attr/colorOnPrimary"/>
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -32,5 +32,12 @@
         android:layout_height="match_parent"
         android:padding="8dp"
         android:clipToPadding="false" />
+
+    <include
+        android:id="@+id/layoutEmptyState"
+        layout="@layout/component_empty_state"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
 
 </LinearLayout>

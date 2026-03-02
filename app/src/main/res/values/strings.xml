@@ -2,4 +2,371 @@
     <string name="app_name">Tax Con</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="verified">Verified</string>
+
+    <!-- Chat & Payments -->
+    <string name="upload_failed">Upload failed: %1$s</string>
+    <string name="camera_mic_permission_needed">Camera/Mic permission needed for video calls</string>
+    <string name="description_required">Description is required</string>
+    <string name="invalid_amount">Invalid amount</string>
+    <string name="error_in_payment">Error in payment: %1$s</string>
+    <string name="payment_request_title">Create Payment Request</string>
+    <string name="view_document">📄 View Document</string>
+    <string name="cannot_open_document">Cannot open document</string>
+
+    <!-- Dashboard -->
+    <string name="new_bookings_count">0 New Bookings</string>
+    <string name="priority_count">%1$d Priority Actions</string>
+    <string name="upcoming_bookings">Upcoming Bookings</string>
+    <string name="error_loading_bookings">Error loading bookings</string>
+    <string name="dashboard_help_title">Dashboard Guide</string>
+    <string name="dashboard_help_message"><b>Status Toggle:</b>\nSwitch between Online (visible to clients) and Offline.\n\n<b>Quick Actions:</b>\n• Requests: View and manage new client requests.\n• Bookings: Check upcoming and past sessions.\n• Messages: Chat with clients.\n<i>Red badges indicate unread items.</i>\n\n<b>Business Overview:</b>\nTrack your revenue, wallet balance, and client stats in real-time.\n\n<b>Documents:</b>\nSecurely manage and share tax documents with your clients.\n\n<b>Priority:</b>\nImportant tasks requiring your immediate attention.\n\n<b>Settings:</b>\nConfigure notifications, themes, and security preferences.</string>
+    <string name="got_it">Got it</string>
+
+    <!-- Profile -->
+    <string name="video_selected_save">Video selected. Click \'Save Changes\' to upload.</string>
+    <string name="video_selected_button">Video Selected</string>
+    <string name="profile_updated_success">Profile updated successfully</string>
+    <string name="update_failed">Update failed: %1$s</string>
+
+    <!-- General UI -->
+    <string name="please_enter_query">Please enter your query</string>
+    <string name="request_sent_success">Request Sent Successfully</string>
+    <string name="failed_to_send_request">Failed to send request: %1$s</string>
+    <string name="please_select_rating">Please select a rating</string>
+    <string name="review_limit_exceeded">Review must be at most 10 words</string>
+    <string name="no_cas_available">No CAs available yet.</string>
+    <string name="error_with_message">Error: %1$s</string>
+    <string name="no_internet">No internet connection</string>
+    <string name="name_required">Name is required</string>
+    <string name="email_required">Email is required</string>
+    <string name="invalid_email">Please enter a valid email address</string>
+    <string name="city_required">City is required</string>
+    <string name="password_required">Password is required</string>
+    <string name="password_min_length">Password must be at least 6 characters</string>
+    <string name="ca_number_required">CA Number is required</string>
+    <string name="ca_number_min_length">CA Number must be at least 6 digits</string>
+    <string name="experience_required">Experience is required</string>
+    <string name="specialization_required">Specialization is required</string>
+    <string name="min_charges_required">Minimum charges are required</string>
+    <string name="select_profile_pic">Please select a profile picture</string>
+    <string name="select_intro_video">Please select an intro video</string>
+    <string name="video_upload_failed">Video Upload Failed: %1$s</string>
+    <string name="create_account">Create Account</string>
+    <string name="login_successful">Login Successful</string>
+    <string name="logging_in">Logging in…</string>
+    <string name="login">Login</string>
+    <string name="invalid_document">Invalid Document</string>
+    <string name="session_invalid">Session invalid: %1$s</string>
+    <string name="booking_accepted">Booking Accepted</string>
+    <string name="failed_to_accept_booking">Failed to accept booking: %1$s</string>
+    <string name="booking_rejected">Booking Rejected</string>
+    <string name="failed_to_reject_booking">Failed to reject booking: %1$s</string>
+    <string name="error_fetching_cas">Error fetching CAs: %1$s</string>
+    <string name="registered_cas_count">0 Registered CAs</string>
+    <string name="registered_cas_count_dynamic">%1$d Registered CAs</string>
+    <string name="user_info_missing">User information missing</string>
+    <string name="failed_to_load_docs">Failed to load docs</string>
+    <string name="document_uploaded">Document Uploaded</string>
+    <string name="save_failed">Save failed: %1$s</string>
+    <string name="cannot_get_file_path">Cannot get file path</string>
+    <string name="request_refused">Request Refused</string>
+    <string name="failed_to_refuse">Failed to refuse: %1$s</string>
+    <string name="agora_error">Agora Error: %1$s</string>
+    <string name="permissions_required_video_call">Permissions required for video call</string>
+    <string name="deposit_successful">Deposit Successful</string>
+    <string name="payment_failed">Payment Failed: %1$s</string>
+    <string name="booking_status_updated">Booking %1$s</string>
+    <string name="failed_to_update_booking">Failed to update: %1$s</string>
+    <string name="service_requested_success">Service Requested Successfully!</string>
+    <string name="service_requested_message_pending">Service Requested (Message Pending)</string>
+    <string name="failed_to_request_service">Failed to request service</string>
+
+    <!-- Community & Posts -->
+    <string name="loading_user_profile">Please wait, loading user profile...</string>
+    <string name="post_content_empty">Post content cannot be empty</string>
+
+    <!-- Milestones -->
+    <string name="milestone_title_required">Title is required</string>
+
+    <!-- Notifications -->
+    <string name="notifications_channel_description">TaxConnect Notifications</string>
+    <string name="new_notification">New Notification</string>
+    <string name="notification_type_message">Message</string>
+    <string name="notification_type_call">Call</string>
+    <string name="notification_type_request">Request</string>
+    <string name="notification_type_booking">Booking</string>
+    <string name="notification_action_reply">Reply</string>
+    <string name="notification_action_accept">Accept</string>
+    <string name="notification_action_decline">Decline</string>
+    <string name="notification_action_view">View Details</string>
+    <string name="notification_reply_hint">Type your reply...</string>
+    <string name="notification_settings_title">Notification Settings</string>
+    <string name="notification_quiet_hours">Quiet Hours</string>
+    <string name="notification_battery_optimization">Battery Optimization</string>
+    <string name="notification_battery_optimized">Optimized for reliable notifications</string>
+    <string name="notification_battery_not_optimized">Battery optimization may delay notifications</string>
+    <string name="notification_preview">Notification Preview</string>
+    <string name="notification_save_changes">Save Changes</string>
+    <string name="notification_prefs_saved">Preferences saved</string>
+    <string name="notification_permission_denied">Notifications disabled. You might miss important updates.</string>
+    <string name="notification_permission_granted">Notifications enabled</string>
+
+    <!-- Wallet -->
+    <string name="failed_to_load_transactions">Failed to load transactions</string>
+    <string name="add_money_to_wallet">Add Money to Wallet</string>
+    <string name="add_money">Add Money</string>
+    <string name="withdraw_to_bank">Withdraw to Bank</string>
+    <string name="withdraw_money">Withdraw Money</string>
+
+    <!-- Chat & Workflow -->
+    <string name="current_status">Current: %1$s</string>
+    <string name="next_accept_request">Next: Accept request</string>
+    <string name="next_agree_price">Next: Agree on price</string>
+    <string name="video_call_started">📞 Video Call Started</string>
+    <string name="incoming_video_call">📞 Incoming Video Call\nTap to Join</string>
+
+    <!-- Profile & Verification -->
+    <string name="updating">Updating…</string>
+    <string name="verified_ca">Verified CA</string>
+    <string name="verification_pending">Verification Pending</string>
+    <string name="not_verified">Not Verified</string>
+    <string name="photo_selected">Photo Selected</string>
+    <string name="video_selected">Video Selected</string>
+
+    <!-- Dashboard & Stats -->
+    <string name="revenue_today">Today: %1$s</string>
+    <string name="revenue_week">This Week: %1$s</string>
+    <string name="revenue_month">This Month: %1$s</string>
+    <string name="new_requests_count_dynamic">%1$d New Requests</string>
+    <string name="returning_clients_count">%1$d Returning Clients</string>
+    <string name="new_bookings_count_dynamic">%1$d New Bookings</string>
+    <string name="online">Online</string>
+    <string name="offline">Offline</string>
+    <string name="status_online">Online</string>
+    <string name="status_offline">Offline</string>
+
+    <!-- CA Detail & Booking -->
+    <string name="loading_dots">Loading…</string>
+    <string name="price_time_payment_message">Price: ₹ %1$s\nTime: %2$s\n\nProceed to payment?</string>
+    <string name="request_assistance">Request assistance</string>
+    <string name="request_pending">Request pending</string>
+    <string name="request_pending_approval">Request pending approval.</string>
+    <string name="request_pending_approval_msg">Your request is pending approval from the CA.</string>
+    <string name="message">Message</string>
+    <string name="pricing_on_request">Pricing on request</string>
+
+    <!-- Tabs & Lists -->
+    <string name="tab_requests">Requests</string>
+    <string name="tab_upcoming">Upcoming</string>
+    <string name="tab_declined">Declined</string>
+    <string name="clear">Clear</string>
+    <string name="edit">Edit</string>
+    <string name="buy_now">Buy Now</string>
+
+    <!-- Video Call Status -->
+    <string name="connecting_to">Connecting to %1$s…</string>
+    <string name="remote_mic_muted">Remote microphone muted</string>
+    <string name="remote_camera_off">Remote camera off</string>
+
+    <!-- Registration -->
+    <string name="uploading_media">Uploading Media…</string>
+    <string name="registering">Registering…</string>
+
+    <!-- Roles & Status -->
+    <string name="ca_role">CA</string>
+    <string name="client_role">Client</string>
+    <string name="chartered_accountant_role">Chartered Accountant</string>
+    <string name="status_expired">Expired</string>
+    <string name="status_confirmed">Confirmed</string>
+    <string name="status_completed">Completed</string>
+    <string name="status_upcoming">Upcoming</string>
+    <string name="status_declined">Declined</string>
+
+    <!-- Documents -->
+    <string name="my_documents">My Documents</string>
+    <string name="upload_documents">Upload Documents</string>
+    <string name="upload_documents_desc">Keep your tax documents and identity proofs organized and secure.</string>
+    <string name="uploaded_documents">Uploaded Documents</string>
+
+    <!-- Security -->
+    <string name="secure_access">Secure Access</string>
+    <string name="filter_by_price">Filter by Price Range</string>
+    <!-- Message Adapter -->
+    <string name="currency_format">₹ %1$s</string>
+    <string name="status_format">Status: %1$s</string>
+    <string name="proposal_version">Version v%1$d</string>
+    <string name="rejection_reason_format">Reason: %1$s</string>
+    <string name="payment_action_unavailable">Payment action unavailable</string>
+    <string name="payment_final_paid">Payment: Final paid</string>
+    <string name="payment_final_due">Payment: Final due</string>
+    <string name="payment_advance_paid">Payment: Advance paid</string>
+    <string name="payment_advance_due">Payment: Advance due</string>
+    <string name="payment_awaiting_acceptance">Payment: Awaiting acceptance</string>
+    <string name="document">Document</string>
+    <string name="payment_pending_client">Pending Client Payment</string>
+    <string name="payment_status_paid">✅ PAID</string>
+    <string name="payment_status_declined">❌ DECLINED</string>
+    <string name="call_ended">Call Ended</string>
+    <string name="channel_name_missing">Channel name is missing</string>
+    <string name="service_purchase_message">I have purchased your service: %1$s</string>
+    <string name="uncategorized">Uncategorized</string>
+    <string name="cancel">Cancel</string>
+    <string name="payment_successful_wallet">Payment Successful from Wallet</string>
+    <string name="chat_payment">Chat Payment</string>
+    <string name="send_attachment">Send Attachment</string>
+    <string name="send">Send</string>
+    <string name="attachment_image">Image</string>
+    <string name="attachment_document">Document</string>
+    <string name="attachment_payment_request">Payment Request</string>
+    <string name="failed_to_load_comments">Failed to load comments</string>
+    <string name="comment_empty_error">Comment cannot be empty</string>
+    <string name="comment_added">Comment added</string>
+    <string name="failed_to_add_comment">Failed to add comment: %1$s</string>
+    <string name="rating_submitted">Rating Submitted!</string>
+    <string name="failed_to_submit_rating">Failed to submit rating: %1$s</string>
+    <string name="edit_service">Edit Service</string>
+    <string name="add_service">Add Service</string>
+    <string name="update">Update</string>
+    <string name="add">Add</string>
+    <string name="service_title_required">Service title is required</string>
+    <string name="delete_service">Delete Service</string>
+    <string name="delete_service_confirmation">Are you sure you want to delete %1$s?</string>
+    <string name="delete">Delete</string>
+    <string name="camera">Camera</string>
+    <string name="gallery">Gallery</string>
+    <string name="select_source">Select Source</string>
+    <string name="verification_request_submitted">Verification Request Submitted</string>
+    <string name="uploading_certificate">Uploading Certificate...</string>
+    <string name="post_created">Post Created!</string>
+    <string name="failed_to_create_post">Failed to create post</string>
+    <string name="error_rendering_pdf">Error rendering PDF</string>
+    <string name="downloading_file">Downloading file...</string>
+    <string name="download_started">Download started</string>
+    <string name="download_failed_manager">Download failed: Manager not available</string>
+    <string name="download_error">Download error: %1$s</string>
+    <string name="withdrawal_successful">Withdrawal Successful</string>
+    <string name="enter_amount">Enter amount</string>
+    <string name="enter_upi_id">Enter UPI ID</string>
+    <string name="invalid_upi_id">Invalid UPI ID</string>
+    <string name="insufficient_balance">Insufficient Balance</string>
+    <string name="transaction_failed">Transaction failed</string>
+    <string name="wallet_top_up">Wallet Top-up</string>
+    <string name="deposit_razorpay">Deposit via Razorpay</string>
+    <string name="bank_transfer">Bank Transfer</string>
+    <string name="withdrawal_to_upi">Withdrawal to %1$s</string>
+    <string name="auth_error">Authentication error: %1$s</string>
+    <string name="auth_failed">Authentication failed</string>
+    <string name="wallet_security">Wallet Security</string>
+    <string name="wallet_security_subtitle">Log in using your biometric credential</string>
+    <string name="fill_details_error">Please fill description and total amount</string>
+    <string name="invalid_token"> (Invalid Token)</string>
+    <string name="token_expired"> (Token Expired)</string>
+    <string name="invalid_app_id"> (Invalid App ID)</string>
+    <string name="price_required">Price is required</string>
+    <string name="service_price_required">Service price is required</string>
+    <string name="field_required">Required</string>
+    <string name="invalid_ca_number">Invalid CA Number</string>
+    <string name="save_changes">Save Changes</string>
+    <string name="expired_bookings">Expired Bookings</string>
+    <string name="upcoming_bookings_title">Upcoming Bookings</string>
+    <string name="expired_bookings_count">Expired Bookings (%1$d)</string>
+    <string name="upcoming_bookings_count">Upcoming Bookings (%1$d)</string>
+    <string name="sort_date_asc">Date ↑</string>
+    <string name="sort_date_desc">Date ↓</string>
+    <string name="sort_urgency">Urgency</string>
+    <string name="image_upload_failed">Image Upload Failed: %1$s</string>
+    <string name="registration_successful">Registration Successful!</string>
+    <string name="failed_to_load_milestones">Failed to load milestones</string>
+    <string name="failed_to_update_status">Failed to update status</string>
+    <string name="add_city_profile_filter">Please add city to your profile to filter by city</string>
+    <string name="apply">Apply</string>
+    <string name="confirm_identity_finance">Please confirm your identity to view financial records</string>
+    <string name="error_loading_revenue">Error loading revenue data</string>
+    <string name="pending_requests_count">Pending Requests: %1$d</string>
+    <string name="error_loading_transactions">Error loading transactions</string>
+    <string name="rating_count_format">(%1$d)</string>
+
+    <!-- Calendar Integration -->
+    <string name="add_to_calendar">Add to Calendar</string>
+    <string name="calendar_permission_required">Calendar permission is required to add events</string>
+    <string name="event_added_to_calendar">Event added to calendar</string>
+    <string name="failed_to_add_event">Failed to add event to calendar</string>
+    <string name="booking_already_in_calendar">Booking already in calendar</string>
+
+    <!-- Offline Documents -->
+    <string name="download_for_offline">Download for Offline</string>
+    <string name="available_offline">Available Offline</string>
+    <string name="downloading">Downloading...</string>
+    <string name="download_complete">Download complete</string>
+    <string name="download_failed">Download failed</string>
+    <string name="cache_cleared">Cache cleared</string>
+    <string name="clear_cache">Clear Cache</string>
+    <string name="cached_documents">Cached: %1$d documents (%2$s)</string>
+
+    <!-- Expense Tracker -->
+    <string name="expense_tracker">Expense Tracker</string>
+    <string name="add_expense">Add Expense</string>
+    <string name="monthly_total">Monthly Total</string>
+    <string name="yearly_total">Yearly Total</string>
+    <string name="category_travel">Travel</string>
+    <string name="category_food">Food</string>
+    <string name="category_business">Business</string>
+    <string name="category_medical">Medical</string>
+    <string name="category_education">Education</string>
+    <string name="category_entertainment">Entertainment</string>
+    <string name="category_other">Other</string>
+    <string name="expense_added">Expense added</string>
+    <string name="expense_deleted">Expense deleted</string>
+    <string name="export_to_csv">Export to CSV</string>
+    <string name="amount">Amount</string>
+    <string name="category">Category</string>
+    <string name="description_optional">Description (Optional)</string>
+    <string name="select_date">Select Date</string>
+    <string name="no_expenses">No expenses yet</string>
+    <string name="total_expenses">Total Expenses</string>
+    <string name="track_expenses">Track Expenses</string>
+
+    <!-- UI Polish Additions -->
+    <string name="profile_nudge_desc">Please update your profile to build trust with clients and get more booking requests.</string>
+    <string name="action_update">Update</string>
+    <string name="revenue_graph_disclaimer">* Data is simulated. Actual revenue is calculated based on completed work.</string>
+    <string name="profile_completeness_format">Profile is %1$d%% complete</string>
+    <string name="payment_step_proposal">Proposal</string>
+    <string name="payment_step_advance">Advance</string>
+    <string name="payment_step_completed">Completed</string>
+    <string name="payment_progress_default">Payment progress: Awaiting acceptance</string>
+    <string name="payment_no_active_request">Payment: No active request</string>
+    <string name="next_send_proposal">Next: Send proposal or payment request</string>
+    <string name="payment_awaiting_client">Payment: Awaiting client action</string>
+    <string name="next_client_pay">Next: Client to pay or decline</string>
+    <string name="payment_advance_paid_success">Payment: Advance Paid ✅</string>
+    <string name="next_ca_work">Next: CA work &amp; document delivery</string>
+    <string name="next_final_request">Next: Final payment request</string>
+    <string name="payment_fully_paid">Payment: Fully Paid ✅</string>
+    <string name="status_project_completed">Status: Project successfully completed</string>
+    <string name="payment_not_started">Payment: Not started</string>
+    <string name="next_accept_decline">Next: Accept or decline request</string>
+    <string name="next_continue_discussion">Next: Continue discussion</string>
+    <string name="notification_header_today">Today</string>
+    <string name="notification_header_yesterday">Yesterday</string>
+    <string name="notification_header_older">Older</string>
+    <string name="notification_call_from">Call from %1$s</string>
+    <string name="notification_default_title">Notification</string>
+    <string name="no_requests_title">No Requests</string>
+    <string name="no_requests_desc">You have no pending requests to show here.</string>
+
+    <!-- Notification bar strings (calls + messages) -->
+    <string name="notification_incoming_call">Incoming Call</string>
+    <string name="notification_incoming_call_subtitle">Incoming Video Call · TaxConnect</string>
+    <string name="notification_action_answer">Answer</string>
+    <string name="notification_action_mark_read">Mark as Read</string>
+    <string name="notification_me">Me</string>
+    <string name="notification_sender_default">Sender</string>
+    <string name="notification_new_messages_title">New Messages</string>
+    <string name="notification_new_messages_body">You have unread messages</string>
+    
+    <!-- Booking reminder notifications -->
+    <string name="reminder_notif_title">Upcoming Appointment</string>
+    <string name="reminder_notif_body">You have an appointment with %1$s in %2$s.</string>
 </resources>

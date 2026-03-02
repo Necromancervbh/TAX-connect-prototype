@@ -7,4 +7,4 @@
         android:endColor="@color/primary_variant"
         android:type="linear" />
     <corners android:radius="0dp" />
-</shape>
+</shape> 

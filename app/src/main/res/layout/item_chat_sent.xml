@@ -3,17 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingHorizontal="8dp"
-    android:paddingVertical="4dp">
+    android:paddingHorizontal="@dimen/space_2x"
+    android:paddingVertical="@dimen/space_2x">
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cardPreview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="16dp"
-        app:cardElevation="0dp"
+        app:cardCornerRadius="@dimen/corner_radius_medium"
+        app:cardElevation="2dp"
         android:visibility="gone"
-        android:layout_marginBottom="4dp"
+        android:layout_marginBottom="@dimen/space_1x"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
         
@@ -21,6 +21,7 @@
             android:id="@+id/ivChatPreview"
             android:layout_width="240dp"
             android:layout_height="180dp"
+            android:contentDescription="Image attachment"
             android:scaleType="centerCrop" />
     </com.google.android.material.card.MaterialCardView>
 
@@ -29,17 +30,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.2" />
+        app:layout_constraintGuide_percent="0.25" />
 
     <LinearLayout
         android:id="@+id/layoutMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/bg_bubble_sent_gradient"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="12dp"
+        android:paddingHorizontal="@dimen/space_4x"
+        android:paddingVertical="@dimen/space_3x"
         android:orientation="vertical"
-        android:minWidth="100dp"
+        android:minWidth="96dp"
+        android:maxWidth="280dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/guidelineStart"
         app:layout_constraintTop_toBottomOf="@id/cardPreview"
@@ -50,16 +52,30 @@
             android:id="@+id/layoutDocument"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
+            android:orientation="vertical"
             android:visibility="gone"
-            android:layout_marginBottom="8dp">
-
+            android:layout_marginBottom="@dimen/space_2x">
+            
             <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_document"
-                app:tint="@color/on_primary"/>
+                android:id="@+id/ivDocThumbnail"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:scaleType="centerCrop"
+                android:visibility="gone"
+                android:layout_marginBottom="4dp"
+                android:contentDescription="Document Preview" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_document"
+                    android:contentDescription="Document Icon"
+                    app:tint="@color/on_primary"/>
 
             <TextView
                 android:id="@+id/tvDocName"
@@ -70,14 +86,15 @@
                 android:textColor="@color/on_primary"
                 android:textStyle="bold"
                 android:textSize="14sp"/>
+            </LinearLayout>
         </LinearLayout>
 
         <TextView
             android:id="@+id/tvChatMessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            style="@style/TextAppearance.Material3.BodyMedium"
             android:textColor="@color/on_primary"
-            android:textSize="15sp"
             android:lineSpacingExtra="4dp"
             android:fontFamily="sans-serif" />
 
@@ -85,7 +102,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:layout_marginTop="6dp"
+            android:layout_marginTop="@dimen/space_2x"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
@@ -94,19 +111,47 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="12:00 PM"
-                android:textSize="10sp"
-                android:textColor="@color/on_primary"
-                android:alpha="0.7" />
+                style="@style/TextAppearance.Material3.BodySmall"
+                android:textColor="@color/on_primary" />
 
-            <ImageView
-                android:id="@+id/ivStatus"
+            <ProgressBar
+                android:id="@+id/pbUpload"
                 android:layout_width="14dp"
                 android:layout_height="14dp"
                 android:layout_marginStart="4dp"
-                android:src="@drawable/ic_single_tick"
+                android:visibility="gone"
+                android:indeterminateTint="@color/on_primary"/>
+
+            <ImageView
+                android:id="@+id/ivUploadFailed"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
+                android:layout_marginStart="4dp"
+                android:visibility="gone"
+                android:src="@drawable/ic_error"
+                app:tint="@color/error"/>
+
+            <TextView
+                android:id="@+id/tvRetry"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="Retry"
+                android:textSize="10sp"
+                android:textColor="@color/error"
+                android:visibility="gone"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/ivReadStatus"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:src="@drawable/ic_double_tick"
+                android:layout_marginStart="4dp"
                 app:tint="@color/on_primary"
-                android:alpha="0.7" />
+                android:contentDescription="Read status" />
         </LinearLayout>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+

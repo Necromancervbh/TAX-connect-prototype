@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    app:cardCornerRadius="16dp"
+    app:cardCornerRadius="@dimen/corner_radius_medium"
     app:cardElevation="2dp"
     app:strokeWidth="0dp"
     app:cardBackgroundColor="@color/surface">
@@ -25,7 +25,7 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_video_call"
+                android:src="@drawable/ic_video_call_material3"
                 app:tint="?attr/colorOnPrimary"
                 android:layout_marginEnd="8dp"/>
 

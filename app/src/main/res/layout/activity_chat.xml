@@ -42,20 +42,150 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="8dp"
-            app:cardCornerRadius="16dp"
+            app:cardCornerRadius="@dimen/corner_radius_medium"
             app:cardBackgroundColor="#20FFFFFF"
             app:strokeWidth="0dp">
-            
-            <TextView
-                android:id="@+id/tvWorkflowStatus"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:orientation="vertical"
                 android:paddingHorizontal="16dp"
-                android:paddingVertical="4dp"
-                android:text="Status: Discussion"
-                android:textColor="?attr/colorOnPrimary"
-                android:textStyle="bold"
-                android:textSize="12sp" />
+                android:paddingVertical="6dp">
+
+                <TextView
+                    android:id="@+id/tvWorkflowStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Current: Discussion in progress"
+                    android:textColor="?attr/colorOnPrimary"
+                    android:textStyle="bold"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/tvWorkflowNext"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="Next: Share requirements"
+                    android:textColor="?attr/colorOnPrimary"
+                    android:textSize="11sp"
+                    android:alpha="0.85" />
+
+                <TextView
+                    android:id="@+id/tvPaymentProgress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="@string/payment_progress_default"
+                    android:textColor="?attr/colorOnPrimary"
+                    android:textSize="11sp"
+                    android:alpha="0.85" />
+
+                <!-- Payment Progress Stepper -->
+                <LinearLayout
+                    android:id="@+id/layoutStepper"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="12dp"
+                    android:gravity="center_vertical"
+                    android:visibility="gone">
+                    
+                    <ImageView android:id="@+id/step1_icon" android:layout_width="16dp" android:layout_height="16dp" android:src="@drawable/ic_check_circle" app:tint="?attr/colorOnPrimary"/>
+                    <View android:id="@+id/step1_line" android:layout_width="0dp" android:layout_weight="1" android:layout_height="2dp" android:background="?attr/colorOnPrimary" android:alpha="0.3"/>
+                    
+                    <ImageView android:id="@+id/step2_icon" android:layout_width="16dp" android:layout_height="16dp" android:src="@drawable/ic_circle_outline" app:tint="?attr/colorOnPrimary" android:alpha="0.5"/>
+                    <View android:id="@+id/step2_line" android:layout_width="0dp" android:layout_weight="1" android:layout_height="2dp" android:background="?attr/colorOnPrimary" android:alpha="0.3"/>
+                    
+                    <ImageView android:id="@+id/step3_icon" android:layout_width="16dp" android:layout_height="16dp" android:src="@drawable/ic_circle_outline" app:tint="?attr/colorOnPrimary" android:alpha="0.5"/>
+                </LinearLayout>
+                
+                <LinearLayout
+                    android:id="@+id/layoutStepperLabels"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="4dp"
+                    android:visibility="gone">
+                    <TextView android:id="@+id/tvStep1Label" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="@string/payment_step_proposal" android:textSize="10sp" android:textColor="?attr/colorOnPrimary" android:gravity="start"/>
+                    <TextView android:id="@+id/tvStep2Label" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/payment_step_advance" android:textSize="10sp" android:textColor="?attr/colorOnPrimary" android:gravity="center"/>
+                    <TextView android:id="@+id/tvStep3Label" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="@string/payment_step_completed" android:textSize="10sp" android:textColor="?attr/colorOnPrimary" android:gravity="end"/>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tvRejectionPreview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="Last rejection: Budget too high"
+                    android:textColor="?attr/colorOnPrimary"
+                    android:textSize="11sp"
+                    android:alpha="0.85"
+                    android:visibility="gone" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnReviseHeader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Revise proposal"
+                    android:visibility="gone"
+                    android:textColor="?attr/colorOnPrimary"
+                    app:backgroundTint="@android:color/transparent"
+                    style="@style/Widget.Material3.Button.TextButton" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardPaymentIssue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/screen_margin_horizontal"
+            android:layout_marginBottom="8dp"
+            app:cardCornerRadius="@dimen/corner_radius_small"
+            app:cardBackgroundColor="@color/surface"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/space_3x">
+
+                <TextView
+                    android:id="@+id/tvPaymentIssue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Payment failed. Try again or contact support."
+                    android:textColor="@color/text_main"
+                    android:textSize="13sp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnPaymentRetry"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Retry"
+                        android:layout_marginEnd="8dp"
+                        android:backgroundTint="@color/emerald_600"
+                        android:textColor="@android:color/white"
+                        style="@style/Widget.Material3.Button.TextButton" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnPaymentSupport"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Support"
+                        android:textColor="@color/primary"
+                        app:backgroundTint="@color/primary_container"
+                        style="@style/Widget.Material3.Button.TextButton" />
+                </LinearLayout>
+            </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
             
     </com.google.android.material.appbar.AppBarLayout>
@@ -67,8 +197,9 @@
         app:layout_constraintTop_toBottomOf="@id/appBar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:background="@color/surface"
-        android:padding="8dp"
+        android:background="@color/primary_container"
+        android:paddingVertical="@dimen/space_2x"
+        android:paddingHorizontal="@dimen/screen_margin_horizontal"
         android:scrollbars="none">
 
         <LinearLayout
@@ -83,7 +214,9 @@
                 android:text="Enable Video Calls"
                 android:layout_marginEnd="8dp"
                 android:visibility="gone"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+                android:textColor="@color/primary"
+                app:backgroundTint="@color/primary_container"
+                style="@style/Widget.Material3.Button.TextButton"/>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnCreateProposal"
@@ -91,7 +224,10 @@
                 android:layout_height="wrap_content"
                 android:text="Create Proposal"
                 android:layout_marginEnd="8dp"
-                android:visibility="gone" />
+                android:visibility="gone"
+                android:textColor="@color/primary"
+                app:backgroundTint="@color/primary_container"
+                style="@style/Widget.Material3.Button.TextButton" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnRequestDocs"
@@ -99,7 +235,10 @@
                 android:layout_height="wrap_content"
                 android:text="Request Docs"
                 android:layout_marginEnd="8dp"
-                android:visibility="gone" />
+                android:visibility="gone"
+                android:textColor="@color/primary"
+                app:backgroundTint="@color/primary_container"
+                style="@style/Widget.Material3.Button.TextButton" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnCompleteJob"
@@ -108,7 +247,18 @@
                 android:text="Complete Job"
                 android:backgroundTint="@color/emerald_600"
                 android:layout_marginEnd="8dp"
-                android:visibility="gone" />
+                android:visibility="gone"
+                style="@style/Widget.Material3.Button.TextButton" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnPayFinal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pay Final"
+                android:backgroundTint="@color/emerald_600"
+                android:layout_marginEnd="8dp"
+                android:visibility="gone"
+                style="@style/Widget.Material3.Button.TextButton" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnLeaveFeedback"
@@ -116,7 +266,32 @@
                 android:layout_height="wrap_content"
                 android:text="Leave Feedback"
                 android:layout_marginEnd="8dp"
-                android:visibility="gone" />
+                android:visibility="gone"
+                android:textColor="@color/primary"
+                app:backgroundTint="@color/primary_container"
+                style="@style/Widget.Material3.Button.TextButton" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnRequestAgain"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Request Assistance Again"
+                android:layout_marginEnd="8dp"
+                android:visibility="gone"
+                android:textColor="@color/primary"
+                app:backgroundTint="@color/primary_container"
+                style="@style/Widget.Material3.Button.TextButton" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnViewHistory"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="View History"
+                android:layout_marginEnd="8dp"
+                android:visibility="gone"
+                android:textColor="@color/primary"
+                app:backgroundTint="@color/primary_container"
+                style="@style/Widget.Material3.Button.TextButton" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnBookAppointment"
@@ -126,7 +301,8 @@
                 android:backgroundTint="@color/primary"
                 android:textColor="?attr/colorOnPrimary"
                 android:layout_marginEnd="8dp"
-                android:visibility="gone" />
+                android:visibility="gone"
+                style="@style/Widget.Material3.Button.TextButton" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnCustomerVideoCall"
@@ -135,42 +311,178 @@
                 android:text="Video Call"
                 android:icon="@drawable/ic_video_call"
                 android:layout_marginEnd="8dp"
-                android:visibility="gone" />
+                android:visibility="gone"
+                android:textColor="@color/primary"
+                app:backgroundTint="@color/primary_container"
+                app:iconTint="@color/primary"
+                style="@style/Widget.Material3.Button.TextButton" />
 
         </LinearLayout>
     </HorizontalScrollView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardServiceHistory"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/screen_margin_horizontal"
+        android:layout_marginTop="@dimen/space_3x"
+        android:visibility="gone"
+        app:cardCornerRadius="@dimen/corner_radius_medium"
+        app:cardElevation="1dp"
+        app:cardBackgroundColor="@color/surface"
+        app:layout_constraintTop_toBottomOf="@id/actionContainer"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/space_4x">
+
+            <TextView
+                android:id="@+id/tvServiceHistoryTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Service History"
+                android:textColor="@color/text_main"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvServiceHistoryEmpty"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_2x"
+                android:text="No previous services yet."
+                android:textColor="@color/text_secondary"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:id="@+id/layoutServiceHistory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_2x"
+                android:orientation="vertical" />
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvChatMessages"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:clipToPadding="false"
-        android:paddingBottom="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/layoutInput"
-        app:layout_constraintTop_toBottomOf="@+id/actionContainer"
+        android:paddingHorizontal="@dimen/screen_margin_horizontal"
+        android:paddingTop="@dimen/space_4x"
+        android:paddingBottom="@dimen/space_6x"
+        app:layout_constraintBottom_toTopOf="@+id/chatInputDivider"
+        app:layout_constraintTop_toBottomOf="@+id/cardServiceHistory"
         tools:listitem="@layout/item_chat_received" />
 
-    <TextView
-        android:id="@+id/tvEmptyState"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="No messages yet. Start the conversation."
-        android:textColor="@color/text_muted"
-        android:textSize="14sp"
-        android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@+id/actionContainer"
+    <View
+        android:id="@+id/chatInputDivider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="@color/divider"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/layoutInput"
-        android:layout_marginTop="16dp" />
+        app:layout_constraintTop_toBottomOf="@+id/rvChatMessages"
+        app:layout_constraintBottom_toTopOf="@+id/layoutInput" />
+
+    <!-- Rich empty state — shown when no messages exist yet -->
+    <LinearLayout
+        android:id="@+id/layoutChatEmpty"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="32dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@+id/cardServiceHistory"
+        app:layout_constraintBottom_toTopOf="@+id/chatInputDivider"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="💬"
+            android:textSize="48sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Start the conversation"
+            android:textColor="@color/text_main"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:gravity="center"
+            android:text="Describe your tax concern and the CA will respond shortly."
+            android:textColor="@color/text_muted"
+            android:textSize="13sp" />
+
+        <!-- Quick-start suggestion chips -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/chipSuggestion1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="👋 Hello, I need help with my ITR"
+                android:textSize="13sp"
+                android:textColor="@color/primary"
+                app:backgroundTint="@color/primary_container"
+                app:cornerRadius="20dp"
+                style="@style/Widget.Material3.Button.TonalButton" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/chipSuggestion2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="📊 I need help with GST filing"
+                android:textSize="13sp"
+                android:textColor="@color/primary"
+                app:backgroundTint="@color/primary_container"
+                app:cornerRadius="20dp"
+                style="@style/Widget.Material3.Button.TonalButton" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/chipSuggestion3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="📄 I received a tax notice"
+                android:textSize="13sp"
+                android:textColor="@color/primary"
+                app:backgroundTint="@color/primary_container"
+                app:cornerRadius="20dp"
+                style="@style/Widget.Material3.Button.TonalButton" />
+
+        </LinearLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/layoutInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
+        android:background="@color/surface"
         android:orientation="horizontal"
-        android:padding="8dp"
+        android:paddingVertical="@dimen/space_3x"
+        android:paddingHorizontal="@dimen/screen_margin_horizontal"
         android:gravity="bottom"
         app:layout_constraintBottom_toBottomOf="parent">
 
@@ -179,27 +491,29 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginEnd="8dp"
-            app:cardCornerRadius="24dp"
-            app:cardElevation="2dp"
-            app:strokeWidth="0dp"
-            app:cardBackgroundColor="@color/surface">
+            app:cardCornerRadius="@dimen/corner_radius_pill"
+            app:cardElevation="0dp"
+            app:strokeWidth="1dp"
+            app:strokeColor="@color/primary"
+            app:cardBackgroundColor="@color/surface_variant">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:paddingHorizontal="8dp"
-                android:paddingVertical="4dp">
+                android:paddingHorizontal="@dimen/space_2x"
+                android:paddingVertical="@dimen/space_1x">
 
                 <ImageButton
                     android:id="@+id/btnAttach"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:src="@android:drawable/ic_menu_add"
-                    android:padding="8dp"
-                    app:tint="@color/text_muted" />
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:background="@drawable/bg_circle_light_primary"
+                    android:src="@drawable/ic_add_circle"
+                    android:padding="6dp"
+                    android:contentDescription="Attach files"
+                    app:tint="@color/primary" />
 
                 <EditText
                     android:id="@+id/etMessage"
@@ -210,10 +524,12 @@
                     android:hint="Message..."
                     android:inputType="textCapSentences|textMultiLine"
                     android:maxLines="4"
-                    android:minHeight="40dp"
+                    android:minHeight="44dp"
                     android:paddingHorizontal="8dp"
                     android:paddingVertical="8dp"
-                    android:textSize="15sp" />
+                    android:textSize="15sp"
+                    android:textColor="@color/text_main"
+                    android:textColorHint="@color/text_muted" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
@@ -222,11 +538,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="Send"
-            app:fabSize="normal"
+        app:fabSize="normal"
             app:elevation="2dp"
-            app:backgroundTint="@color/primary"
-            app:tint="@color/on_primary"
+        app:backgroundTint="@color/secondary"
+        app:tint="@color/on_secondary"
             android:src="@android:drawable/ic_menu_send" />
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
+

@@ -25,22 +25,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingHorizontal="24dp"
-            android:paddingBottom="24dp">
+            android:paddingHorizontal="@dimen/space_6x"
+            android:paddingBottom="@dimen/space_6x">
 
             <!-- Spacing for status bar/top -->
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="60dp" />
+                android:layout_height="64dp" />
 
             <!-- App Logo/Title -->
             <ImageView
                 android:layout_width="72dp"
                 android:layout_height="72dp"
                 android:src="@drawable/ic_app_logo"
+                android:contentDescription="Tax Connect Logo"
                 app:tint="?attr/colorOnPrimary"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="16dp"/>
+                android:layout_marginBottom="@dimen/space_4x"/>
 
             <TextView
                 android:id="@+id/tvAppTitle"
@@ -59,48 +60,48 @@
                 android:textColor="?attr/colorOnPrimary"
                 android:alpha="0.8"
                 android:textSize="16sp"
-                android:layout_marginTop="4dp"
-                android:layout_marginBottom="40dp"
+                android:layout_marginTop="@dimen/space_1x"
+                android:layout_marginBottom="@dimen/space_10x"
                 android:layout_gravity="center_horizontal" />
 
             <!-- Login Card -->
             <com.google.android.material.card.MaterialCardView
-                style="@style/AppCard"
+                style="@style/Widget.Material3.CardView.Elevated"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardElevation="4dp"
+                app:cardElevation="@dimen/card_elevation"
                 app:cardBackgroundColor="@color/surface">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="32dp">
+                    android:padding="@dimen/space_8x">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Welcome Back"
-                        style="@style/AppText.Headline"
+                        style="@style/TextAppearance.Material3.HeadlineMedium"
                         android:textSize="24sp"
                         android:layout_gravity="center_horizontal"
-                        android:layout_marginBottom="8dp" />
+                        android:layout_marginBottom="@dimen/space_2x" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Sign in to continue"
-                        style="@style/AppText.Body"
+                        style="@style/TextAppearance.Material3.BodyMedium"
                         android:textSize="14sp"
                         android:layout_gravity="center_horizontal"
-                        android:layout_marginBottom="32dp" />
+                        android:layout_marginBottom="@dimen/space_8x" />
 
                     <com.google.android.material.textfield.TextInputLayout
-                        style="@style/AppTextInputLayout"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Email Address"
-                        app:startIconDrawable="@drawable/ic_email"
+                        app:startIconDrawable="@drawable/ic_email_material3"
                         app:startIconTint="@color/primary">
 
                         <com.google.android.material.textfield.TextInputEditText
@@ -111,10 +112,10 @@
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
-                        style="@style/AppTextInputLayout"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
+                        android:layout_marginTop="@dimen/space_5x"
                         app:passwordToggleEnabled="true"
                         android:hint="Password"
                         app:startIconDrawable="@drawable/ic_visibility"
@@ -132,7 +133,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="end"
-                        android:layout_marginTop="12dp"
+                        android:layout_marginTop="@dimen/space_3x"
                         android:text="Forgot Password?"
                         android:textColor="@color/secondary"
                         android:textSize="14sp"
@@ -140,10 +141,10 @@
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnLogin"
-                        style="@style/AppButton"
+                        style="@style/Widget.Material3.Button"
                         android:layout_width="match_parent"
                         android:layout_height="56dp"
-                        android:layout_marginTop="32dp"
+                        android:layout_marginTop="@dimen/space_8x"
                         android:text="Sign In"
                         android:textSize="16sp"
                         android:textStyle="bold"
@@ -176,3 +177,4 @@
         </LinearLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
+
