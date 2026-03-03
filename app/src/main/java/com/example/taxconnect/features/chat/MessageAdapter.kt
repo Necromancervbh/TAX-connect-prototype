@@ -501,6 +501,7 @@ class MessageAdapter(
                 btnDeclineCall?.setOnClickListener {
                     message.chatId?.let { chatId ->
                         ConversationRepository.getInstance().updateCallStatus(chatId, "REJECTED", null)
+                        androidx.core.app.NotificationManagerCompat.from(itemView.context).cancel(chatId.hashCode())
                     }
                     layoutCallActions?.visibility = View.GONE
                     tvMessage.text = "Call Declined"

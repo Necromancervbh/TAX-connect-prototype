@@ -350,7 +350,8 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         callerName: String?,
         callerAvatar: String?
     ) {
-        val notificationId = System.currentTimeMillis().toInt()
+        // Deterministic ID based on channelName so we can cancel it when VideoCallActivity opens
+        val notificationId = channelName?.hashCode() ?: System.currentTimeMillis().toInt()
 
         val answerIntent = Intent(this, VideoCallActivity::class.java).apply {
             putExtra("CHANNEL_NAME", channelName)

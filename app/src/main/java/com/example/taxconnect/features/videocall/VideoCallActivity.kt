@@ -157,6 +157,11 @@ class VideoCallActivity : BaseActivity<ActivityVideoCallBinding>() {
         val callerName = intent.getStringExtra("CALLER_NAME")
         val isIncoming = intent.getBooleanExtra("INCOMING_CALL", false)
         val action = intent.getStringExtra("ACTION")
+
+        // Cancel the incoming call notification to stop the ringtone
+        channelName?.let {
+            androidx.core.app.NotificationManagerCompat.from(this).cancel(it.hashCode())
+        }
         
         if (isIncoming) {
             binding.tvStatus.text = "Incoming call from $callerName..."
