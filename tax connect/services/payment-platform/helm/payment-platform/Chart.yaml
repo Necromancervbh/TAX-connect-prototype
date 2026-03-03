@@ -1,0 +1,6 @@
+apiVersion: v2
+name: payment-platform
+description: Payment and agreement platform
+type: application
+version: 0.1.0
+appVersion: "0.1.0"

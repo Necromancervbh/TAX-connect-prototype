@@ -1,0 +1,637 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawerLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?attr/colorSurface">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorSurface"
+            app:elevation="0dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_scrollFlags="scroll|enterAlways|snap">
+
+                <!-- Header Section -->
+                <LinearLayout
+                    android:id="@+id/header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="@dimen/screen_margin_horizontal"
+                    android:paddingTop="@dimen/screen_margin_vertical"
+                    android:paddingBottom="@dimen/space_2x">
+
+                    <ImageView
+                        android:id="@+id/ivMenu"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:src="@drawable/ic_menu"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:padding="12dp"
+                        android:layout_marginEnd="@dimen/space_2x"
+                        android:contentDescription="Menu"
+                        app:tint="?attr/colorOnSurface" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+                        
+                        <TextView
+                            android:id="@+id/tvWelcome"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Home"
+                            android:contentDescription="Welcome header"
+                            android:textAppearance="?attr/textAppearanceHeadlineMedium"
+                            android:textStyle="bold"/>
+                            
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Find your expert"
+                            android:textAppearance="?attr/textAppearanceBodyLarge"
+                            android:textColor="?attr/colorOnSurfaceVariant"/>
+                    </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/ivMyChats"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_marginEnd="@dimen/space_1x"
+                        android:src="@drawable/ic_chat_bubble"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:padding="12dp"
+                        app:tint="?attr/colorOnSurface"
+                        android:contentDescription="Messages" />
+
+                    <ImageView
+                        android:id="@+id/ivNotifications"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_marginEnd="@dimen/space_1x"
+                        android:src="@drawable/ic_notifications"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:padding="12dp"
+                        app:tint="?attr/colorOnSurface"
+                        android:contentDescription="Notifications" />
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/ivProfile"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/ic_person"
+                        android:background="@drawable/bg_circle_gray"
+                        android:padding="0dp"
+                        app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
+                        android:contentDescription="Profile" />
+                </LinearLayout>
+
+                <!-- Search Card -->
+                <com.google.android.material.card.MaterialCardView
+                    style="@style/Widget.Material3.CardView.Filled"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/screen_margin_horizontal"
+                    android:layout_marginTop="@dimen/space_1x"
+                    app:cardBackgroundColor="?attr/colorSurfaceVariant"
+                    app:cardCornerRadius="@dimen/corner_radius_pill">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="@dimen/space_2x"
+                        android:gravity="center_vertical">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_search"
+                            app:tint="?attr/colorOnSurfaceVariant"/>
+
+                        <EditText
+                            android:id="@+id/etSearch"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:hint="Search Chartered Accountants"
+                            android:contentDescription="Search for Chartered Accountants"
+                            android:textAppearance="?attr/textAppearanceBodyLarge"
+                            android:textColor="?attr/colorOnSurface"
+                            android:textColorHint="?attr/colorOnSurfaceVariant"
+                            android:background="@android:color/transparent"
+                            android:paddingStart="@dimen/space_2x"
+                            android:imeOptions="actionSearch"
+                            android:inputType="text"
+                            android:singleLine="true"/>
+
+                        <ImageView
+                            android:id="@+id/ivVoiceSearch"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_mic"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            app:tint="?attr/colorOnSurfaceVariant"
+                            android:contentDescription="Voice Search" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Tax Savings Calculator Widget (Removed) -->
+
+
+                <!-- Quick Actions -->
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scrollbars="none"
+                    android:layout_marginTop="@dimen/space_2x"
+                    android:paddingBottom="@dimen/space_2x"
+                    android:clipToPadding="false"
+                    android:paddingHorizontal="@dimen/screen_margin_horizontal">
+                    
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/quickActions"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:singleLine="true">
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipExplore"
+                            style="@style/Widget.Material3.Chip.Assist"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Explore CAs"/>
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipBookings"
+                            style="@style/Widget.Material3.Chip.Assist"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="My Bookings"/>
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipWallet"
+                            style="@style/Widget.Material3.Chip.Assist"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Wallet"/>
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipSaved"
+                            style="@style/Widget.Material3.Chip.Assist"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Saved CAs"/>
+                    </com.google.android.material.chip.ChipGroup>
+                </HorizontalScrollView>
+
+            </LinearLayout>
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="104dp">
+
+                <!-- Profile Completion Card -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardProfileCompletion"
+                    style="@style/Widget.Material3.CardView.Elevated"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_4x"
+                    android:layout_marginHorizontal="@dimen/screen_margin_horizontal"
+                    android:visibility="gone">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="@dimen/space_4x"
+                        android:gravity="center_vertical">
+
+                        <FrameLayout
+                            android:layout_width="64dp"
+                            android:layout_height="64dp">
+                            <com.google.android.material.progressindicator.CircularProgressIndicator
+                                android:id="@+id/profileProgress"
+                                android:layout_width="64dp"
+                                android:layout_height="64dp"
+                                app:indicatorSize="64dp"
+                                app:trackThickness="6dp"
+                                app:trackCornerRadius="3dp"
+                                android:progress="65"
+                                app:indicatorColor="?attr/colorPrimary"
+                                app:trackColor="?attr/colorSurfaceVariant"/>
+                            
+                            <TextView
+                                android:id="@+id/tvProfilePercentage"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="65%"
+                                android:textAppearance="?attr/textAppearanceLabelLarge"
+                                android:textStyle="bold"/>
+                        </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:layout_marginStart="@dimen/space_4x">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Complete Your Profile"
+                                android:textAppearance="?attr/textAppearanceTitleMedium"
+                                android:textStyle="bold"/>
+
+                            <TextView
+                                android:id="@+id/tvProfileCompletionDesc"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Add your bio and services to stand out."
+                                android:textAppearance="?attr/textAppearanceBodySmall"
+                                android:textColor="?attr/colorOnSurfaceVariant"/>
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnCompleteProfile"
+                                style="@style/Widget.Material3.Button.TextButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="0dp"
+                                android:minWidth="0dp"
+                                android:minHeight="0dp"
+                                android:text="Finish Setup"
+                                android:textAllCaps="false"
+                                app:icon="@drawable/ic_arrow_forward"
+                                app:iconGravity="textEnd"
+                                app:iconSize="16dp"/>
+                        </LinearLayout>
+
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Hero Banner -->
+                <com.google.android.material.card.MaterialCardView
+                    style="@style/Widget.Material3.CardView.Filled"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_4x"
+                    android:layout_marginHorizontal="@dimen/screen_margin_horizontal"
+                    app:cardBackgroundColor="?attr/colorPrimary">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/space_6x">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_toStartOf="@+id/ivBannerIcon"
+                            android:layout_marginEnd="@dimen/space_4x">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Tax Season is Here!"
+                                android:textAppearance="?attr/textAppearanceHeadlineMedium"
+                                android:textColor="?attr/colorOnPrimary"
+                                android:textStyle="bold"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/space_2x"
+                                android:text="File your taxes with expert CAs hassle-free."
+                                android:textAppearance="?attr/textAppearanceBodyMedium"
+                                android:textColor="?attr/colorOnPrimary"
+                                android:alpha="0.9"/>
+                        </LinearLayout>
+
+                        <ImageView
+                            android:id="@+id/ivBannerIcon"
+                            android:layout_width="64dp"
+                            android:layout_height="64dp"
+                            android:src="@drawable/ic_document"
+                            app:tint="?attr/colorOnPrimary"
+                            android:alpha="0.9"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"/>
+                    </RelativeLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Tax Deadlines Section -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="@dimen/space_6x"
+                    android:layout_marginBottom="@dimen/space_2x"
+                    android:paddingHorizontal="@dimen/screen_margin_horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="📅 Upcoming Deadlines"
+                        android:textAppearance="?attr/textAppearanceTitleLarge" />
+                </LinearLayout>
+
+                <HorizontalScrollView
+                    android:id="@+id/scrollDeadlines"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scrollbars="none"
+                    android:paddingHorizontal="@dimen/screen_margin_horizontal"
+                    android:clipToPadding="false">
+
+                    <LinearLayout
+                        android:id="@+id/layoutDeadlines"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingEnd="@dimen/screen_margin_horizontal" />
+
+                </HorizontalScrollView>
+
+                <!-- Top Rated Header -->
+
+                <LinearLayout
+                    android:id="@+id/layoutTopRated"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="@dimen/space_6x"
+                    android:layout_marginBottom="@dimen/space_2x"
+                    android:paddingHorizontal="@dimen/screen_margin_horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Top Rated Experts"
+                        android:textAppearance="?attr/textAppearanceTitleLarge"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnViewAll"
+                        style="@style/Widget.Material3.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="View All"
+                        android:textColor="?attr/colorSecondary"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/shimmerTopRated"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:visibility="visible">
+                    <include layout="@layout/item_ca_shimmer" android:layout_width="280dp" android:layout_height="wrap_content" />
+                    <include layout="@layout/item_ca_shimmer" android:layout_width="280dp" android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvTopRated"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="@dimen/screen_margin_horizontal"
+                    android:paddingEnd="@dimen/space_2x"
+                    android:clipToPadding="false"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    android:orientation="horizontal"
+                    android:layoutAnimation="@anim/layout_animation_fall_down"
+                    android:visibility="gone"/>
+
+                <ProgressBar
+                    android:id="@+id/progressTopRated"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginStart="@dimen/screen_margin_horizontal"
+                    android:layout_marginTop="@dimen/space_2x"
+                    android:visibility="gone"/>
+
+                <!-- Featured Experts Header -->
+                <LinearLayout
+                    android:id="@+id/layoutFeatured"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="@dimen/space_6x"
+                    android:layout_marginBottom="@dimen/space_2x"
+                    android:paddingHorizontal="@dimen/screen_margin_horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Featured Experts"
+                        android:textAppearance="?attr/textAppearanceTitleLarge"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/shimmerFeatured"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:visibility="visible">
+                    <include layout="@layout/item_ca_shimmer" android:layout_width="280dp" android:layout_height="wrap_content" />
+                    <include layout="@layout/item_ca_shimmer" android:layout_width="280dp" android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvFeaturedCAs"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="@dimen/screen_margin_horizontal"
+                    android:paddingEnd="@dimen/space_2x"
+                    android:clipToPadding="false"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    android:orientation="horizontal"
+                    android:layoutAnimation="@anim/layout_animation_fall_down"
+                    android:visibility="gone"/>
+
+                <LinearLayout
+                    android:id="@+id/layoutEmptyState"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:layout_marginTop="@dimen/space_6x"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:layout_width="120dp"
+                        android:layout_height="120dp"
+                        android:src="@drawable/ic_search"
+                        app:tint="?attr/colorOnSurfaceVariant"
+                        android:alpha="0.5"
+                        android:layout_marginBottom="16dp"
+                        android:contentDescription="@null"/>
+
+                    <TextView
+                        android:id="@+id/tvEmptyState"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="No CAs found"
+                        android:textAppearance="?attr/textAppearanceBodyLarge"
+                        android:textColor="?attr/colorOnSurfaceVariant"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+        <!-- FAB Overlay -->
+        <View
+            android:id="@+id/fabOverlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#80000000"
+            android:visibility="gone"
+            android:alpha="0"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <!-- FAB Menu -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/screen_margin_horizontal"
+            android:gravity="end"
+            android:orientation="vertical">
+
+            <!-- Sub Action 1: Search -->
+            <LinearLayout
+                android:id="@+id/layoutFabSearch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                android:alpha="0"
+                android:translationY="24dp"
+                android:layout_marginBottom="@dimen/space_2x">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/space_2x"
+                    android:background="@drawable/bg_rounded_surface_variant"
+                    android:paddingHorizontal="@dimen/space_2x"
+                    android:paddingVertical="@dimen/space_1x"
+                    android:text="Search CAs"
+                    android:textAppearance="?attr/textAppearanceLabelLarge"
+                    android:textColor="?attr/colorOnSurface" />
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/fabSearch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:fabSize="mini"
+                    app:srcCompat="@drawable/ic_search"
+                    app:tint="?attr/colorOnSecondaryContainer"
+                    app:backgroundTint="?attr/colorSecondaryContainer"
+                    android:contentDescription="Search CAs" />
+            </LinearLayout>
+
+            <!-- Sub Action 2: Bookings -->
+            <LinearLayout
+                android:id="@+id/layoutFabBookings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                android:alpha="0"
+                android:translationY="24dp"
+                android:layout_marginBottom="@dimen/space_2x">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/space_2x"
+                    android:background="@drawable/bg_rounded_surface_variant"
+                    android:paddingHorizontal="@dimen/space_2x"
+                    android:paddingVertical="@dimen/space_1x"
+                    android:text="My Bookings"
+                    android:textAppearance="?attr/textAppearanceLabelLarge"
+                    android:textColor="?attr/colorOnSurface" />
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/fabBookings"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:fabSize="mini"
+                    app:srcCompat="@drawable/ic_event"
+                    app:tint="?attr/colorOnSecondaryContainer"
+                    app:backgroundTint="?attr/colorSecondaryContainer"
+                    android:contentDescription="My Bookings" />
+            </LinearLayout>
+
+            <!-- Main FAB -->
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fabMain"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_add"
+                app:tint="?attr/colorOnPrimaryContainer"
+                app:backgroundTint="?attr/colorPrimaryContainer"
+                android:contentDescription="Quick Actions" />
+
+        </LinearLayout>
+
+        <!-- Smart Bottom Navigation -->
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottomNavigation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="?attr/colorSurface"
+            app:menu="@menu/bottom_nav_menu_client"
+            app:labelVisibilityMode="labeled"
+            app:elevation="8dp" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/nav_view"
+        style="@style/AppNavigationView.Material3"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        app:headerLayout="@layout/nav_header"
+        app:menu="@menu/side_menu" />
+</androidx.drawerlayout.widget.DrawerLayout>

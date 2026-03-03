@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <bool name="is_large_screen">false</bool>
+    <bool name="is_xlarge_screen">false</bool>
+    <bool name="is_foldable">false</bool>
+    <bool name="show_navigation_rail">false</bool>
+    <bool name="show_bottom_navigation">true</bool>
+    <bool name="show_two_pane_layout">false</bool>
+    <bool name="show_expanded_cards">false</bool>
+    <bool name="show_compact_stats">true</bool>
+    <bool name="show_detailed_stats">false</bool>
+    <bool name="show_quick_actions">true</bool>
+    <bool name="show_extended_quick_actions">false</bool>
+</resources>
