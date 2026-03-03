@@ -363,12 +363,14 @@ class MessageAdapter(
         private val layoutDocument: LinearLayout? = itemView.findViewById(R.id.layoutDocument)
         private val tvDocName: TextView? = itemView.findViewById(R.id.tvDocName)
         private val ivDocThumbnail: ImageView? = itemView.findViewById(R.id.ivDocThumbnail)
+        private val layoutCallActions: View? = itemView.findViewById(R.id.layoutCallActions)
 
         fun bind(message: MessageModel, callListener: OnCallActionListener?) {
             // Reset visibilities
             tvMessage.visibility = View.GONE
             cardPreview.visibility = View.GONE
             layoutDocument?.visibility = View.GONE
+            layoutCallActions?.visibility = View.GONE
 
             // Read Status and Upload Status
             when (message.uploadStatus) {
@@ -404,14 +406,11 @@ class MessageAdapter(
             }
 
             if ("CALL" == message.type || "call" == message.type) {
-                tvMessage.visibility = View.VISIBLE
-                tvMessage.text = itemView.context.getString(R.string.video_call_started)
-                tvMessage.typeface = Typeface.DEFAULT_BOLD
-                tvMessage.setTextColor(ContextCompat.getColor(itemView.context, R.color.on_primary))
-                tvMessage.setOnClickListener {
-                     callListener?.onJoinCall(message)
-                }
-            } else if ("DOCUMENT" == message.type) {
+            layoutCallActions?.visibility = View.VISIBLE
+            layoutCallActions?.setOnClickListener {
+                callListener?.onJoinCall(message)
+            }
+        } else if ("DOCUMENT" == message.type) {
                 if (layoutDocument != null) {
                     layoutDocument.visibility = View.VISIBLE
                     var docName = itemView.context.getString(R.string.document)

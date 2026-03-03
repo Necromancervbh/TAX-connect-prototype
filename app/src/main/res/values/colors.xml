@@ -71,6 +71,7 @@
     
     <!-- UI Component Colors -->
     <color name="chip_background">#E2E8F0</color> <!-- Slate 200 -->
-
+    <color name="outline">#E2E8F0</color>
+    <color name="on_primary_container">#1E3A8A</color>
 
 </resources>
