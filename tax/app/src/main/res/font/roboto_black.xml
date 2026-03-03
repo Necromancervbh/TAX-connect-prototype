@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<font-family xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- Roboto Black - For Display Large -->
-    <font
-        android:fontStyle="normal"
-        android:fontWeight="900" />
-</font-family>
