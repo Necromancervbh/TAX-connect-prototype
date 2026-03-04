@@ -39,5 +39,8 @@ data class MessageModel(
     
     // Internal fields for identifying local files during optimistic state
     var localFilePath: String? = null,
-    var localThumbnailPath: String? = null
+    var localThumbnailPath: String? = null,
+
+    // SERVICE_SUMMARY invoice fields
+    var serviceName: String? = null   // Service description shown in the invoice card
 )

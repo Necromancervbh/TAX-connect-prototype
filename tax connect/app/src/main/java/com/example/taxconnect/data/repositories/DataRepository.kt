@@ -1,4 +1,4 @@
-package com.example.taxconnect.data.repositories
+﻿package com.example.taxconnect.data.repositories
 
 import com.example.taxconnect.data.models.*
 import com.example.taxconnect.data.repositories.AnalyticsRepository
@@ -247,7 +247,10 @@ class DataRepository private constructor() {
             transaction.set(ratingRef, rating)
             transaction.update(caRef, "rating", newAverage, "ratingCount", newCount)
             null
-        }.addOnSuccessListener { callback.onSuccess(null) }
+        }.addOnSuccessListener {
+            clearUserCache(caId!!)
+            callback.onSuccess(null)
+        }
             .addOnFailureListener { e -> callback.onError(e.message) }
     }
 
@@ -598,8 +601,7 @@ class DataRepository private constructor() {
             val newCount = currentCount + 1
             val newRating = (currentRating * currentCount + rating.rating) / newCount
             
-            transaction.update(caRef, "rating", newRating)
-            transaction.update(caRef, "ratingCount", newCount.toInt()) // Cast to Int for UserModel compatibility
+            transaction.update(caRef, mapOf("rating" to newRating, "ratingCount" to newCount.toInt()))
 
             // 3. Reset conversation workflow state to Discussion
             val convRef = firestore.collection("conversations").document(chatId)
@@ -607,6 +609,7 @@ class DataRepository private constructor() {
             
             null
         }.addOnSuccessListener {
+            clearUserCache(caId)
             callback.onSuccess(null)
         }.addOnFailureListener { e ->
             callback.onError(e.message)
@@ -823,12 +826,12 @@ class DataRepository private constructor() {
                     }
                     sendMessage(
                         MessageModel(
-                            senderId,
-                            receiverId,
-                            chatId,
-                            initialMessageText,
-                            System.currentTimeMillis(),
-                            "TEXT"
+                            senderId = senderId,
+                            receiverId = receiverId,
+                            chatId = chatId,
+                            message = initialMessageText,
+                            timestamp = System.currentTimeMillis(),
+                            type = "TEXT"
                         ), callback
                     )
                 } else {
@@ -1101,12 +1104,12 @@ class DataRepository private constructor() {
 
         val finalMsgSenderId = msgSenderId!!
         val msg = MessageModel(
-            finalMsgSenderId,
-            msgReceiverId,
-            chatId,
-            initialMessageText,
-            System.currentTimeMillis(),
-            "TEXT"
+            senderId = finalMsgSenderId,
+            receiverId = msgReceiverId,
+            chatId = chatId,
+            message = initialMessageText,
+            timestamp = System.currentTimeMillis(),
+            type = "TEXT"
         )
 
         // 1. Update State to DISCUSSION
@@ -1492,9 +1495,6 @@ class DataRepository private constructor() {
                         for (booking in bookings) {
                             if (booking.userId == uid) {
                                 booking.userName = user.name
-                                // Note: BookingModel doesn't have a userProfileImage field, 
-                                // but we could add it if needed. For now, userName is enough 
-                                // as RequestsActivity.enrichRequestsWithUserData will fetch the full UserModel.
                             }
                         }
                     }
@@ -1539,6 +1539,80 @@ class DataRepository private constructor() {
     fun updateBookingStatus(bookingId: String, status: String, callback: DataCallback<Void?>) {
         val ref = firestore.collection("bookings").document(bookingId)
         updateFieldWithRetry(ref, "status", status, 2, callback)
+    }
+
+    fun updateBookingStatusWithReason(bookingId: String, status: String, reason: String?, callback: DataCallback<Void?>) {
+        val ref = firestore.collection("bookings").document(bookingId)
+        val updates = mutableMapOf<String, Any>("status" to status)
+        if (!reason.isNullOrBlank()) {
+            updates["rejectionReason"] = reason
+        }
+        ref.update(updates)
+            .addOnSuccessListener { callback.onSuccess(null) }
+            .addOnFailureListener { e -> callback.onError(e.message) }
+    }
+
+    fun sendBookingNotification(targetUserId: String, title: String, body: String) {
+        // Fetch target user's FCM token and send via FCM HTTP API (handled server-side via Cloud Functions ideally).
+        // For client-side fallback, we store a notification document in Firestore which the Cloud Function picks up.
+        firestore.collection("users").document(targetUserId).get()
+            .addOnSuccessListener { doc ->
+                val fcmToken = doc.getString("fcmToken") ?: return@addOnSuccessListener
+                val notification = hashMapOf(
+                    "toToken" to fcmToken,
+                    "title" to title,
+                    "body" to body,
+                    "type" to "BOOKING_UPDATE",
+                    "sentAt" to System.currentTimeMillis()
+                )
+                firestore.collection("notifications_queue").add(notification)
+            }
+    }
+
+    // ─── CA Availability ─────────────────────────────────────────────────────
+
+    /**
+     * Fetches all availability days for the given CA.
+     * Stored at: users/{caUid}/availability/{DAY}
+     * If the subcollection is empty, the callback receives an empty list
+     * and callers should fall back to default hardcoded slots.
+     */
+    fun getCAAvailability(caUid: String, callback: DataCallback<List<AvailabilityModel>>) {
+        firestore.collection("users").document(caUid)
+            .collection("availability")
+            .get()
+            .addOnSuccessListener { snapshot ->
+                val list = snapshot.documents.mapNotNull { doc ->
+                    doc.toObject(AvailabilityModel::class.java)?.also { it.day = doc.id }
+                }
+                callback.onSuccess(list)
+            }
+            .addOnFailureListener { e -> callback.onError(e.message) }
+    }
+
+    /**
+     * Saves or updates a single day's availability for the CA.
+     */
+    fun saveCAAvailability(caUid: String, model: AvailabilityModel, callback: DataCallback<Void?>) {
+        val day = model.day ?: return
+        firestore.collection("users").document(caUid)
+            .collection("availability").document(day)
+            .set(model)
+            .addOnSuccessListener { callback.onSuccess(null) }
+            .addOnFailureListener { e -> callback.onError(e.message) }
+    }
+
+
+    fun autoExpirePendingBookings(caUid: String) {
+        val cutoff = System.currentTimeMillis() - 86400000L
+        firestore.collection("bookings").whereEqualTo("caId", caUid).whereEqualTo("status", "PENDING").whereLessThan("createdAt", cutoff).get()
+            .addOnSuccessListener { snapshot -> if (!snapshot.isEmpty) { val batch = firestore.batch(); snapshot.documents.forEach { batch.update(it.reference, "status", "EXPIRED") }; batch.commit() } }
+    }
+
+    fun getCompletedCAsForUser(userId: String, callback: DataCallback<List<String>>) {
+        firestore.collection("bookings").whereEqualTo("userId", userId).whereEqualTo("status", "COMPLETED").get()
+            .addOnSuccessListener { snap -> callback.onSuccess(snap.documents.mapNotNull { it.getString("caId") }.distinct()) }
+            .addOnFailureListener { e -> callback.onError(e.message) }
     }
 
     fun blockUser(currentUserId: String, targetUserId: String, callback: DataCallback<Void?>) {
@@ -1740,3 +1814,4 @@ class DataRepository private constructor() {
             .addOnFailureListener { e -> callback.onError(e.message) }
     }
 }
+

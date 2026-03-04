@@ -84,8 +84,10 @@
         <activity android:name=".features.ca.CADetailActivity" />
         <activity android:name=".features.chat.MyChatsActivity" />
         <activity android:name=".features.booking.OrderHistoryActivity" />
-        <activity android:name=".features.booking.RequestsActivity" />
+
         <activity android:name=".features.booking.BookAppointmentActivity" />
+        <activity android:name=".features.booking.AvailabilitySettingsActivity" />
+
         <activity android:name=".features.wallet.WalletActivity" />
         <activity android:name=".features.documents.BalanceSheetActivity" />
         <activity android:name=".features.booking.MyBookingsActivity" />

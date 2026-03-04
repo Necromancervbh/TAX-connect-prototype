@@ -10,6 +10,7 @@
     <color name="background">#F8FAFC</color> <!-- Slate 50 (Lighter, cleaner background) -->
     <color name="surface">#FFFFFF</color>
     <color name="surface_variant">#F1F5F9</color> <!-- Slate 100 -->
+    <color name="surface_variant_safe">#F1F5F9</color> <!-- Safe alias for drawables (no ?attr/ crashes) -->
     <color name="stroke">#E2E8F0</color> <!-- Slate 200 (Subtle borders) -->
     <color name="stroke_strong">#CBD5E1</color> <!-- Slate 300 -->
 
@@ -46,7 +47,7 @@
     <color name="emerald_600">#059669</color>
     <color name="rose_600">#E11D48</color>
     <color name="emerald_500">#10B981</color>
-    
+
     <!-- Missing Colors -->
     <color name="white">#FFFFFF</color>
     <color name="slate_50">#F8FAFC</color>
@@ -73,5 +74,6 @@
     <color name="chip_background">#E2E8F0</color> <!-- Slate 200 -->
     <color name="outline">#E2E8F0</color>
     <color name="on_primary_container">#1E3A8A</color>
+    <color name="border_color">#E2E8F0</color><!-- Alias for stroke — used by item_chat_summary card border -->
 
 </resources>

@@ -269,7 +269,7 @@ class VideoCallActivity : BaseActivity<ActivityVideoCallBinding>() {
             if (grantResults.isNotEmpty() && grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
                 initAgora()
             } else {
-                showToast("Permissions required for video call")
+                showToast(getString(R.string.permissions_required_video_call))
                 finish()
             }
         }
@@ -359,7 +359,7 @@ class VideoCallActivity : BaseActivity<ActivityVideoCallBinding>() {
                                 "channelName" to (channelName ?: "")
                             )
                             AnalyticsRepository.getInstance()?.log("call_status_change", d)
-                            showToast("Call Declined")
+                            showToast(getString(R.string.call_declined))
                             leaveChannel()
                             finish()
                         }
@@ -369,7 +369,7 @@ class VideoCallActivity : BaseActivity<ActivityVideoCallBinding>() {
                                 "channelName" to (channelName ?: "")
                             )
                             AnalyticsRepository.getInstance()?.log("call_status_change", d)
-                            showToast("User is busy")
+                            showToast(getString(R.string.user_is_busy))
                             leaveChannel()
                             finish()
                         }
@@ -398,7 +398,7 @@ class VideoCallActivity : BaseActivity<ActivityVideoCallBinding>() {
             rtcEngine = agoraManager.rtcEngine
 
             if (rtcEngine == null) {
-                showToast("Failed to initialize video engine")
+                showToast(getString(R.string.error_video_engine))
                 finish()
                 return
             }
@@ -452,7 +452,7 @@ class VideoCallActivity : BaseActivity<ActivityVideoCallBinding>() {
         rtcEngine?.setupRemoteVideo(VideoCanvas(surfaceView, VideoCanvas.RENDER_MODE_HIDDEN, uid))
         surfaceView.visibility = View.VISIBLE
 
-        showToast("Remote video setup for: $uid")
+        timber.log.Timber.d("Remote video setup for uid: $uid")
     }
 
     private fun showCallQualityAndFinish() {

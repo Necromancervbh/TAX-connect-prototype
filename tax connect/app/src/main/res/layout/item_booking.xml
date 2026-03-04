@@ -78,13 +78,29 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="@id/ivAvatar" />
 
+        <!-- Service Name -->
+        <TextView
+            android:id="@+id/tvServiceName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Tax Consultation"
+            android:textAppearance="?attr/textAppearanceLabelMedium"
+            android:textColor="?attr/colorPrimary"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:layout_marginTop="2dp"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@id/tvName"
+            app:layout_constraintTop_toBottomOf="@id/tvRoleLabel"
+            app:layout_constraintEnd_toStartOf="@id/chipStatus" />
+
         <!-- Divider -->
         <com.google.android.material.divider.MaterialDivider
             android:id="@+id/divider"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/space_2x"
-            app:layout_constraintTop_toBottomOf="@id/ivAvatar" />
+            app:layout_constraintTop_toBottomOf="@id/tvServiceName" />
 
         <!-- Date & Time Section -->
         <LinearLayout
@@ -131,6 +147,28 @@
             android:ellipsize="end"
             app:layout_constraintTop_toBottomOf="@id/layoutDateTime" />
 
+        <!-- Rejection Reason (shown to client on rejected bookings) -->
+        <LinearLayout
+            android:id="@+id/llRejectionReason"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_1x"
+            android:orientation="horizontal"
+            android:background="?attr/colorErrorContainer"
+            android:padding="@dimen/space_2x"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/tvMessage">
+
+            <TextView
+                android:id="@+id/tvRejectionReason"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Reason: Not available at this time"
+                android:textAppearance="?attr/textAppearanceBodySmall"
+                android:textColor="?attr/colorError" />
+
+        </LinearLayout>
+
         <!-- Action Buttons -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layoutActions"
@@ -138,7 +176,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/space_2x"
             android:visibility="visible"
-            app:layout_constraintTop_toBottomOf="@id/tvMessage">
+            app:layout_constraintTop_toBottomOf="@id/llRejectionReason">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnReject"
@@ -193,9 +231,118 @@
             android:text="View Details"
             android:visibility="gone"
             tools:visibility="visible"
-            app:icon="@drawable/ic_arrow_back"
+            app:icon="@drawable/ic_arrow_forward"
             app:iconGravity="textEnd"
             app:layout_constraintTop_toBottomOf="@id/btnAddToCalendar" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnMarkComplete"
+            style="@style/Widget.Material3.Button.TextButton.Icon"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="\u2705 Mark as Complete"
+            android:textColor="@color/emerald_700"
+            android:visibility="gone"
+            app:icon="@drawable/ic_check_circle"
+            app:iconTint="@color/emerald_700"
+            app:layout_constraintTop_toBottomOf="@id/btnMilestones"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- 3-Step Timeline (shown for COMPLETED bookings) -->
+        <LinearLayout
+            android:id="@+id/layoutTimeline"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_3x"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/btnMarkComplete">
+
+            <!-- Step 1: Booked -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center">
+                <View
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:background="@drawable/bg_circle_light_primary"
+                    android:backgroundTint="?attr/colorPrimary" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Booked"
+                    android:textAppearance="?attr/textAppearanceLabelSmall"
+                    android:textColor="?attr/colorPrimary"
+                    android:textStyle="bold"
+                    android:layout_marginTop="4dp" />
+            </LinearLayout>
+
+            <!-- Connector -->
+            <View
+                android:layout_width="0dp"
+                android:layout_height="2dp"
+                android:layout_weight="0.5"
+                android:backgroundTint="?attr/colorPrimary"
+                android:background="@android:color/darker_gray" />
+
+            <!-- Step 2: Accepted -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center">
+                <View
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:background="@drawable/bg_circle_light_primary"
+                    android:backgroundTint="?attr/colorPrimary" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Accepted"
+                    android:textAppearance="?attr/textAppearanceLabelSmall"
+                    android:textColor="?attr/colorPrimary"
+                    android:textStyle="bold"
+                    android:layout_marginTop="4dp" />
+            </LinearLayout>
+
+            <!-- Connector -->
+            <View
+                android:layout_width="0dp"
+                android:layout_height="2dp"
+                android:layout_weight="0.5"
+                android:backgroundTint="?attr/colorPrimary"
+                android:background="@android:color/darker_gray" />
+
+            <!-- Step 3: Completed -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center">
+                <View
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:background="@drawable/bg_circle_light_primary"
+                    android:backgroundTint="?attr/colorTertiary" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="✅ Done"
+                    android:textAppearance="?attr/textAppearanceLabelSmall"
+                    android:textColor="?attr/colorTertiary"
+                    android:textStyle="bold"
+                    android:layout_marginTop="4dp" />
+            </LinearLayout>
+        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

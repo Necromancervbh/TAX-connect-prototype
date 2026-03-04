@@ -1,0 +1,90 @@
+
+=== USERS COLLECTION ===
+Total sampled: 4
+
+Doc: 62Tcd3JPSYTQ6X2QXcR6dT4ai0r2
+  name: Shruti shah
+  email: vaibhavnecro@gmail.com
+  role: CA
+  rating: 0
+  ratingCount: 0
+  isOnline: undefined
+  uid: 62Tcd3JPSYTQ6X2QXcR6dT4ai0r2
+  fcmToken_present: true
+  profileImageUrl_present: true
+  specialization: TAXATION
+  experience: 3
+  ALL_FIELDS: [role, city, rating, verified, bio, caNumber, verificationRequested, experience, ratingCount, introVideoUrl, minCharges, uid, phoneNumber, certificates, walletBalance, name, specialization, online, blockedUsers, clientCount, priceRange, profileImageUrl, email, fcmToken]
+
+Doc: 8RjVObJwk9b8N0KNspDtUiqKKxc2
+  name: vaibhav
+  email: vaibhavtest2@gmail.com
+  role: CUSTOMER
+  rating: 0
+  ratingCount: 0
+  isOnline: undefined
+  uid: 8RjVObJwk9b8N0KNspDtUiqKKxc2
+  fcmToken_present: true
+  profileImageUrl_present: false
+  specialization: null
+  experience: null
+  ALL_FIELDS: [notifyCalls, role, notifyRequests, city, notifyBookings, rating, bio, caNumber, experience, introVideoUrl, minCharges, uid, archived, createdAt, quietHoursStart, walletBalance, quietHoursEnabled, clientCount, profileImageUrl, email, updatedAt, notifyMessages, verified, verificationRequested, ratingCount, archivedAt, phoneNumber, certificates, name, specialization, quietHoursEnd, blockedUsers, priceRange, fcmToken, online]
+
+Doc: ACbf5EjP7UN0vhWhxqqNZEA1oZk2
+  name: Vaibhav Shukla
+  email: vaibhavshukl23@gmail.com
+  role: CA
+  rating: 4.666666666666667
+  ratingCount: 3
+  isOnline: undefined
+  uid: ACbf5EjP7UN0vhWhxqqNZEA1oZk2
+  fcmToken_present: true
+  profileImageUrl_present: true
+  specialization: incometax
+  experience: 6
+  ALL_FIELDS: [notifyCalls, role, notifyRequests, city, notifyBookings, rating, bio, caNumber, experience, introVideoUrl, minCharges, uid, archived, createdAt, quietHoursStart, walletBalance, quietHoursEnabled, profileImageUrl, fcmToken, email, updatedAt, notifyMessages, verified, verificationRequested, ratingCount, archivedAt, phoneNumber, certificates, name, specialization, quietHoursEnd, blockedUsers, priceRange, online, clientCount]
+
+Doc: IGnSgrpYflYg6YWNSWKZ1C3XGNz1
+  name: raoman singh
+  email: vaibhavshuklvbh@gmail.com
+  role: CA
+  rating: 0
+  ratingCount: 0
+  isOnline: undefined
+  uid: IGnSgrpYflYg6YWNSWKZ1C3XGNz1
+  fcmToken_present: true
+  profileImageUrl_present: true
+  specialization: GST
+  experience: 2
+  ALL_FIELDS: [role, city, rating, verified, bio, caNumber, verificationRequested, experience, ratingCount, introVideoUrl, minCharges, uid, phoneNumber, certificates, walletBalance, name, specialization, online, blockedUsers, clientCount, priceRange, profileImageUrl, email, fcmToken]
+
+CA users with role==CA: 2
+  CA: 62Tcd3JPSYTQ6X2QXcR6dT4ai0r2 | name: Shruti shah | rating: 0 | ratingCount: 0
+  CA: ACbf5EjP7UN0vhWhxqqNZEA1oZk2 | name: Vaibhav Shukla | rating: 4.666666666666667 | ratingCount: 3
+
+Ratings subcollection for CA 62Tcd3JPSYTQ6X2QXcR6dT4ai0r2: 0 docs
+
+=== CONVERSATIONS COLLECTION ===
+Total sampled: 1
+
+Conv: 8RjVObJwk9b8N0KNspDtUiqKKxc2_ACbf5EjP7UN0vhWhxqqNZEA1oZk2
+  workflowState: Advance Payment
+  participantIds: ["8RjVObJwk9b8N0KNspDtUiqKKxc2","ACbf5EjP7UN0vhWhxqqNZEA1oZk2"]
+  videoCallAllowed: false
+  lastMessage: Hula
+  ALL_FIELDS: [otherUserEmail, serviceCycleSequence, currentServiceCycleId, conversationId, videoCallAllowed, lastServiceCompletedAt, callStatus, otherUserName, participantIds, otherUserProfileImage, unreadCounts, lastMessageTimestamp, lastMessage, unreadCounts.ACbf5EjP7UN0vhWhxqqNZEA1oZk2, workflowState]
+
+Messages in conv 8RjVObJwk9b8N0KNspDtUiqKKxc2_ACbf5EjP7UN0vhWhxqqNZEA1oZk2: 4
+  type: PROPOSAL, senderId: 8RjVObJwk9b8, msg: "New Booking: tax filling
+Date: 04/03/2026
+Time: 10"
+  type: TEXT, senderId: 8RjVObJwk9b8, msg: "Heyy"
+  type: TEXT, senderId: 8RjVObJwk9b8, msg: "Hula"
+  type: TEXT, senderId: 8RjVObJwk9b8, msg: "Heyy"
+  All message types in this conv: [PROPOSAL, TEXT]
+
+=== SERVICES COLLECTION ===
+Total docs: 1
+  Doc: c94426d4-f361-4fa3-b5ab-b68562e169a0, fields: [estimatedTime, price, caId, description, id, title]
+
+=== AUDIT COMPLETE ===

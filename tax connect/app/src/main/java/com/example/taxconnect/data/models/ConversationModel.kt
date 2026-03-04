@@ -14,7 +14,8 @@ data class ConversationModel(
     var currentServiceCycleId: String? = null,
     var serviceCycleSequence: Int = 0,
     var lastServiceCompletedAt: Long = 0,
-    var unreadCounts: MutableMap<String, Int> = HashMap()
+    var unreadCounts: MutableMap<String, Int> = HashMap(),
+    var bookingId: String? = null  // Links this conversation to its booking
 ) {
     companion object {
         // Workflow States
@@ -30,5 +31,7 @@ data class ConversationModel(
         const val STATE_COMPLETED = "Completed"
         const val STATE_DOCS_PENDING = "Documents Pending"
         const val STATE_PAYMENT_PENDING = "Payment Pending"
+        const val STATE_FINAL_DUE = "Final Due"
+        const val STATE_READY_TO_COMPLETE = "Ready to Complete"
     }
 }

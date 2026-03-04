@@ -19,9 +19,9 @@
             android:layout_height="?attr/actionBarSize"
             app:title="Book Appointment"
             app:titleCentered="true"
-            app:navigationIcon="@drawable/ic_arrow_back_material3" 
+            app:navigationIcon="@drawable/ic_arrow_back_material3"
             app:navigationIconTint="?attr/colorOnSurface"/>
-            
+
     </com.google.android.material.appbar.AppBarLayout>
 
     <LinearLayout
@@ -44,8 +44,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:indeterminate="true"
-            android:visibility="gone"
-            app:layout_constraintTop_toBottomOf="@id/layoutStepper" />
+            android:visibility="gone"/>
 
         <!-- Content Area -->
         <ViewFlipper
@@ -54,7 +53,7 @@
             android:layout_height="0dp"
             android:layout_weight="1">
 
-            <!-- Step 1: Select Service -->
+            <!-- ===================== STEP 1: Select Service ===================== -->
             <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -78,21 +77,56 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:nestedScrollingEnabled="false"
-                        tools:listitem="@layout/item_service" />
-                        
-                    <TextView
-                        android:id="@+id/tvNoServices"
+                        tools:listitem="@layout/item_service_selection" />
+
+                    <!-- Empty state: no services listed -->
+                    <LinearLayout
+                        android:id="@+id/layoutNoServices"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="No services available for this expert."
+                        android:orientation="vertical"
                         android:gravity="center"
                         android:padding="32dp"
-                        android:visibility="gone"/>
+                        android:visibility="gone">
+
+                        <ImageView
+                            android:layout_width="64dp"
+                            android:layout_height="64dp"
+                            android:src="@drawable/ic_work_material3"
+                            app:tint="?attr/colorOutline"
+                            android:layout_marginBottom="16dp"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="No services listed yet"
+                            android:gravity="center"
+                            style="@style/TextAppearance.Material3.TitleMedium"
+                            android:layout_marginBottom="8dp"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="This professional hasn't listed services yet. You can still message them directly."
+                            android:gravity="center"
+                            style="@style/TextAppearance.Material3.BodyMedium"
+                            android:textColor="?attr/colorOnSurfaceVariant"
+                            android:layout_marginBottom="24dp"/>
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnChatNoServices"
+                            style="@style/Widget.Material3.Button.TonalButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Message Professional"
+                            app:icon="@drawable/ic_chat_bubble"/>
+
+                    </LinearLayout>
 
                 </LinearLayout>
             </androidx.core.widget.NestedScrollView>
 
-            <!-- Step 2: Schedule (Date & Time) -->
+            <!-- ===================== STEP 2: Date & Time ===================== -->
             <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -103,42 +137,142 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="@dimen/screen_margin_horizontal">
-                    
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Select Date"
-                        style="@style/TextAppearance.Material3.TitleMedium"
-                        android:layout_marginBottom="@dimen/space_2x" />
 
-                    <CalendarView
-                        android:id="@+id/calendarView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/space_4x"
-                        android:background="@drawable/bg_rounded_surface"
-                        android:elevation="2dp"/>
-                        
+                    <!-- Section title -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Select Time Slot"
+                        android:text="Choose a Date"
                         style="@style/TextAppearance.Material3.TitleMedium"
-                        android:layout_marginBottom="@dimen/space_2x" />
-                        
+                        android:layout_marginBottom="@dimen/space_2x"/>
+
+                    <!-- Today / Tomorrow quick chips -->
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/chipGroupQuickDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/space_2x"
+                        app:selectionRequired="false"
+                        app:singleSelection="true">
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipToday"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Today"/>
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipTomorrow"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Tomorrow"/>
+
+                    </com.google.android.material.chip.ChipGroup>
+
+                    <!-- Horizontal date strip -->
                     <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rvTimeSlots"
+                        android:id="@+id/rvDateStrip"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/space_4x"
+                        android:orientation="horizontal"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+
+                    <!-- Time slots section -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="bottom"
+                        android:layout_marginBottom="@dimen/space_2x">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Morning"
+                            style="@style/TextAppearance.Material3.TitleMedium"/>
+
+                        <TextView
+                            android:id="@+id/tvMorningSlotCount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="12sp"
+                            android:textColor="@color/text_muted"
+                            android:layout_marginBottom="2dp"/>
+                    </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvMorningSlots"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/space_4x"
+                        android:nestedScrollingEnabled="false"
                         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                         app:spanCount="3"
                         tools:listitem="@layout/item_time_slot_chip"/>
 
+                    <!-- Afternoon Slots -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="bottom"
+                        android:layout_marginBottom="@dimen/space_2x">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Afternoon"
+                            style="@style/TextAppearance.Material3.TitleMedium"/>
+
+                        <TextView
+                            android:id="@+id/tvAfternoonSlotCount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="12sp"
+                            android:textColor="@color/text_muted"
+                            android:layout_marginBottom="2dp"/>
+                    </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvAfternoonSlots"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/space_2x"
+                        android:nestedScrollingEnabled="false"
+                        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                        app:spanCount="3"
+                        tools:listitem="@layout/item_time_slot_chip"/>
+
+                    <!-- Timezone note -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:layout_marginTop="@dimen/space_2x">
+                        <ImageView
+                            android:layout_width="14dp"
+                            android:layout_height="14dp"
+                            android:src="@drawable/ic_info"
+                            app:tint="@color/text_muted"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="All times in IST (Indian Standard Time)"
+                            android:textSize="11sp"
+                            android:textColor="@color/text_muted"
+                            android:layout_marginStart="4dp"/>
+                    </LinearLayout>
+
                 </LinearLayout>
             </androidx.core.widget.NestedScrollView>
 
-            <!-- Step 3: Review & Confirm -->
+            <!-- ===================== STEP 3: Review & Confirm ===================== -->
             <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -176,7 +310,7 @@
                                 android:layout_height="wrap_content"
                                 android:orientation="horizontal"
                                 android:layout_marginBottom="@dimen/space_3x">
-                                
+
                                 <ImageView
                                     android:id="@+id/ivExpertProfile"
                                     android:layout_width="48dp"
@@ -184,21 +318,21 @@
                                     android:src="@drawable/ic_person_material3"
                                     android:background="@drawable/bg_circle_outline"
                                     android:scaleType="centerCrop"/>
-                                    
+
                                 <LinearLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:orientation="vertical"
                                     android:layout_marginStart="@dimen/space_3x"
                                     android:gravity="center_vertical">
-                                    
+
                                     <TextView
                                         android:id="@+id/tvExpertName"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         tools:text="Dr. Tax Expert"
                                         style="@style/TextAppearance.Material3.TitleSmall"/>
-                                        
+
                                     <TextView
                                         android:id="@+id/tvExpertTitle"
                                         android:layout_width="wrap_content"
@@ -207,18 +341,18 @@
                                         style="@style/TextAppearance.Material3.BodySmall"/>
                                 </LinearLayout>
                             </LinearLayout>
-                            
+
                             <View
                                 android:layout_width="match_parent"
                                 android:layout_height="1dp"
                                 android:background="?attr/colorOutlineVariant"
                                 android:layout_marginBottom="@dimen/space_3x"/>
-                                
+
                             <!-- Service Details -->
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Service"
+                                android:text="SERVICE"
                                 style="@style/AppText.LabelMedium"/>
                             <TextView
                                 android:id="@+id/tvSelectedService"
@@ -227,48 +361,61 @@
                                 tools:text="Income Tax Filing"
                                 style="@style/TextAppearance.Material3.BodyLarge"
                                 android:layout_marginBottom="@dimen/space_2x"/>
-                                
+
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Date &amp; Time"
+                                android:text="DATE &amp; TIME"
                                 style="@style/AppText.LabelMedium"/>
                             <TextView
                                 android:id="@+id/tvSelectedDateTime"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                tools:text="Mon, 15 Jan Ã¢â‚¬Â¢ 10:00 AM"
+                                tools:text="Mon, 15 Jan • 10:00 AM"
                                 style="@style/TextAppearance.Material3.BodyLarge"
                                 android:layout_marginBottom="@dimen/space_2x"/>
-                                
+
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Consultation Fee"
+                                android:text="CONSULTATION FEE"
                                 style="@style/AppText.LabelMedium"/>
                             <TextView
                                 android:id="@+id/tvFee"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                tools:text="Ã¢â€šÂ¹ 1500"
+                                tools:text="₹ 1500"
                                 style="@style/TextAppearance.Material3.HeadlineSmall"
                                 android:textColor="?attr/colorPrimary"/>
+
+                            <!-- Fee breakdown context -->
+                            <TextView
+                                android:id="@+id/tvFeeContext"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="12sp"
+                                android:textColor="?attr/colorOnSurfaceVariant"
+                                android:layout_marginTop="2dp"
+                                tools:text="Advance payment due on acceptance"/>
 
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
 
-                    <!-- Add Note -->
+                    <!-- Special Instructions (Note field — clearly labelled) -->
                     <com.google.android.material.textfield.TextInputLayout
                         style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Add a note (Optional)">
-                        
+                        android:hint="Special instructions (optional)"
+                        android:layout_marginBottom="@dimen/space_4x"
+                        app:helperText="e.g. I need help with ITR for AY 2024–25">
+
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etNote"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:minLines="3"
+                            android:inputType="textMultiLine"
                             android:gravity="top"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -310,4 +457,3 @@
     </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
-

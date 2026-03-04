@@ -166,7 +166,20 @@ object NotificationHelper {
                 }
             }
             "booking" -> {
-                Intent(context, com.example.taxconnect.features.booking.MyBookingsActivity::class.java)
+                val chatId = data["chatId"]
+                if (!chatId.isNullOrBlank()) {
+                    // Booking accepted — we have a chat; go directly to it
+                    Intent(context, com.example.taxconnect.features.chat.ChatActivity::class.java).apply {
+                        putExtra("chatId", chatId)
+                        putExtra("otherUserId", data["otherUserId"])
+                        putExtra("otherUserName", data["otherUserName"])
+                    }
+                } else {
+                    // No chat yet (still PENDING or REJECTED) — show bookings list
+                    Intent(context, com.example.taxconnect.features.booking.MyBookingsActivity::class.java).apply {
+                        data["bookingId"]?.let { putExtra("bookingId", it) }
+                    }
+                }
             }
             else -> Intent(context, com.example.taxconnect.features.home.MainActivity::class.java)
         }

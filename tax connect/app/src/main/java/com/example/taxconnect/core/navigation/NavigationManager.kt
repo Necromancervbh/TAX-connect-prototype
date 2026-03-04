@@ -13,7 +13,8 @@ import com.example.taxconnect.features.chat.ChatActivity
 import com.example.taxconnect.features.booking.MyBookingsActivity
 import com.example.taxconnect.features.documents.MyDocumentsActivity
 import com.example.taxconnect.features.booking.OrderHistoryActivity
-import com.example.taxconnect.features.booking.RequestsActivity
+
+
 import com.example.taxconnect.features.community.CommunityActivity
 import com.example.taxconnect.features.videocall.VideoCallActivity
 import com.example.taxconnect.features.ca.CADetailActivity
@@ -61,9 +62,9 @@ class NavigationManager {
 
     fun navigateToChat(activity: Activity, conversationId: String, otherUserId: String, otherUserName: String) {
         val intent = Intent(activity, ChatActivity::class.java).apply {
-            putExtra("CONVERSATION_ID", conversationId)
-            putExtra("OTHER_USER_ID", otherUserId)
-            putExtra("OTHER_USER_NAME", otherUserName)
+            putExtra("chatId", conversationId)
+            putExtra("otherUserId", otherUserId)
+            putExtra("otherUserName", otherUserName)
         }
         activity.startActivity(intent)
     }
@@ -80,8 +81,8 @@ class NavigationManager {
         activity.startActivity(Intent(activity, OrderHistoryActivity::class.java))
     }
 
-    fun navigateToRequests(activity: Activity) {
-        activity.startActivity(Intent(activity, RequestsActivity::class.java))
+    fun navigateToPendingBookings(activity: Activity) {
+        activity.startActivity(Intent(activity, MyBookingsActivity::class.java))
     }
 
     fun navigateToCommunity(activity: Activity) {

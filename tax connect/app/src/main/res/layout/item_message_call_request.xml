@@ -84,14 +84,14 @@
 
                 <Button
                     android:id="@+id/btnReject"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginEnd="8dp"
                     android:text="Decline"
-                    android:textColor="@android:color/holo_red_dark"
-                    app:strokeColor="@android:color/holo_red_dark" />
+                    android:textColor="@color/error"
+                    app:strokeColor="@color/error" />
 
                 <Button
                     android:id="@+id/btnAccept"
@@ -101,7 +101,7 @@
                     android:layout_marginStart="8dp"
                     android:text="Accept &amp; Call"
                     android:backgroundTint="@color/emerald_600"
-                    android:textColor="@android:color/white" />
+                    android:textColor="@color/white" />
 
             </LinearLayout>
 

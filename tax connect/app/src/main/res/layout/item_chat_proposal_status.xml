@@ -28,7 +28,7 @@
                 android:text="Proposal Accepted"
                 android:textStyle="bold"
                 android:textSize="14sp"
-                android:textColor="#4CAF50" />
+                android:textColor="@color/accent" />
 
             <TextView
                 android:id="@+id/tvChatTime"
@@ -37,7 +37,7 @@
                 android:layout_marginTop="2dp"
                 android:text="12:00 PM"
                 android:textSize="10sp"
-                android:textColor="#9E9E9E" />
+                android:textColor="@color/text_muted" />
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 </LinearLayout>

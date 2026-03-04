@@ -21,7 +21,6 @@ import com.example.taxconnect.features.documents.SecureDocViewerActivity
 import com.example.taxconnect.databinding.ActivityCaDetailBinding
 import com.example.taxconnect.data.models.CertificateModel
 import com.example.taxconnect.data.models.ConversationModel
-import com.example.taxconnect.data.models.MessageModel
 import com.example.taxconnect.data.models.RatingModel
 import com.example.taxconnect.data.models.ServiceModel
 import com.example.taxconnect.data.models.UserModel
@@ -171,47 +170,6 @@ class CADetailActivity : BaseActivity<ActivityCaDetailBinding>() {
         startActivity(intent)
     }
 
-    private fun initiatePayment(service: ServiceModel) {
-        // Here we would integrate Razorpay
-        // For now, simulate success
-
-        val targetCa = ca ?: return
-        val uid = currentUserId ?: return
-        val cid = chatId ?: ConversationRepository.getInstance().getChatId(uid, targetCa.uid!!)
-
-        // Create conversation request directly with payment info
-        val request = ConversationModel()
-        request.conversationId = cid
-        request.participantIds = mutableListOf(uid, targetCa.uid!!)
-        request.workflowState = ConversationModel.STATE_REQUESTED
-        request.lastMessage = "Service Request: ${service.title}"
-        request.lastMessageTimestamp = System.currentTimeMillis()
-
-        ConversationRepository.getInstance().createConversation(request, object : DataRepository.DataCallback<Void?> {
-            override fun onSuccess(data: Void?) {
-                // Send initial message
-                val msg = MessageModel(
-                    uid, targetCa.uid!!, cid,
-                    getString(R.string.service_purchase_message, service.title ?: ""),
-                    System.currentTimeMillis(), "TEXT"
-                )
-                ConversationRepository.getInstance().sendMessage(msg, object : DataRepository.DataCallback<Void?> {
-                    override fun onSuccess(data: Void?) {
-                        showToast(getString(R.string.service_requested_success))
-                    }
-
-                    override fun onError(error: String?) {
-                        // Still show success as conversation was created, message failure is minor
-                        showToast(getString(R.string.service_requested_message_pending))
-                    }
-                })
-            }
-
-            override fun onError(error: String?) {
-                showToast(getString(R.string.failed_to_request_service))
-            }
-        })
-    }
 
     private fun setupUI() {
         val user = ca ?: return
@@ -301,23 +259,15 @@ class CADetailActivity : BaseActivity<ActivityCaDetailBinding>() {
         binding.tvRequestStatus.visibility = View.GONE
 
         if (currentConversation == null || ConversationModel.STATE_REFUSED == currentConversation?.workflowState) {
+            // No existing conversation — send user to booking flow
             binding.btnConnect.text = getString(R.string.request_assistance)
-            binding.btnConnect.setOnClickListener { 
+            binding.btnConnect.setOnClickListener {
                 val intent = Intent(this, com.example.taxconnect.features.booking.BookAppointmentActivity::class.java)
                 intent.putExtra("CA_DATA", ca)
                 startActivity(intent)
             }
-
-        } else if (ConversationModel.STATE_REQUESTED == currentConversation?.workflowState) {
-            binding.btnConnect.text = getString(R.string.request_pending)
-            binding.btnConnect.setOnClickListener {
-                showToast(getString(R.string.request_pending_approval_msg))
-            }
-            binding.tvRequestStatus.text = getString(R.string.request_pending_approval)
-            binding.tvRequestStatus.visibility = View.VISIBLE
-
         } else {
-            // Discussion, Accepted, etc.
+            // Conversation exists (booking accepted / discussion ongoing) — go to chat
             binding.btnConnect.text = getString(R.string.message)
             binding.btnConnect.setOnClickListener {
                 val intent = Intent(this, ChatActivity::class.java)
@@ -329,46 +279,7 @@ class CADetailActivity : BaseActivity<ActivityCaDetailBinding>() {
         }
     }
 
-    private fun showRequestDialog() {
-        val builder = AlertDialog.Builder(this)
-        val view = LayoutInflater.from(this).inflate(R.layout.dialog_send_request, null)
-        builder.setView(view)
-        val dialog = builder.create()
 
-        val etMessage = view.findViewById<TextInputEditText>(R.id.etRequestMessage)
-        val btnSend = view.findViewById<Button>(R.id.btnSendRequest)
-        val btnCancel = view.findViewById<Button>(R.id.btnCancelRequest)
-
-        btnSend.setOnClickListener {
-            val message = etMessage.text.toString().trim()
-            if (message.isEmpty()) {
-                showToast(getString(R.string.please_enter_query))
-                return@setOnClickListener
-            }
-
-            sendRequest(message, dialog)
-        }
-
-        btnCancel.setOnClickListener { dialog.dismiss() }
-        dialog.show()
-    }
-
-    private fun sendRequest(message: String, dialog: AlertDialog) {
-        val uid = currentUserId ?: return
-        val targetCa = ca ?: return
-
-        ConversationRepository.getInstance().sendRequest(uid, targetCa.uid!!, message, object : DataRepository.DataCallback<Void?> {
-            override fun onSuccess(data: Void?) {
-                showToast(getString(R.string.request_sent_success))
-                dialog.dismiss()
-                // Button update will happen automatically via listener
-            }
-
-            override fun onError(error: String?) {
-                showToast(getString(R.string.failed_to_send_request, error))
-            }
-        })
-    }
 
     private fun showVideoBottomSheet(videoUrl: String) {
         if (videoUrl.isEmpty()) return

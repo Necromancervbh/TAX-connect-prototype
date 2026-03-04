@@ -42,6 +42,22 @@
                 android:duplicateParentState="true"/>
         </LinearLayout>
 
+        <!-- Description (shown only when available) -->
+        <TextView
+            android:id="@+id/tvServiceDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="6dp"
+            android:textSize="13sp"
+            android:textColor="?attr/colorOnSurfaceVariant"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:visibility="gone"
+            tools:text="Includes ITR filing for salaried employees with Form 16"
+            tools:visibility="visible"
+            xmlns:tools="http://schemas.android.com/tools"/>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

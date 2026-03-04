@@ -1,4 +1,4 @@
-package com.example.taxconnect.features.booking
+﻿package com.example.taxconnect.features.booking
 
 import android.content.res.ColorStateList
 import android.view.LayoutInflater
@@ -26,6 +26,7 @@ class BookingAdapter(
         fun onBookingClick(booking: BookingModel)
         fun onMilestonesClick(booking: BookingModel)
         fun onAddToCalendar(booking: BookingModel)
+        fun onMarkComplete(booking: BookingModel)
     }
 
     fun setBookings(bookings: List<BookingModel>) {
@@ -72,6 +73,14 @@ class BookingAdapter(
                 binding.tvMessage.visibility = View.GONE
             }
 
+            // Show service name
+            if (!booking.serviceName.isNullOrBlank()) {
+                binding.tvServiceName.text = booking.serviceName
+                binding.tvServiceName.visibility = View.VISIBLE
+            } else {
+                binding.tvServiceName.visibility = View.GONE
+            }
+
             val currentTime = System.currentTimeMillis()
             val isExpired = booking.appointmentTimestamp < currentTime
             var status = booking.status
@@ -79,15 +88,16 @@ class BookingAdapter(
                 status = "PENDING"
             }
 
-            // Check for expiration first
-            if (isExpired && (status == "PENDING" || status == "ACCEPTED" || status == "CONFIRMED")) {
+            // Show "Expired" chip only when Firestore status is explicitly EXPIRED.
+            // (isExpired is still used below to hide action buttons for overdue bookings.)
+            if (status == "EXPIRED") {
                 binding.chipStatus.text = itemView.context.getString(R.string.status_expired)
                 setChipStyle(binding.chipStatus, R.color.error, R.color.error_container)
                 binding.layoutActions.visibility = View.GONE
             } else {
                 when (status) {
                     "PENDING" -> {
-                        binding.chipStatus.text = itemView.context.getString(R.string.request_pending)
+                        binding.chipStatus.text = itemView.context.getString(R.string.booking_pending)
                         setChipStyle(binding.chipStatus, R.color.amber_700, R.color.amber_50)
                         if (isCaView) {
                             binding.layoutActions.visibility = View.VISIBLE
@@ -121,6 +131,14 @@ class BookingAdapter(
                         setChipStyle(binding.chipStatus, R.color.error, R.color.error_container)
                         binding.layoutActions.visibility = View.GONE
                         
+                        // Show rejection reason if provided (visible to the user/client)
+                        if (!isCaView && !booking.rejectionReason.isNullOrBlank()) {
+                            binding.llRejectionReason.visibility = View.VISIBLE
+                            binding.tvRejectionReason.text = "Reason: ${booking.rejectionReason}"
+                        } else {
+                            binding.llRejectionReason.visibility = View.GONE
+                        }
+
                         booking.id?.let {
                             com.example.taxconnect.core.utils.BookingReminderScheduler.cancel(itemView.context, it)
                         }
@@ -129,6 +147,7 @@ class BookingAdapter(
                         binding.chipStatus.text = itemView.context.getString(R.string.status_completed)
                         setChipStyle(binding.chipStatus, R.color.primary, R.color.primary_container)
                         binding.layoutActions.visibility = View.GONE
+                        binding.layoutTimeline.visibility = View.VISIBLE
                     }
                     else -> {
                         binding.chipStatus.text = status
@@ -136,6 +155,13 @@ class BookingAdapter(
                         setChipStyle(binding.chipStatus, R.color.text_secondary, R.color.surface_variant) // Default fallback
                     }
                 }
+            }
+
+            if (status != "REJECTED") {
+                binding.llRejectionReason.visibility = View.GONE
+            }
+            if (status != "COMPLETED") {
+                binding.layoutTimeline.visibility = View.GONE
             }
 
             binding.btnAccept.setOnClickListener {
@@ -165,6 +191,14 @@ class BookingAdapter(
                 binding.btnAddToCalendar.visibility = View.GONE
             }
 
+
+            // Mark as Complete — visible for CA on ACCEPTED bookings
+            if (isCaView && (status == "ACCEPTED" || status == "CONFIRMED") && !isExpired) {
+                binding.btnMarkComplete.visibility = View.VISIBLE
+                binding.btnMarkComplete.setOnClickListener { listener?.onMarkComplete(booking) }
+            } else {
+                binding.btnMarkComplete.visibility = View.GONE
+            }
             binding.root.setOnClickListener {
                 listener?.onBookingClick(booking)
             }

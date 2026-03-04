@@ -46,6 +46,27 @@ class ConversationRepository @Inject constructor() {
         return if (uid1.compareTo(uid2) < 0) "${uid1}_$uid2" else "${uid2}_$uid1"
     }
 
+    suspend fun findExistingChatId(uid1: String, uid2: String): String? {
+        val deterministicId = getChatId(uid1, uid2)
+        val snapshot = firestore.collection("conversations").document(deterministicId).get().await()
+        if (snapshot.exists()) {
+            return deterministicId
+        }
+        
+        // Fallback: search by participants in case it was created with a random ID
+        val query = firestore.collection("conversations")
+            .whereArrayContains("participantIds", uid1)
+            .get()
+            .await()
+            
+        val existing = query.documents.firstOrNull { doc ->
+            val participants = doc.get("participantIds") as? List<*>
+            participants != null && participants.contains(uid2)
+        }
+        
+        return existing?.id
+    }
+
     // --- Conversation CRUD ---
 
     suspend fun createConversation(conversation: ConversationModel) {
@@ -150,6 +171,16 @@ class ConversationRepository @Inject constructor() {
 
     fun listenToConversation(chatId: String): Flow<ConversationModel> {
         return getConversationFlow(chatId)
+    }
+
+    /** Fetches the conversation document once (non-reactive). */
+    suspend fun getConversationOnce(chatId: String): ConversationModel? {
+        return try {
+            val snapshot = firestore.collection("conversations").document(chatId).get().await()
+            if (snapshot.exists()) snapshot.toObject(ConversationModel::class.java) else null
+        } catch (e: Exception) {
+            null
+        }
     }
 
     fun listenToUnreadCount(chatId: String, userId: String): Flow<Int> = callbackFlow {
@@ -275,8 +306,12 @@ class ConversationRepository @Inject constructor() {
                              .addOnFailureListener { e -> callback?.onError(e.message) }
                      } else {
                          val msg = MessageModel(
-                             senderId, receiverId, chatId, initialMessageText,
-                             System.currentTimeMillis(), "TEXT"
+                             senderId = senderId,
+                             receiverId = receiverId,
+                             chatId = chatId,
+                             message = initialMessageText,
+                             timestamp = System.currentTimeMillis(),
+                             type = "TEXT"
                          )
                          sendMessage(msg, callback)
                      }
@@ -321,8 +356,12 @@ class ConversationRepository @Inject constructor() {
             } else {
                 // Conversation exists and is active, send as message
                 val msg = MessageModel(
-                    senderId, receiverId, chatId, initialMessageText,
-                    System.currentTimeMillis(), "TEXT"
+                    senderId = senderId,
+                    receiverId = receiverId,
+                    chatId = chatId,
+                    message = initialMessageText,
+                    timestamp = System.currentTimeMillis(),
+                    type = "TEXT"
                 )
                 firestore.collection("conversations").document(chatId)
                     .collection("messages").add(msg).await()

@@ -34,6 +34,7 @@ class MessageAdapter(
     private val currentUserId: String? = FirebaseAuth.getInstance().uid
     private var callListener: OnCallActionListener? = null
     private var paymentListener: OnPaymentActionListener? = null
+    private var satisfiedListener: OnSatisfiedListener? = null
 
     interface OnProposalActionListener {
         fun onAccept(proposal: MessageModel)
@@ -57,6 +58,11 @@ class MessageAdapter(
     interface OnRetryUploadListener {
         fun onRetry(message: MessageModel)
     }
+
+    /** Called when the client taps "Satisfied" on a SERVICE_SUMMARY card. */
+    interface OnSatisfiedListener {
+        fun onSatisfied(message: MessageModel)
+    }
     
     fun setOnCallActionListener(listener: OnCallActionListener) {
         this.callListener = listener
@@ -64,6 +70,10 @@ class MessageAdapter(
     
     fun setOnPaymentActionListener(listener: OnPaymentActionListener) {
         this.paymentListener = listener
+    }
+
+    fun setOnSatisfiedListener(listener: OnSatisfiedListener) {
+        this.satisfiedListener = listener
     }
 
     fun setMessages(messages: List<MessageModel>) {
@@ -82,6 +92,8 @@ class MessageAdapter(
             "PROPOSAL" -> VIEW_TYPE_PROPOSAL
             "CALL_REQUEST" -> VIEW_TYPE_CALL_REQUEST
             "PAYMENT_REQUEST" -> VIEW_TYPE_PAYMENT_REQUEST
+            "SYSTEM" -> VIEW_TYPE_SYSTEM
+            "SERVICE_SUMMARY" -> VIEW_TYPE_SERVICE_SUMMARY
             else -> if (message.senderId == currentUserId) VIEW_TYPE_SENT else VIEW_TYPE_RECEIVED
         }
     }
@@ -92,6 +104,8 @@ class MessageAdapter(
             VIEW_TYPE_PROPOSAL -> ProposalViewHolder(inflater.inflate(R.layout.item_message_proposal, parent, false))
             VIEW_TYPE_CALL_REQUEST -> CallRequestViewHolder(inflater.inflate(R.layout.item_message_call_request, parent, false))
             VIEW_TYPE_PAYMENT_REQUEST -> PaymentRequestViewHolder(inflater.inflate(R.layout.item_message_payment_request, parent, false))
+            VIEW_TYPE_SYSTEM -> SystemMessageViewHolder(inflater.inflate(R.layout.item_message_system, parent, false))
+            VIEW_TYPE_SERVICE_SUMMARY -> ServiceSummaryViewHolder(inflater.inflate(R.layout.item_chat_summary, parent, false))
             VIEW_TYPE_SENT -> SentMessageViewHolder(inflater.inflate(R.layout.item_chat_sent, parent, false))
             else -> ReceivedMessageViewHolder(inflater.inflate(R.layout.item_chat_received, parent, false))
         }
@@ -103,6 +117,8 @@ class MessageAdapter(
             is ProposalViewHolder -> holder.bind(message)
             is CallRequestViewHolder -> holder.bind(message)
             is PaymentRequestViewHolder -> holder.bind(message)
+            is SystemMessageViewHolder -> holder.bind(message)
+            is ServiceSummaryViewHolder -> holder.bind(message)
             is SentMessageViewHolder -> holder.bind(message, callListener)
             is ReceivedMessageViewHolder -> holder.bind(message, callListener)
         }
@@ -115,6 +131,68 @@ class MessageAdapter(
     private fun isCallMessage(message: MessageModel): Boolean {
         return "CALL" == message.type || "call" == message.type
     }
+
+    inner class SystemMessageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val tvSystemMessage: android.widget.TextView =
+            itemView.findViewById(R.id.tvSystemMessage)
+
+        fun bind(message: MessageModel) {
+            tvSystemMessage.text = message.message ?: ""
+        }
+    }
+
+    /**
+     * Renders the SERVICE_SUMMARY invoice card the CA sends when completing a job.
+     * Shows service description, date, itemised advance + final, total, and a
+     * "Leave a Rating" button visible ONLY to the client (receiver).
+     */
+    inner class ServiceSummaryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val tvServiceName: TextView   = itemView.findViewById(R.id.tvServiceName)
+        private val tvInvoiceDate: TextView   = itemView.findViewById(R.id.tvInvoiceDate)
+        private val tvAdvanceAmount: TextView = itemView.findViewById(R.id.tvAdvanceAmount)
+        private val tvFinalAmount: TextView   = itemView.findViewById(R.id.tvFinalAmount)
+        private val tvTotalAmount: TextView   = itemView.findViewById(R.id.tvTotalAmount)
+        private val btnSatisfied: com.google.android.material.button.MaterialButton =
+            itemView.findViewById(R.id.btnSatisfied)
+
+        fun bind(message: MessageModel) {
+            val advance = message.proposalAdvanceAmount?.toDoubleOrNull() ?: 0.0
+            val final   = message.proposalFinalAmount?.toDoubleOrNull()   ?: 0.0
+            val total   = advance + final
+
+            // Format amounts as ₹1,500 style
+            val fmt = java.text.NumberFormat.getNumberInstance(java.util.Locale("en", "IN"))
+            tvAdvanceAmount.text = "₹${fmt.format(advance)}"
+            tvFinalAmount.text   = "₹${fmt.format(final)}"
+            tvTotalAmount.text   = "₹${fmt.format(total)}"
+
+            // Service name (from proposal description stored at send time)
+            val svc = message.serviceName
+            if (!svc.isNullOrBlank()) {
+                tvServiceName.text = svc
+                tvServiceName.visibility = View.VISIBLE
+            } else {
+                tvServiceName.visibility = View.GONE
+            }
+
+            // Date of completion
+            val dateStr = SimpleDateFormat("dd MMM yyyy, hh:mm a", Locale.getDefault())
+                .format(Date(message.timestamp))
+            tvInvoiceDate.text = "Completed on $dateStr"
+
+            // Only the receiver (client) sees the rating button
+            val isReceiver = message.receiverId == currentUserId
+            if (isReceiver) {
+                btnSatisfied.visibility = View.VISIBLE
+                btnSatisfied.setOnClickListener {
+                    satisfiedListener?.onSatisfied(message)
+                }
+            } else {
+                btnSatisfied.visibility = View.GONE
+            }
+        }
+    }
+
 
     inner class PaymentRequestViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val tvAmount: TextView = itemView.findViewById(R.id.tvAmount)
@@ -475,7 +553,7 @@ class MessageAdapter(
         private val layoutDocument: LinearLayout? = itemView.findViewById(R.id.layoutDocument)
         private val tvDocName: TextView? = itemView.findViewById(R.id.tvDocName)
         private val ivDocThumbnail: ImageView? = itemView.findViewById(R.id.ivDocThumbnail)
-        private val layoutCallActions: LinearLayout? = itemView.findViewById(R.id.layoutCallActions)
+        private val layoutCallActions: View? = itemView.findViewById(R.id.layoutCallActions)
         private val btnAnswerCall: View? = itemView.findViewById(R.id.btnAnswerCall)
         private val btnDeclineCall: View? = itemView.findViewById(R.id.btnDeclineCall)
 
@@ -490,7 +568,7 @@ class MessageAdapter(
                 tvMessage.visibility = View.VISIBLE
                 tvMessage.text = itemView.context.getString(R.string.incoming_video_call)
                 tvMessage.typeface = Typeface.DEFAULT_BOLD
-                tvMessage.setTextColor(ContextCompat.getColor(itemView.context, android.R.color.holo_blue_dark))
+                tvMessage.setTextColor(ContextCompat.getColor(itemView.context, R.color.secondary))
                 tvMessage.setOnClickListener(null)
                 
                 layoutCallActions?.visibility = View.VISIBLE
@@ -563,12 +641,25 @@ class MessageAdapter(
         }
     }
 
+    /**
+     * Returns the most recent PROPOSAL message that has been ACCEPTED
+     * and whose final payment has not yet been made.
+     * Used by btnPayFinal to open the correct payment dialog.
+     */
+    fun getLatestAcceptedProposal(): MessageModel? {
+        return messages
+            .filter { it.type == "PROPOSAL" && it.proposalStatus == "ACCEPTED" && it.proposalFinalPaid != true }
+            .maxByOrNull { it.timestamp }
+    }
+
     companion object {
         private const val VIEW_TYPE_SENT = 1
         private const val VIEW_TYPE_RECEIVED = 2
         private const val VIEW_TYPE_PROPOSAL = 3
         private const val VIEW_TYPE_CALL_REQUEST = 4
         private const val VIEW_TYPE_PAYMENT_REQUEST = 5
+        private const val VIEW_TYPE_SYSTEM = 6
+        private const val VIEW_TYPE_SERVICE_SUMMARY = 7
         
         fun formatTime(timestamp: Long): String {
             val date = Date(timestamp)

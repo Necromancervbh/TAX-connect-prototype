@@ -43,18 +43,28 @@ class NotificationHistoryActivity : BaseActivity<ActivityNotificationHistoryBind
 
     private fun setupRecyclerView() {
         binding.rvNotifications.layoutManager = LinearLayoutManager(this)
-        repository.getNotifications { notifications ->
-            if (notifications.isEmpty()) {
-                binding.tvEmpty.visibility = View.VISIBLE
-                binding.rvNotifications.visibility = View.GONE
-            } else {
-                binding.tvEmpty.visibility = View.GONE
-                binding.rvNotifications.visibility = View.VISIBLE
-                
-                val groupedList = groupNotifications(notifications)
-                binding.rvNotifications.adapter = NotificationAdapter(groupedList)
+        repository.getNotifications(
+            callback = { notifications ->
+                runOnUiThread {
+                    if (notifications.isEmpty()) {
+                        binding.tvEmpty.visibility = View.VISIBLE
+                        binding.rvNotifications.visibility = View.GONE
+                    } else {
+                        binding.tvEmpty.visibility = View.GONE
+                        binding.rvNotifications.visibility = View.VISIBLE
+                        val groupedList = groupNotifications(notifications)
+                        binding.rvNotifications.adapter = NotificationAdapter(groupedList)
+                    }
+                }
+            },
+            onError = { error ->
+                runOnUiThread {
+                    binding.tvEmpty.visibility = View.VISIBLE
+                    binding.rvNotifications.visibility = View.GONE
+                    android.util.Log.e("NotificationHistory", "Firestore error: $error")
+                }
             }
-        }
+        )
     }
 
     private fun groupNotifications(notifications: List<NotificationModel>): List<NotificationListItem> {

@@ -117,6 +117,7 @@ class CAAdapter(
 
         private val tvClientCount: TextView? = itemView.findViewById(R.id.tvClientCount)
         private val chipStatus: Chip? = itemView.findViewById(R.id.chipStatus)
+        private val chipRating: Chip? = itemView.findViewById(R.id.chipRating)
         private val btnConnect: Button? = itemView.findViewById(R.id.btnConnect)
         private val btnSave: Button? = itemView.findViewById(R.id.btnSave)
         private var observerJob: Job? = null
@@ -136,6 +137,17 @@ class CAAdapter(
             
             tvCity?.text = ca.city ?: "N/A"
             tvRating?.text = String.format(Locale.getDefault(), "★ %.1f (%d)", ca.rating, ca.ratingCount)
+
+            // Chip in the top-right of item_ca shows the numeric rating
+            chipRating?.let {
+                if (ca.ratingCount > 0) {
+                    it.text = String.format(Locale.getDefault(), "%.1f", ca.rating)
+                    it.visibility = android.view.View.VISIBLE
+                } else {
+                    it.text = "New"
+                    it.visibility = android.view.View.VISIBLE
+                }
+            }
             
             tvMinCharges?.let {
                 val minCharges = ca.minCharges

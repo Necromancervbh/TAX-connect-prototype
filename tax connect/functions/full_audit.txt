@@ -1,0 +1,21 @@
+﻿TOTAL_USERS=8
+USER|62Tcd3JPSYTQ6X2QXcR6dT4ai0r2|role=CA|name=Shruti shah|rating=0|ratingCount=0|isOnline=undefined|online=false|uid=62Tcd3JPSYTQ6X2QXcR6dT4ai0r2
+  FIELDS=[role,city,rating,verified,bio,caNumber,verificationRequested,experience,ratingCount,introVideoUrl,minCharges,uid,phoneNumber,certificates,walletBalance,name,specialization,online,blockedUsers,clientCount,priceRange,profileImageUrl,email,fcmToken]
+USER|8RjVObJwk9b8N0KNspDtUiqKKxc2|role=CUSTOMER|name=vaibhav|rating=0|ratingCount=0|isOnline=undefined|online=true|uid=8RjVObJwk9b8N0KNspDtUiqKKxc2
+  FIELDS=[notifyCalls,role,notifyRequests,city,notifyBookings,rating,bio,caNumber,experience,introVideoUrl,minCharges,uid,archived,createdAt,quietHoursStart,walletBalance,quietHoursEnabled,clientCount,profileImageUrl,email,updatedAt,notifyMessages,verified,verificationRequested,ratingCount,archivedAt,phoneNumber,certificates,name,specialization,quietHoursEnd,blockedUsers,priceRange,fcmToken,online]
+USER|ACbf5EjP7UN0vhWhxqqNZEA1oZk2|role=CA|name=Vaibhav Shukla|rating=4.666666666666667|ratingCount=3|isOnline=undefined|online=true|uid=ACbf5EjP7UN0vhWhxqqNZEA1oZk2
+  FIELDS=[notifyCalls,role,notifyRequests,city,notifyBookings,rating,bio,caNumber,experience,introVideoUrl,minCharges,uid,archived,createdAt,quietHoursStart,walletBalance,quietHoursEnabled,profileImageUrl,fcmToken,email,updatedAt,notifyMessages,verified,verificationRequested,ratingCount,archivedAt,phoneNumber,certificates,name,specialization,quietHoursEnd,blockedUsers,priceRange,online,clientCount]
+USER|IGnSgrpYflYg6YWNSWKZ1C3XGNz1|role=CA|name=raoman singh|rating=0|ratingCount=0|isOnline=undefined|online=false|uid=IGnSgrpYflYg6YWNSWKZ1C3XGNz1
+  FIELDS=[role,city,rating,verified,bio,caNumber,verificationRequested,experience,ratingCount,introVideoUrl,minCharges,uid,phoneNumber,certificates,walletBalance,name,specialization,online,blockedUsers,clientCount,priceRange,profileImageUrl,email,fcmToken]
+USER|Pgwah7RpeSdON1iJwFLCKRrBndd2|role=CA|name=Mathew charles|rating=0|ratingCount=0|isOnline=true|online=true|uid=Pgwah7RpeSdON1iJwFLCKRrBndd2
+  FIELDS=[role,city,rating,verified,bio,caNumber,experience,ratingCount,introVideoUrl,minCharges,uid,phoneNumber,certificates,name,specialization,blockedUsers,priceRange,profileImageUrl,email,verificationRequested,walletBalance,fcmToken,clientCount,isOnline,online]
+USER|QWF6Tm0G8wezckKZ4cCiazMLFCy2|role=CA|name=smriti kapoor|rating=0|ratingCount=0|isOnline=false|online=false|uid=QWF6Tm0G8wezckKZ4cCiazMLFCy2
+  FIELDS=[role,city,rating,verified,bio,caNumber,verificationRequested,experience,ratingCount,introVideoUrl,minCharges,uid,phoneNumber,certificates,walletBalance,name,specialization,online,blockedUsers,priceRange,profileImageUrl,email,fcmToken,clientCount,isOnline]
+USER|TTLkS5nZqQPlozgILw8vqvMs2l62|role=CA|name=rakesh pal|rating=0|ratingCount=0|isOnline=false|online=false|uid=TTLkS5nZqQPlozgILw8vqvMs2l62
+  FIELDS=[notifyCalls,role,notifyRequests,city,notifyBookings,rating,bio,caNumber,experience,introVideoUrl,minCharges,uid,archived,createdAt,quietHoursStart,walletBalance,quietHoursEnabled,profileImageUrl,fcmToken,email,updatedAt,notifyMessages,verified,verificationRequested,ratingCount,archivedAt,phoneNumber,certificates,name,specialization,quietHoursEnd,blockedUsers,priceRange,clientCount,isOnline,online]
+USER|e4YuReEDMWg7BR7CFCj951grN6A3|role=CA|name=shubham sharma|rating=0|ratingCount=0|isOnline=undefined|online=false|uid=e4YuReEDMWg7BR7CFCj951grN6A3
+  FIELDS=[role,city,rating,verified,bio,caNumber,verificationRequested,experience,ratingCount,introVideoUrl,minCharges,uid,phoneNumber,certificates,name,specialization,online,blockedUsers,priceRange,profileImageUrl,email,fcmToken,clientCount,walletBalance]
+TOTAL_CONVS=1
+CONV|8RjVObJwk9b8N0KNspDtUiqKKxc2_ACbf5EjP7UN0vhWhxqqNZEA1oZk2|state=Advance Payment|videoCallAllowed=false|lastMsg=Hula
+  FIELDS=[otherUserEmail,serviceCycleSequence,currentServiceCycleId,conversationId,videoCallAllowed,lastServiceCompletedAt,callStatus,otherUserName,participantIds,otherUserProfileImage,unreadCounts,lastMessageTimestamp,lastMessage,unreadCounts.ACbf5EjP7UN0vhWhxqqNZEA1oZk2,workflowState]
+  MSG_COUNT=4 TYPES=[PROPOSAL,TEXT]

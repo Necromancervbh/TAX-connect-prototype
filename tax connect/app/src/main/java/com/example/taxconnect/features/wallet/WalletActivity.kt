@@ -36,6 +36,8 @@ class WalletActivity : BaseActivity<ActivityWalletBinding>(), PaymentResultListe
     private lateinit var adapter: TransactionAdapter
     
     private var currentUserId: String? = null
+    private var currentUserEmail: String? = null
+    private var currentUserPhone: String? = null
     private var paymentManager: PaymentManager? = null
     private var isAuthenticated = false
     private var pendingDepositAmount = 0.0
@@ -43,7 +45,10 @@ class WalletActivity : BaseActivity<ActivityWalletBinding>(), PaymentResultListe
 
     override fun initViews() {
         binding.root.visibility = View.INVISIBLE
-        currentUserId = FirebaseAuth.getInstance().uid
+        val firebaseUser = FirebaseAuth.getInstance().currentUser
+        currentUserId = firebaseUser?.uid
+        currentUserEmail = firebaseUser?.email ?: ""
+        currentUserPhone = firebaseUser?.phoneNumber ?: ""
         paymentManager = PaymentManager()
 
         if (currentUserId == null) {
@@ -216,7 +221,13 @@ class WalletActivity : BaseActivity<ActivityWalletBinding>(), PaymentResultListe
             if (isDeposit) {
                 pendingDepositAmount = amount
                 bottomSheetDialog?.dismiss()
-                paymentManager?.startPayment(this, amountStr, "user@example.com", "9999999999", "Wallet Deposit")
+                paymentManager?.startPayment(
+                    this,
+                    amountStr,
+                    currentUserEmail ?: "",
+                    currentUserPhone ?: "",
+                    "Wallet Deposit"
+                )
             } else {
                 val upiId = etUpiId.text.toString()
                 if (upiId.isEmpty()) {

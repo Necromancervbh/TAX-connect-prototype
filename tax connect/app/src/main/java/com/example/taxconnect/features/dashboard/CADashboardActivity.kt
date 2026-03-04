@@ -1,4 +1,4 @@
-package com.example.taxconnect.features.dashboard
+﻿package com.example.taxconnect.features.dashboard
 
 import android.widget.Toast
 import com.example.taxconnect.data.models.UserModel
@@ -29,7 +29,7 @@ import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 import com.example.taxconnect.features.auth.LoginActivity
-import com.example.taxconnect.features.booking.RequestsActivity
+
 import com.example.taxconnect.features.booking.MyBookingsActivity
 import com.example.taxconnect.features.wallet.WalletActivity
 import com.example.taxconnect.features.chat.MyChatsActivity
@@ -98,6 +98,7 @@ class CADashboardActivity : BaseActivity<ActivityCaDashboardBinding>() {
         // Initial Load
         currentUserId?.let { uid ->
             viewModel.loadDashboardData(uid)
+            viewModel.autoExpirePendingBookings(uid)
             com.example.taxconnect.data.services.PresenceManager.getInstance().setupPresence()
         }
 
@@ -107,8 +108,10 @@ class CADashboardActivity : BaseActivity<ActivityCaDashboardBinding>() {
 
     override fun onResume() {
         super.onResume()
+        // Only refresh lightweight one-shot data on resume.
+        // listenToBookings stays alive via ViewModel scope — no need to restart.
         currentUserId?.let { uid ->
-            viewModel.loadDashboardData(uid)
+            viewModel.refreshData(uid)
         }
     }
 
@@ -161,30 +164,7 @@ class CADashboardActivity : BaseActivity<ActivityCaDashboardBinding>() {
             }
         }
 
-        lifecycleScope.launch {
-            viewModel.requestStatsState.collect { stats ->
-                // Priority logic integrated here
-                val priorityCount = viewModel.priorityRequestsState.value.size
-                if (priorityCount > 0) {
-                    binding.tvPendingRequestsCount.text = getString(R.string.priority_count, priorityCount)
-                    binding.tvPendingRequestsCount.setTextColor(ContextCompat.getColor(this@CADashboardActivity, R.color.error_color))
-                    binding.badgeRequests.text = priorityCount.toString()
-                    binding.badgeRequests.visibility = View.VISIBLE
-                    binding.tvPriorityBadge.visibility = View.VISIBLE
-                    binding.cardPendingRequests.strokeWidth = resources.getDimensionPixelSize(R.dimen.space_0_5x)
-                    binding.cardPendingRequests.strokeColor = ContextCompat.getColor(this@CADashboardActivity, R.color.error_color)
-                } else {
-                    binding.tvPendingRequestsCount.text = getString(R.string.new_requests_count_dynamic, stats.pending)
-                    binding.tvPendingRequestsCount.setTextColor(ContextCompat.getColor(this@CADashboardActivity, R.color.text_muted))
-                    binding.badgeRequests.visibility = if (stats.pending > 0) View.VISIBLE else View.GONE
-                    if (stats.pending > 0) binding.badgeRequests.text = stats.pending.toString()
-                    binding.tvPriorityBadge.visibility = View.GONE
-                    binding.cardPendingRequests.strokeWidth = resources.getDimensionPixelSize(R.dimen.space_0_25x)
-                    binding.cardPendingRequests.strokeColor = ContextCompat.getColor(this@CADashboardActivity, R.color.primary)
-                }
-                binding.tvReturningRequestsCount.text = getString(R.string.returning_clients_count, stats.returning)
-            }
-        }
+        // Requests card removed — bookings-only workflow (card deleted from XML)
         
         lifecycleScope.launch {
             viewModel.messageStatsState.collect { stats ->
@@ -323,19 +303,21 @@ class CADashboardActivity : BaseActivity<ActivityCaDashboardBinding>() {
     private fun setupRecyclerView() {
         bookingAdapter = BookingAdapter(object : BookingAdapter.OnBookingActionListener {
             override fun onAccept(booking: BookingModel) {
-                viewModel.updateBookingStatus(booking, "ACCEPTED")
+                showAcceptConfirmDialog(booking)
             }
 
             override fun onReject(booking: BookingModel) {
-                viewModel.updateBookingStatus(booking, "REJECTED")
+                showRejectDialog(booking)
             }
 
             override fun onBookingClick(booking: BookingModel) {
                 if ("ACCEPTED" == booking.status) {
+                    val chatId = booking.chatId
                     val intent = Intent(this@CADashboardActivity, ChatActivity::class.java)
                     intent.putExtra("bookingId", booking.id)
-                    intent.putExtra("userId", booking.userId)
-                    intent.putExtra("userName", booking.userName)
+                    intent.putExtra("otherUserId", booking.userId)
+                    intent.putExtra("otherUserName", booking.userName)
+                    if (!chatId.isNullOrEmpty()) intent.putExtra("chatId", chatId)
                     startActivity(intent)
                 }
             }
@@ -360,6 +342,21 @@ class CADashboardActivity : BaseActivity<ActivityCaDashboardBinding>() {
                     showToast("No calendar app found")
                 }
             }
+
+            override fun onMarkComplete(booking: BookingModel) {
+                androidx.appcompat.app.AlertDialog.Builder(this@CADashboardActivity)
+                    .setTitle("Mark as Complete")
+                    .setMessage("Confirm this booking is fully completed? This will notify the client.")
+                    .setPositiveButton("Complete") { _, _ ->
+                        // Updates booking status AND transitions the chat to STATE_COMPLETED
+                        // so the client's stepper finishes and the rating dialog fires.
+                        viewModel.completeBookingAndConversation(booking)
+                        showToast("Booking marked as completed!")
+                    }
+                    .setNegativeButton("Cancel", null)
+                    .show()
+            }
+
         }, true) // isCaView = true
 
         binding.rvBookings.layoutManager = LinearLayoutManager(this)
@@ -371,15 +368,11 @@ class CADashboardActivity : BaseActivity<ActivityCaDashboardBinding>() {
         binding.ivNotifications.setOnClickListener { startActivity(Intent(this, NotificationHistoryActivity::class.java)) }
         binding.ivProfile.setOnClickListener { startActivity(Intent(this, ProfileActivity::class.java)) }
         binding.cardRevenue.setOnClickListener { startActivity(Intent(this, BalanceSheetActivity::class.java)) }
-        binding.cardActiveClients.setOnClickListener { startActivity(Intent(this, MyChatsActivity::class.java)) }
-        binding.cardPendingRequests.setOnClickListener { startActivity(Intent(this, RequestsActivity::class.java)) }
-        binding.btnViewAllRequests.setOnClickListener { startActivity(Intent(this, RequestsActivity::class.java)) }
+        binding.cardActiveClients.setOnClickListener { startActivity(Intent(this, MyBookingsActivity::class.java)) }
         binding.cardPendingBookings.setOnClickListener { startActivity(Intent(this, MyBookingsActivity::class.java)) }
         binding.btnViewAllBookings.setOnClickListener { startActivity(Intent(this, MyBookingsActivity::class.java)) }
         binding.cardExplore.setOnClickListener { startActivity(Intent(this, ExploreCAsActivity::class.java)) }
         
-        // Quick Actions (Cards)
-        binding.cardQuickRequests.setOnClickListener { startActivity(Intent(this, RequestsActivity::class.java)) }
         binding.cardQuickBookings.setOnClickListener { startActivity(Intent(this, MyBookingsActivity::class.java)) }
         binding.cardQuickWallet.setOnClickListener { startActivity(Intent(this, WalletActivity::class.java)) }
         binding.cardQuickChats.setOnClickListener { startActivity(Intent(this, MyChatsActivity::class.java)) }
@@ -470,8 +463,8 @@ class CADashboardActivity : BaseActivity<ActivityCaDashboardBinding>() {
                 R.id.nav_home -> { /* Already here */ }
                 R.id.nav_profile -> startActivity(Intent(this, ProfileActivity::class.java))
                 R.id.nav_chats -> startActivity(Intent(this, MyChatsActivity::class.java))
+                R.id.nav_notifications -> startActivity(Intent(this, NotificationHistoryActivity::class.java))
                 R.id.nav_wallet -> startActivity(Intent(this, WalletActivity::class.java))
-                R.id.nav_requests -> startActivity(Intent(this, RequestsActivity::class.java))
                 R.id.nav_bookings -> startActivity(Intent(this, MyBookingsActivity::class.java))
                 R.id.nav_explore -> startActivity(Intent(this, ExploreCAsActivity::class.java))
                 R.id.nav_docs -> startActivity(Intent(this, MyDocumentsActivity::class.java))
@@ -668,4 +661,56 @@ class CADashboardActivity : BaseActivity<ActivityCaDashboardBinding>() {
         val formatter = NumberFormat.getCurrencyInstance(Locale.forLanguageTag("en-IN"))
         return formatter.format(safeAmount)
     }
+
+    private fun showAcceptConfirmDialog(booking: BookingModel) {
+        val service = booking.serviceName ?: "service"
+        val date = booking.appointmentDate ?: ""
+        val time = booking.appointmentTime ?: ""
+        val client = booking.userName ?: "client"
+        val msg = "Accept booking from $client for $service${if (date.isNotBlank()) " on $date" else ""}${if (time.isNotBlank()) " at $time" else ""}?\n\nOnce accepted, the chat will be unlocked."
+        
+        AlertDialog.Builder(this)
+            .setTitle("Accept Booking")
+            .setMessage(msg)
+            .setPositiveButton("Accept & Open Chat") { _, _ ->
+                viewModel.acceptBookingWithChat(booking, { convId ->
+                    showToast("Booking accepted! Chat is now open.")
+                    val intent = Intent(this, com.example.taxconnect.features.chat.ChatActivity::class.java)
+                    intent.putExtra("chatId", convId)
+                    intent.putExtra("otherUserId", booking.userId)
+                    intent.putExtra("otherUserName", booking.userName ?: "Client")
+                    startActivity(intent)
+                }, { error ->
+                    showToast("Error: $error")
+                })
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun showRejectDialog(booking: BookingModel) {
+        val input = com.google.android.material.textfield.TextInputEditText(this)
+        input.hint = "Reason (optional)"
+        val container = android.widget.FrameLayout(this).also { fl ->
+            val params = android.widget.FrameLayout.LayoutParams(
+                android.widget.FrameLayout.LayoutParams.MATCH_PARENT,
+                android.widget.FrameLayout.LayoutParams.WRAP_CONTENT
+            )
+            params.setMargins(48, 16, 48, 0)
+            input.layoutParams = params
+            fl.addView(input)
+        }
+        AlertDialog.Builder(this)
+            .setTitle("Reject Booking")
+            .setMessage("Are you sure you want to reject this booking?")
+            .setView(container)
+            .setPositiveButton("Reject") { _, _ ->
+                val reason = input.text.toString().trim()
+                viewModel.rejectBooking(booking, reason.ifBlank { null })
+                showToast("Booking rejected")
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
 }

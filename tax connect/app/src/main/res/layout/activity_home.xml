@@ -383,6 +383,45 @@
 
                 </HorizontalScrollView>
 
+                <!-- My Professionals Section -->
+                <LinearLayout
+                    android:id="@+id/layoutMyProfessionals"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="@dimen/space_6x"
+                    android:layout_marginBottom="@dimen/space_2x"
+                    android:paddingHorizontal="@dimen/screen_margin_horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="\uD83D\uDC64 My Professionals"
+                        android:textAppearance="?attr/textAppearanceTitleLarge" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnViewAllProfessionals"
+                        style="@style/Widget.Material3.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="View All"
+                        android:textColor="?attr/colorSecondary" />
+                </LinearLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvMyProfessionals"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="@dimen/screen_margin_horizontal"
+                    android:paddingEnd="@dimen/space_2x"
+                    android:clipToPadding="false"
+                    android:orientation="horizontal"
+                    android:visibility="gone"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
                 <!-- Top Rated Header -->
 
                 <LinearLayout

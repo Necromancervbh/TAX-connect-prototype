@@ -1,4 +1,4 @@
-package com.example.taxconnect.features.home
+﻿package com.example.taxconnect.features.home
 
 import android.Manifest
 import android.content.Intent
@@ -100,6 +100,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(), CAAdapter.OnRequestAss
 
             viewModel.fetchCAs()
             loadFavorites()
+            loadMyProfessionals()
             
             askNotificationPermission()
             updateFcmToken()
@@ -553,10 +554,6 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(), CAAdapter.OnRequestAss
     private fun setupDrawer() {
         binding.ivMenu.setOnClickListener { binding.drawerLayout.openDrawer(GravityCompat.START) }
 
-        val menu = binding.navView.menu
-        val requestsItem = menu.findItem(R.id.nav_requests)
-        requestsItem?.isVisible = false
-
         binding.navView.setNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_home -> {
@@ -564,6 +561,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(), CAAdapter.OnRequestAss
                 }
                 R.id.nav_profile -> startActivity(Intent(this, ProfileActivity::class.java))
                 R.id.nav_chats -> startActivity(Intent(this, MyChatsActivity::class.java))
+                R.id.nav_notifications -> startActivity(Intent(this, NotificationHistoryActivity::class.java))
                 R.id.nav_wallet -> startActivity(Intent(this, WalletActivity::class.java))
                 R.id.nav_bookings -> startActivity(Intent(this, MyBookingsActivity::class.java))
                 R.id.nav_docs -> startActivity(Intent(this, MyDocumentsActivity::class.java))
@@ -672,5 +670,44 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(), CAAdapter.OnRequestAss
                 // Ignore
             }
         })
+    }
+
+    private fun loadMyProfessionals() {
+        val uid = FirebaseAuth.getInstance().uid ?: return
+        com.google.firebase.firestore.FirebaseFirestore.getInstance()
+            .collection("bookings")
+            .whereEqualTo("userId", uid)
+            .whereIn("status", listOf("ACCEPTED", "COMPLETED", "CONFIRMED"))
+            .limit(20)
+            .get()
+            .addOnSuccessListener { snap ->
+                val caIds = snap.documents.mapNotNull { it.getString("caId") }.distinct().take(10)
+                if (caIds.isEmpty()) return@addOnSuccessListener
+                val db = com.google.firebase.firestore.FirebaseFirestore.getInstance()
+                val caProfiles = mutableListOf<UserModel>()
+                var fetched = 0
+                caIds.forEach { caId ->
+                    db.collection("users").document(caId).get().addOnSuccessListener { doc ->
+                        fetched++
+                        doc.toObject(UserModel::class.java)?.let { caProfiles.add(it) }
+                        if (fetched == caIds.size && caProfiles.isNotEmpty()) {
+                            runOnUiThread {
+                                binding.layoutMyProfessionals.visibility = View.VISIBLE
+                                binding.rvMyProfessionals.visibility = View.VISIBLE
+                                val profAdapter = CAAdapter(caProfiles, this@HomeActivity, true)
+                                binding.rvMyProfessionals.layoutManager =
+                                    androidx.recyclerview.widget.LinearLayoutManager(
+                                        this@HomeActivity,
+                                        androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL, false
+                                    )
+                                binding.rvMyProfessionals.adapter = profAdapter
+                                binding.btnViewAllProfessionals.setOnClickListener {
+                                    startActivity(Intent(this@HomeActivity, MyBookingsActivity::class.java))
+                                }
+                            }
+                        }
+                    }
+                }
+            }
     }
 }

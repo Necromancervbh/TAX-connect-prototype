@@ -66,15 +66,15 @@ class ProposalDialogHelper(
             val finalAmount = totalAmount - advanceAmount
 
             val message = MessageModel(
-                currentUserId,
-                otherUserId,
-                currentChatId,
-                "📄 Sent a proposal: $description",
-                System.currentTimeMillis(),
-                "PROPOSAL",
-                description,
-                totalAmountStr,
-                "PENDING"
+                senderId = currentUserId,
+                receiverId = otherUserId,
+                chatId = currentChatId,
+                message = "📄 Sent a proposal: $description",
+                timestamp = System.currentTimeMillis(),
+                type = "PROPOSAL",
+                proposalDescription = description,
+                proposalAmount = totalAmountStr,
+                proposalStatus = "PENDING"
             )
             
             if (advanceAmount > 0) {
@@ -152,12 +152,12 @@ class ProposalDialogHelper(
         stage: String
     ): MessageModel {
         val message = MessageModel(
-            currentUserId,
-            otherUserId,
-            currentChatId,
-            description,
-            System.currentTimeMillis(),
-            "PAYMENT_REQUEST"
+            senderId = currentUserId,
+            receiverId = otherUserId,
+            chatId = currentChatId,
+            message = description,
+            timestamp = System.currentTimeMillis(),
+            type = "PAYMENT_REQUEST"
         )
         message.paymentRequestAmount = amount
         message.paymentRequestStatus = "PENDING"

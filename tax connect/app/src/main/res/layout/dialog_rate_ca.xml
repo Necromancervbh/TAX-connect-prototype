@@ -39,7 +39,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:hint="Feedback (Optional)"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etFeedback"
@@ -62,7 +62,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Not Now"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
+            style="@style/Widget.Material3.Button.TextButton"
             android:layout_marginEnd="8dp"/>
 
         <com.google.android.material.button.MaterialButton

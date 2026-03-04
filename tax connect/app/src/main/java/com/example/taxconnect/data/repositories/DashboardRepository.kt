@@ -1,8 +1,9 @@
-package com.example.taxconnect.data.repositories
+﻿package com.example.taxconnect.data.repositories
 
 import com.example.taxconnect.data.models.BookingModel
 import com.example.taxconnect.data.models.ConversationModel
 import com.example.taxconnect.data.models.UserModel
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -38,6 +39,10 @@ class DashboardRepository @Inject constructor(
         return bookingRepository.getBookingsForCA(uid)
     }
 
+    fun getBookingsForCaFlow(caId: String): Flow<List<BookingModel>> {
+        return bookingRepository.getBookingsForCaFlow(caId)
+    }
+
     suspend fun getWalletBalance(uid: String): Double {
         return walletRepository.getWalletBalance(uid)
     }
@@ -57,4 +62,21 @@ class DashboardRepository @Inject constructor(
     suspend fun incrementClientCount(caId: String, userId: String) {
         bookingRepository.incrementClientCount(caId, userId)
     }
+
+    suspend fun acceptBookingWithChat(booking: com.example.taxconnect.data.models.BookingModel): String? {
+        return bookingRepository.acceptBookingWithChat(booking)
+    }
+
+    suspend fun rejectBooking(bookingId: String, reason: String?) {
+        bookingRepository.rejectBooking(bookingId, reason)
+    }
+
+    suspend fun autoExpirePendingBookings(caUid: String) {
+        bookingRepository.autoExpirePendingBookingsForCA(caUid)
+    }
+
+    suspend fun getCompletedCAsForUser(userId: String): List<String> {
+        return bookingRepository.getCompletedCAsForUser(userId)
+    }
+
 }

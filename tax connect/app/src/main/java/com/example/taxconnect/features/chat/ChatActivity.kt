@@ -1,4 +1,4 @@
-package com.example.taxconnect.features.chat
+﻿package com.example.taxconnect.features.chat
 
 import android.Manifest
 import android.content.Intent
@@ -58,6 +58,8 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(), PaymentResultListener 
     private var currentPaymentMessage: MessageModel? = null
     private var conversationModel: ConversationModel? = null
     private var hasShownRatingDialog = false
+    /** Guards the booking-context snackbar so it is shown at most once per session. */
+    private var bookingContextShown = false
     
     private lateinit var proposalDialogHelper: ProposalDialogHelper
     private lateinit var paymentDialogHelper: PaymentDialogHelper
@@ -109,16 +111,31 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(), PaymentResultListener 
             val bookingId = intent.getStringExtra("bookingId")
             otherUserId = intent.getStringExtra("otherUserId") ?: intent.getStringExtra("userId")
             otherUserName = intent.getStringExtra("otherUserName") ?: intent.getStringExtra("userName")
+            currentChatId = intent.getStringExtra("chatId") // also capture chatId if present
+            bookingId?.let { id -> showBookingBannerOnce(id) }
         } else {
             currentChatId = intent.getStringExtra("chatId")
             otherUserId = intent.getStringExtra("otherUserId")
             otherUserName = intent.getStringExtra("otherUserName")
+            // No bookingId in intent — the booking banner will be shown automatically
+            // once the conversation loads and its bookingId field is read (see observeViewModel)
         }
         
+        if (currentChatId == null && otherUserId == null) {
+            // Nothing to open — malformed deep-link or missing extras
+            showToast(getString(R.string.error_chat_open))
+            finish()
+            return
+        }
+
         if (currentChatId == null && otherUserId != null) {
              viewModel.initializeChatByUsers(currentUserId!!, otherUserId!!)
         } else if (currentChatId != null && otherUserId != null) {
              viewModel.initializeChat(currentChatId!!, otherUserId!!)
+        } else if (currentChatId != null && otherUserId == null) {
+            // CA may arrive here from notifications or other sources that only have chatId.
+            // Fetch conversation to derive otherUserId from participantIds.
+            viewModel.initializeChatById(currentChatId!!, currentUserId!!)
         }
 
         setupRecyclerView()
@@ -138,6 +155,22 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(), PaymentResultListener 
     }
 
     override fun observeViewModel() {
+        // ── Guard: emit from ViewModel if chat cannot be opened (e.g. booking still PENDING) ──
+        lifecycleScope.launch {
+            viewModel.chatErrorState.collect { errorMsg ->
+                showToast(errorMsg)
+                finish()
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.chatIdResolved.collect { resolvedId ->
+                if (resolvedId != null && currentChatId == null) {
+                    currentChatId = resolvedId
+                }
+            }
+        }
+
         lifecycleScope.launch {
             viewModel.messagesState.collect { messages ->
                 adapter.setMessages(messages)
@@ -157,9 +190,20 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(), PaymentResultListener 
                 conversationModel = conversation
                 currentChatId = conversation?.conversationId
                 updateWorkflowUI(conversation)
+
+                // Auto-show service context banner once when conversation loads
+                val bookingId = conversation?.bookingId
+                    ?: intent.getStringExtra("bookingId")
+                if (!bookingId.isNullOrBlank()) {
+                    showBookingBannerOnce(bookingId)
+                }
+
+                // Load service history once when conversation ID is first known
+                if (conversation?.conversationId != null) {
+                    loadServiceHistory()
+                }
             }
         }
-
         lifecycleScope.launch {
             viewModel.otherUserState.collect { resource ->
                 if (resource is Resource.Success) {
@@ -168,10 +212,24 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(), PaymentResultListener 
                         binding.toolbar.title = user.name
                         binding.toolbar.subtitle = if (user.isOnline) "Online" else "Offline"
                         otherUserName = user.name
+                        // Re-evaluate action row visibility now that the other user's role is known.
+                        // conversationState may have fired first (before role was loaded),
+                        // so the CA/client button visibility could be wrong without this refresh.
+                        updateWorkflowUI(conversationModel)
                     }
                 }
             }
         }
+
+        lifecycleScope.launch {
+            viewModel.currentUserState.collect { resource ->
+                if (resource is Resource.Success && resource.data != null) {
+                    // Re-evaluate action row visibility once we know the current user's role.
+                    updateWorkflowUI(conversationModel)
+                }
+            }
+        }
+
         
         lifecycleScope.launch {
             viewModel.fileUploadState.collect { resource ->
@@ -231,10 +289,8 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(), PaymentResultListener 
                         showToast("Thank you for your feedback!", Toast.LENGTH_SHORT)
                         ratingDialog?.dismiss()
                         ratingDialog = null
-                        // Reset conversation state back to Discussion for future services
-                        currentChatId?.let { chatId ->
-                            viewModel.updateConversationState(chatId, ConversationModel.STATE_DISCUSSION)
-                        }
+                        // Conversation state is reset to DISCUSSION inside the submitRating
+                        // Firestore transaction — no separate call needed here.
                     }
                     is Resource.Error -> {
                         showToast(resource.message ?: "Failed to submit rating", Toast.LENGTH_SHORT)
@@ -245,6 +301,13 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(), PaymentResultListener 
                             dialog.findViewById<android.view.View>(R.id.progressBar)?.visibility = View.GONE
                         }
                     }
+                }
+            }
+        }
+        lifecycleScope.launch {
+            viewModel.sendMessageState.collect { resource ->
+                if (resource is Resource.Error) {
+                    showToast(resource.message ?: "Failed to send message. Check your connection.")
                 }
             }
         }
@@ -292,18 +355,14 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(), PaymentResultListener 
     private fun setupRecyclerView() {
         adapter = MessageAdapter(object : MessageAdapter.OnProposalActionListener {
             override fun onAccept(proposal: MessageModel) {
-                // Determine next stage
-                val nextStage = if (proposal.proposalAmount?.toDoubleOrNull() ?: 0.0 > 0) {
-                    "ADVANCE_DUE" // Assuming advance is needed if there's an amount
-                } else {
-                    "FINAL_PAID" // Or whatever stage makes sense for 0 amount
-                }
-                
+                // Client accepts the CA's proposal — mark ACCEPTED and set stage to ADVANCE_DUE
                 val chatId = proposal.chatId
                 val proposalId = proposal.id
                 if (chatId != null && proposalId != null) {
-                    viewModel.updatePaymentStatus(chatId, proposalId, "ACCEPTED", null, nextStage)
+                    viewModel.updatePaymentStatus(chatId, proposalId, "ACCEPTED", null, "ADVANCE_DUE")
                 }
+                // Accepting a proposal puts us in ADVANCE_PAYMENT state
+                chatId?.let { viewModel.updateConversationState(it, ConversationModel.STATE_ADVANCE_PAYMENT) }
             }
             
             override fun onPayAdvance(proposal: MessageModel) {
@@ -318,7 +377,6 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(), PaymentResultListener 
                     currentPaymentMessage = proposal
                     paymentDialogHelper.showPaymentOptions(proposal)
                 } else {
-                    // No amount to pay, just update status
                     val chatId = proposal.chatId
                     val proposalId = proposal.id
                     if (chatId != null && proposalId != null) {
@@ -344,15 +402,9 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(), PaymentResultListener 
             override fun onRetry(message: MessageModel) {
                 val localId = message.id ?: return
                 val localPath = message.localFilePath ?: return
-                
-                // Update local message state back to UPLOADING
                 viewModel.updatePendingMessageStatus(localId, "UPLOADING")
-                
-                // Set pending state back up
                 pendingFileName = message.message
                 pendingMessageId = localId
-                
-                // Restart upload process
                 viewModel.uploadDocumentWithThumbnail(localPath, message.localThumbnailPath)
             }
         })
@@ -379,6 +431,15 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(), PaymentResultListener 
             }
             override fun onRequestAgain(message: MessageModel) {
                 proposalDialogHelper.showPaymentRequestDialog(currentUserId, otherUserId, currentChatId)
+            }
+        })
+
+        adapter.setOnSatisfiedListener(object : MessageAdapter.OnSatisfiedListener {
+            override fun onSatisfied(message: MessageModel) {
+                val otherUser = (viewModel.otherUserState.value as? Resource.Success)?.data
+                if (otherUser != null) {
+                    showRateCaDialog(otherUser)
+                }
             }
         })
 
@@ -418,30 +479,115 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(), PaymentResultListener 
         }
 
         binding.chipSuggestion1.setOnClickListener {
-            binding.etMessage.setText("👋 Hello, I need help with my ITR")
+            binding.etMessage.setText("👋 Hello! I'm ready to get started")
             binding.etMessage.requestFocus()
         }
         binding.chipSuggestion2.setOnClickListener {
-            binding.etMessage.setText("📊 I need help with GST filing")
+            binding.etMessage.setText("📎 I have some documents to share")
             binding.etMessage.requestFocus()
         }
         binding.chipSuggestion3.setOnClickListener {
-            binding.etMessage.setText("📄 I received a tax notice")
+            binding.etMessage.setText("❓ I have a few questions first")
             binding.etMessage.requestFocus()
+        }
+
+        // ── Action Row Buttons ─────────────────────────────────────────────────
+        binding.btnBookAppointment.setOnClickListener {
+            val otherUser = (viewModel.otherUserState.value as? Resource.Success)?.data
+            if (otherUser != null) {
+                val intent = Intent(this, com.example.taxconnect.features.booking.BookAppointmentActivity::class.java)
+                intent.putExtra("CA_DATA", otherUser)
+                startActivity(intent)
+            }
+        }
+        binding.btnCustomerVideoCall.setOnClickListener {
+            checkPermissionsAndStartCall()
+        }
+        binding.btnLeaveFeedback.setOnClickListener {
+            val otherUser = (viewModel.otherUserState.value as? Resource.Success)?.data
+            if (otherUser != null) showRateCaDialog(otherUser)
+        }
+        binding.btnRequestAgain.setOnClickListener {
+            // Client wants to book the CA again — open BookAppointmentActivity
+            val otherUser = (viewModel.otherUserState.value as? Resource.Success)?.data
+            if (otherUser != null) {
+                val intent = Intent(this, com.example.taxconnect.features.booking.BookAppointmentActivity::class.java)
+                intent.putExtra("CA_DATA", otherUser)
+                startActivity(intent)
+            }
+        }
+        binding.btnRequestDocs.setOnClickListener {
+            binding.etMessage.setText("📄 Please share the required documents")
+            binding.etMessage.requestFocus()
+        }
+        // CA: complete the booking; sends invoice summary to client and marks conversation COMPLETED
+        binding.btnCompleteJob.setOnClickListener {
+            val proposal = adapter.getLatestAcceptedProposal()
+            val advance = proposal?.proposalAdvanceAmount ?: "0"
+            val final   = proposal?.proposalFinalAmount   ?: "0"
+            // Pull service name from the proposal description (e.g. "ITR Filing – Basic")
+            val serviceName = proposal?.proposalDescription ?: ""
+            viewModel.sendServiceSummaryAndComplete(advance, final, serviceName)
+        }
+
+        // Payment issue card actions
+        binding.btnPaymentRetry.setOnClickListener {
+            binding.cardPaymentIssue.visibility = View.GONE
+            currentPaymentMessage?.let { paymentDialogHelper.showPaymentOptions(it) }
+        }
+        binding.btnPaymentSupport.setOnClickListener {
+            binding.cardPaymentIssue.visibility = View.GONE
+            val intent = Intent(Intent.ACTION_SENDTO).apply {
+                data = android.net.Uri.parse("mailto:support@taxconnect.com")
+                putExtra(Intent.EXTRA_SUBJECT, "Payment Support Needed")
+            }
+            if (intent.resolveActivity(packageManager) != null) startActivity(intent)
+            else showToast("Please email support@taxconnect.com")
+        }
+
+        // Header revise button
+        binding.btnReviseHeader.setOnClickListener {
+            proposalDialogHelper.showCreateProposalDialog(currentUserId, otherUserId, currentChatId)
+        }
+
+        // Pay Final — triggers payment dialog scoped to the final payment amount
+        binding.btnPayFinal.setOnClickListener {
+            val proposal = adapter.getLatestAcceptedProposal()
+            if (proposal != null) {
+                currentPaymentMessage = proposal
+                paymentDialogHelper.showPaymentOptions(proposal)
+            } else {
+                showToast(getString(R.string.no_pending_payment))
+            }
+        }
+
+        // Toggle Video Call — CA-side: enable video and broadcast a system message to the chat
+        binding.btnToggleVideoCall.setOnClickListener {
+            viewModel.updateVideoCallPermission(true)
+            viewModel.sendSystemMessage(getString(R.string.system_msg_video_enabled))
+            showToast(getString(R.string.video_call_enabled))
+        }
+
+        // View History — expand/collapse the past-bookings card
+        binding.btnViewHistory.setOnClickListener {
+            binding.layoutServiceHistory.visibility =
+                if (binding.layoutServiceHistory.visibility == View.VISIBLE) View.GONE else View.VISIBLE
         }
     }
 
     private fun sendMessage() {
         val text = binding.etMessage.text.toString().trim()
         if (text.isEmpty()) return
+        val cid = currentChatId ?: run { showToast("Chat is loading, please wait..."); return }
+        val uid = currentUserId ?: run { showToast("Not signed in"); return }
 
         val message = MessageModel(
-            currentUserId,
-            otherUserId,
-            currentChatId,
-            text,
-            System.currentTimeMillis(),
-            "TEXT"
+            senderId = uid,
+            receiverId = otherUserId,
+            chatId = cid,
+            message = text,
+            timestamp = System.currentTimeMillis(),
+            type = "TEXT"
         )
         viewModel.sendMessage(message)
         binding.etMessage.setText("")
@@ -486,6 +632,7 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(), PaymentResultListener 
     private var pendingMessageId: String? = null
 
     private fun uploadFile(uri: Uri) {
+        val cid = currentChatId ?: run { showToast("Chat is loading, please wait..."); return }
         val fileName = getFileName(uri)
         pendingFileName = fileName
         
@@ -507,7 +654,7 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(), PaymentResultListener 
             val optimisticMessage = MessageModel(
                 senderId = currentUserId,
                 receiverId = otherUserId,
-                chatId = currentChatId,
+                chatId = cid,
                 message = fileName,
                 timestamp = System.currentTimeMillis(),
                 type = type,
@@ -542,12 +689,12 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(), PaymentResultListener 
         } else null
 
         val message = MessageModel(
-            currentUserId,
-            otherUserId,
-            currentChatId,
-            if (type == "DOCUMENT") displayName else url,
-            System.currentTimeMillis(),
-            type
+            senderId = currentUserId,
+            receiverId = otherUserId,
+            chatId = currentChatId,
+            message = if (type == "DOCUMENT") displayName else url,
+            timestamp = System.currentTimeMillis(),
+            type = type
         )
         if (type == "IMAGE") {
             message.imageUrl = url
@@ -576,63 +723,79 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(), PaymentResultListener 
             ConversationModel.STATE_PAYMENT_PENDING,
             ConversationModel.STATE_ADVANCE_PAYMENT,
             ConversationModel.STATE_DOCS_PENDING,
+            ConversationModel.STATE_FINAL_DUE,
+            ConversationModel.STATE_READY_TO_COMPLETE,
             ConversationModel.STATE_COMPLETED
         )
+        
+        // Hide the revise button by default; only shown in PAYMENT_PENDING
+        binding.btnReviseHeader.visibility = View.GONE
         
         if (showStepper) {
             binding.tvPaymentProgress.visibility = View.GONE
             binding.layoutStepper.visibility = View.VISIBLE
             binding.layoutStepperLabels.visibility = View.VISIBLE
             
-            // Default inactive
+            // Reset stepper to default inactive state
             binding.step1Icon.setImageResource(R.drawable.ic_check_circle)
             binding.step1Line.alpha = 0.3f
             binding.step2Icon.setImageResource(R.drawable.ic_circle_outline)
             binding.step2Line.alpha = 0.3f
             binding.step3Icon.setImageResource(R.drawable.ic_circle_outline)
-            
-            // Reset text styling
             binding.tvStep1Label.alpha = 1.0f
             binding.tvStep2Label.alpha = 0.5f
             binding.tvStep3Label.alpha = 0.5f
+            binding.tvWorkflowNext.setTextColor(ContextCompat.getColor(this, R.color.text_secondary))
             
             when (state) {
-                ConversationModel.STATE_PAYMENT_PENDING -> {
-                    // Proposal sent/accepted, waiting for advance payment
-                    binding.step1Icon.setImageResource(R.drawable.ic_circle_outline) // pending completion of step 1
-                    binding.tvWorkflowNext.text = getString(R.string.next_client_pay)
+                ConversationModel.STATE_PAYMENT_PENDING, ConversationModel.STATE_ADVANCE_PAYMENT -> {
+                    // Proposal accepted — waiting for (or just received) advance payment
+                    if (state == ConversationModel.STATE_PAYMENT_PENDING) {
+                        binding.step1Icon.setImageResource(R.drawable.ic_circle_outline)
+                        binding.tvWorkflowNext.text = getString(R.string.next_client_pay)
+                        binding.btnReviseHeader.visibility = View.VISIBLE
+                    } else {
+                        // Advance paid but CA hasn't started yet (shouldn't linger here long)
+                        binding.tvWorkflowNext.text = getString(R.string.next_ca_work)
+                    }
                 }
-                ConversationModel.STATE_ADVANCE_PAYMENT, ConversationModel.STATE_DOCS_PENDING -> {
-                    // Advance paid
+                ConversationModel.STATE_DOCS_PENDING -> {
+                    // Advance paid; CA is working and will send docs + request final payment
                     binding.step1Line.alpha = 1.0f
                     binding.step2Icon.setImageResource(R.drawable.ic_check_circle)
                     binding.tvStep2Label.alpha = 1.0f
-                    
-                    if (state == ConversationModel.STATE_ADVANCE_PAYMENT) {
-                        binding.tvWorkflowNext.text = getString(R.string.next_ca_work)
-                    } else {
-                        binding.tvWorkflowNext.text = getString(R.string.next_final_request)
-                    }
+                    binding.tvWorkflowNext.text = "CA is working — docs & final payment request coming"
                 }
-                ConversationModel.STATE_COMPLETED -> {
-                    // Fully paid
+                ConversationModel.STATE_FINAL_DUE -> {
+                    // CA has sent docs & asked for final payment; client pays now
+                    binding.step1Line.alpha = 1.0f
+                    binding.step2Icon.setImageResource(R.drawable.ic_check_circle)
+                    binding.step2Line.alpha = 1.0f
+                    binding.step3Icon.setImageResource(R.drawable.ic_circle_outline)
+                    binding.tvStep2Label.alpha = 1.0f
+                    binding.tvStep3Label.alpha = 0.4f
+                    binding.tvWorkflowNext.text = "Final payment is due — pay to complete the service"
+                }
+                ConversationModel.STATE_READY_TO_COMPLETE -> {
+                    // Final paid; CA must click "Complete Booking"
                     binding.step1Line.alpha = 1.0f
                     binding.step2Icon.setImageResource(R.drawable.ic_check_circle)
                     binding.step2Line.alpha = 1.0f
                     binding.step3Icon.setImageResource(R.drawable.ic_check_circle)
-                    
                     binding.tvStep2Label.alpha = 1.0f
                     binding.tvStep3Label.alpha = 1.0f
-                    
+                    binding.tvWorkflowNext.text = "All payments received — awaiting CA to complete booking"
+                }
+                ConversationModel.STATE_COMPLETED -> {
+                    // Everything done
+                    binding.step1Line.alpha = 1.0f
+                    binding.step2Icon.setImageResource(R.drawable.ic_check_circle)
+                    binding.step2Line.alpha = 1.0f
+                    binding.step3Icon.setImageResource(R.drawable.ic_check_circle)
+                    binding.tvStep2Label.alpha = 1.0f
+                    binding.tvStep3Label.alpha = 1.0f
                     binding.tvWorkflowNext.text = getString(R.string.status_project_completed)
                     binding.tvWorkflowNext.setTextColor(ContextCompat.getColor(this, R.color.status_online))
-                    
-                    // Trigger rating dialog for client (only once per session)
-                    val otherUser = (viewModel.otherUserState.value as? Resource.Success)?.data
-                    if (otherUser?.role == "CA" && !hasShownRatingDialog && ratingDialog == null) {
-                        hasShownRatingDialog = true
-                        showRateCaDialog(otherUser)
-                    }
                 }
             }
         } else {
@@ -655,7 +818,75 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(), PaymentResultListener 
                 }
             }
         }
+        // ── Action Row: show context-sensitive buttons ─────────────────────────
+        val otherUser = (viewModel.otherUserState.value as? Resource.Success)?.data
+        val currentUser = (viewModel.currentUserState.value as? Resource.Success)?.data
+        
+        // Hide action buttons while user roles are loading to prevent flashing wrong UI
+        if (currentUser == null && otherUser == null) {
+            binding.btnCreateProposal.visibility  = View.GONE
+            binding.btnRequestDocs.visibility     = View.GONE
+            binding.btnCompleteJob.visibility     = View.GONE
+            binding.btnToggleVideoCall.visibility = View.GONE
+            binding.btnBookAppointment.visibility     = View.GONE
+            binding.btnCustomerVideoCall.visibility   = View.GONE
+            binding.btnLeaveFeedback.visibility       = View.GONE
+            binding.btnRequestAgain.visibility        = View.GONE
+            binding.btnPayFinal.visibility            = View.GONE
+            binding.btnViewHistory.visibility         = View.GONE
+            return
+        }
+
+        // Determine roles dynamically
+        val isCA = currentUser?.role?.equals("CA", ignoreCase = true) == true
+        val isClient = currentUser?.role?.equals("CUSTOMER", ignoreCase = true) == true || 
+                       currentUser?.role?.equals("CLIENT", ignoreCase = true) == true
+                       
+        // isTalkingToCA = the current user is a client chatting with a CA
+        val isTalkingToCA = isClient || otherUser?.role?.equals("CA", ignoreCase = true) == true
+        
+        val isCompleted      = state == ConversationModel.STATE_COMPLETED
+        val isDiscussion     = state == ConversationModel.STATE_DISCUSSION || state == null
+        val isDocsPending    = state == ConversationModel.STATE_DOCS_PENDING
+        val isReadyComplete  = state == ConversationModel.STATE_READY_TO_COMPLETE
+        val isFinalDue       = state == ConversationModel.STATE_FINAL_DUE
+
+        // ── CA-side buttons ────────────────────────────────────────────────────
+        // Create Proposal: only in Discussion
+        binding.btnCreateProposal.visibility    = if (!isTalkingToCA && isDiscussion) View.VISIBLE else View.GONE
+        // Request Docs: CA reminds client to send docs (DOCS_PENDING phase)
+        binding.btnRequestDocs.visibility       = if (!isTalkingToCA && isDocsPending) View.VISIBLE else View.GONE
+        // Complete Booking: only shown when final payment is received
+        binding.btnCompleteJob.visibility       = if (!isTalkingToCA && isReadyComplete) View.VISIBLE else View.GONE
+        // Video call enable: only in Discussion
+        binding.btnToggleVideoCall.visibility   = if (!isTalkingToCA && isDiscussion) View.VISIBLE else View.GONE
+
+        // ── Client-side buttons ───────────────────────────────────────────────
+        binding.btnBookAppointment.visibility   = if (isTalkingToCA && isDiscussion) View.VISIBLE else View.GONE
+        binding.btnCustomerVideoCall.visibility = View.GONE  // toolbar btnVideoCall handles this
+        // Leave Feedback: manual option even after COMPLETED
+        binding.btnLeaveFeedback.visibility     = if (isTalkingToCA && isCompleted) View.VISIBLE else View.GONE
+        binding.btnRequestAgain.visibility      = if (isTalkingToCA && isCompleted) View.VISIBLE else View.GONE
+        // Pay Final: big "Pay Final" button shown when CA has requested final payment
+        binding.btnPayFinal.visibility          = if (isTalkingToCA && isFinalDue) View.VISIBLE else View.GONE
+        binding.btnViewHistory.visibility       = if (isTalkingToCA && isCompleted) View.VISIBLE else View.GONE
+        
+        // ── Empty State Handling ─────────────────────────────────────────
+        val hasBooking = conversationModel?.bookingId != null
+        if (hasBooking) {
+            binding.tvChatEmptyTitle.text = "Your booking is confirmed!"
+            binding.tvChatEmptySubtitle.text = "Introduce yourself and share any documents the CA may need."
+            binding.chipSuggestion1.text = "👋 Hello! I'm ready to get started"
+        } else {
+            binding.tvChatEmptyTitle.text = if (isTalkingToCA) "Start a conversation" else "A client wants to connect"
+            binding.tvChatEmptySubtitle.text = if (isTalkingToCA) 
+                "Ask a question or request a service from this professional." 
+            else 
+                "Say hello and discuss their requirements."
+            binding.chipSuggestion1.text = if (isTalkingToCA) "👋 Hi, I have a question about your services." else "👋 Hello! How can I help you today?"
+        }
     }
+
 
     private fun getWorkflowLabel(state: String?): String {
         if (state.isNullOrBlank()) return "Discussion"
@@ -717,31 +948,29 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(), PaymentResultListener 
     }
 
     private fun checkPermissionsAndStartCall() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
-                ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissionLauncher.launch(Manifest.permission.CAMERA) 
-                return
-            }
+        val cameraGranted = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
+        val audioGranted  = ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
+        if (cameraGranted && audioGranted) {
+            startVideoCall()
+        } else {
+            requestPermissionLauncher.launch(Manifest.permission.CAMERA)
         }
-        startVideoCall()
     }
 
     private fun startVideoCall() {
+        val chatId = currentChatId ?: run { showToast("Chat not ready yet, please wait..."); return }
         val intent = Intent(this, VideoCallActivity::class.java)
-        intent.putExtra("CHANNEL_NAME", currentChatId)
-        intent.putExtra("ROOM_UUID", currentChatId)
+        intent.putExtra("CHANNEL_NAME", chatId)
+        intent.putExtra("ROOM_UUID", chatId)
         intent.putExtra("CALLER_NAME", otherUserName)
-        
+
         // Reset the call status before starting to prevent instant finish from previous calls
-        currentChatId?.let { chatId ->
-            com.example.taxconnect.data.repositories.ConversationRepository.getInstance()
-                .updateCallStatus(chatId, "INITIATED", null)
-        }
-        
+        com.example.taxconnect.data.repositories.ConversationRepository.getInstance()
+            .updateCallStatus(chatId, "INITIATED", null)
+
         // Notify the other user via Firestore that a call has started
         viewModel.sendCallMessage()
-        
+
         startActivity(intent)
     }
 
@@ -791,7 +1020,7 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(), PaymentResultListener 
     }
 
     override fun onPaymentSuccess(razorpayPaymentId: String?) {
-        showToast("Payment Successful")
+        showToast(getString(R.string.payment_successful_gateway), Toast.LENGTH_SHORT)
         
         currentPaymentMessage?.let { msg ->
             val status = when {
@@ -809,7 +1038,7 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(), PaymentResultListener 
                 viewModel.processExternalPayment(amount, msg, status, razorpayPaymentId, {
                      Timber.i("External payment processed successfully")
                 }, { error ->
-                     showToast("Failed to update payment status: $error")
+                     showToast(getString(R.string.payment_status_update_failed, error))
                 })
             } else {
                 msg.chatId?.let { chatId ->
@@ -820,14 +1049,95 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(), PaymentResultListener 
             }
             
             currentPaymentMessage = null
+            binding.cardPaymentIssue.visibility = View.GONE
         }
     }
 
+
     override fun onPaymentError(code: Int, response: String?) {
-        val errorMessage = response ?: "Unknown error"
-        com.google.android.material.snackbar.Snackbar.make(binding.root, "Payment Failed: $errorMessage", com.google.android.material.snackbar.Snackbar.LENGTH_LONG)
-            .setAction("Retry") {
-                currentPaymentMessage?.let { paymentDialogHelper.showPaymentOptions(it) }
-            }.show()
+        val errorMessage = response ?: getString(R.string.error_unknown)
+        binding.cardPaymentIssue.visibility = View.VISIBLE
+        binding.tvPaymentIssue.text = getString(R.string.payment_failed_message, errorMessage)
+    }
+
+
+    /**
+     * Loads all past bookings between currentUser and otherUser and shows them
+     * in the cardServiceHistory panel.
+     */
+    private fun loadServiceHistory() {
+        val uid = currentUserId ?: return
+        val other = otherUserId ?: return
+        val db = com.google.firebase.firestore.FirebaseFirestore.getInstance()
+
+        // Two targeted queries: one where current user is the client, one where they are the CA.
+        // Firestore's whereIn on a field only matches one role at a time.
+        val clientQuery = db.collection("bookings")
+            .whereEqualTo("userId", uid).whereEqualTo("caId", other)
+        val caQuery = db.collection("bookings")
+            .whereEqualTo("userId", other).whereEqualTo("caId", uid)
+
+        com.google.android.gms.tasks.Tasks.whenAllSuccess<com.google.firebase.firestore.QuerySnapshot>(clientQuery.get(), caQuery.get())
+            .addOnSuccessListener { results ->
+                val matching = results
+                    .flatMap { (it as com.google.firebase.firestore.QuerySnapshot).documents }
+                    .mapNotNull { it.toObject(com.example.taxconnect.data.models.BookingModel::class.java) }
+                    .sortedByDescending { it.appointmentTimestamp }
+
+                if (matching.isEmpty()) {
+                    binding.tvServiceHistoryEmpty.visibility = View.VISIBLE
+                    binding.layoutServiceHistory.removeAllViews()
+                } else {
+                    binding.tvServiceHistoryEmpty.visibility = View.GONE
+                    binding.layoutServiceHistory.removeAllViews()
+                    matching.forEach { booking ->
+                        val row = android.widget.TextView(this).apply {
+                            val status = booking.status?.lowercase()?.replaceFirstChar { it.uppercase() } ?: ""
+                            text = "• ${booking.serviceName ?: "Service"} — ${booking.appointmentDate ?: ""} [$status]"
+                            textSize = 13f
+                            setTextColor(androidx.core.content.ContextCompat.getColor(this@ChatActivity, R.color.text_secondary))
+                            setPadding(0, 4, 0, 4)
+                        }
+                        binding.layoutServiceHistory.addView(row)
+                    }
+                    binding.cardServiceHistory.visibility = View.VISIBLE
+                }
+            }
+            .addOnFailureListener { e ->
+                Timber.e(e, "Failed to load service history")
+            }
+    }
+
+    /**
+     * Shows the booking-context snackbar at most once per Activity lifecycle.
+     * Guards via [bookingContextShown] so re-renders and observer re-fires don't spam.
+     */
+    private fun showBookingBannerOnce(bookingId: String) {
+        if (bookingContextShown) return
+        bookingContextShown = true
+        fetchAndShowBookingContextBanner(bookingId)
+    }
+
+    private fun fetchAndShowBookingContextBanner(bookingId: String) {
+        com.google.firebase.firestore.FirebaseFirestore.getInstance()
+            .collection("bookings").document(bookingId).get()
+            .addOnSuccessListener { doc ->
+                if (!doc.exists()) return@addOnSuccessListener
+                val service = doc.getString("serviceName") ?: return@addOnSuccessListener
+                val date = doc.getString("appointmentDate") ?: ""
+                val time = doc.getString("appointmentTime") ?: ""
+                val status = doc.getString("status") ?: ""
+
+                val msg = buildString {
+                    append("📋 $service")
+                    if (date.isNotBlank()) append(" · $date")
+                    if (time.isNotBlank()) append(" $time")
+                    if (status.isNotBlank()) append(" · ${status.lowercase().replaceFirstChar { it.uppercase() }}")
+                }
+
+                com.google.android.material.snackbar.Snackbar
+                    .make(binding.root, msg, com.google.android.material.snackbar.Snackbar.LENGTH_LONG)
+                    .show()
+            }
     }
 }

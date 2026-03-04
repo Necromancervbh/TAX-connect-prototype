@@ -1,0 +1,168 @@
+﻿
+TaxConnect Firestore Audit
+Project: trae1-d90c2
+2026-03-04T00:27:29.315Z
+
+============================================================
+COLLECTION: users
+============================================================
+  Total docs sampled: 3
+
+  Doc ID: 62Tcd3JPSYTQ6X2QXcR6dT4ai0r2
+  Fields present (24):
+    role: "CA"
+    city: "Chandigarh"
+    rating: 0
+    verified: false
+    bio: null
+    caNumber: "bshahabb55"
+    verificationRequested: false
+    experience: "3"
+    ratingCount: 0
+    introVideoUrl: "https://res.cloudinary.com/dr2oc1q4y/video/upload/v177014523..."
+    minCharges: "1500"
+    uid: "62Tcd3JPSYTQ6X2QXcR6dT4ai0r2"
+    phoneNumber: ""
+    certificates: null
+    walletBalance: 0
+    name: "Shruti shah"
+    specialization: "TAXATION"
+    online: false
+    blockedUsers: [array, len=0]
+    clientCount: 0
+    priceRange: null
+    profileImageUrl: "https://res.cloudinary.com/dr2oc1q4y/image/upload/v177014522..."
+    email: "vaibhavnecro@gmail.com"
+    fcmToken: "fiK6aQghQiGaorWfnAZ2Ss:APA91bGM3vQJfJtRz7cgO34-JWayVkO-jGLXV..."
+
+  Doc ID: 8RjVObJwk9b8N0KNspDtUiqKKxc2
+  Fields present (35):
+    notifyCalls: true
+    role: "CUSTOMER"
+    notifyRequests: true
+    city: "haridwar"
+    notifyBookings: true
+    rating: 0
+    bio: null
+    caNumber: null
+    experience: null
+    introVideoUrl: null
+    minCharges: null
+    uid: "8RjVObJwk9b8N0KNspDtUiqKKxc2"
+    archived: false
+    createdAt: 1772559248072
+    quietHoursStart: "22:00"
+    walletBalance: 0
+    quietHoursEnabled: false
+    clientCount: 0
+    profileImageUrl: null
+    email: "vaibhavtest2@gmail.com"
+    updatedAt: 1772559248072
+    notifyMessages: true
+    verified: false
+    verificationRequested: false
+    ratingCount: 0
+    archivedAt: null
+    phoneNumber: null
+    certificates: null
+    name: "vaibhav"
+    specialization: null
+    quietHoursEnd: "07:00"
+    blockedUsers: [array, len=0]
+    priceRange: null
+    fcmToken: "e4_chOz5Qxe7WQBSVULrJZ:APA91bEr4GEshrSQnpVXmqndicpI8p4RaGgAt..."
+    online: true
+
+  Doc ID: ACbf5EjP7UN0vhWhxqqNZEA1oZk2
+  Fields present (35):
+    notifyCalls: true
+    role: "CA"
+    notifyRequests: true
+    city: "haridwar"
+    notifyBookings: true
+    rating: 4.666666666666667
+    bio: "hello"
+    caNumber: "CA163636281"
+    experience: "6"
+    introVideoUrl: "https://res.cloudinary.com/dr2oc1q4y/video/upload/v176943585..."
+    minCharges: "1000"
+    uid: "ACbf5EjP7UN0vhWhxqqNZEA1oZk2"
+    archived: false
+    createdAt: 1772430882796
+    quietHoursStart: "22:00"
+    walletBalance: 6120
+    quietHoursEnabled: false
+    profileImageUrl: "https://res.cloudinary.com/dr2oc1q4y/image/upload/v176943584..."
+    fcmToken: "e4_chOz5Qxe7WQBSVULrJZ:APA91bEr4GEshrSQnpVXmqndicpI8p4RaGgAt..."
+    email: "vaibhavshukl23@gmail.com"
+    updatedAt: 1772430882796
+    notifyMessages: true
+    verified: true
+    verificationRequested: true
+    ratingCount: 3
+    archivedAt: null
+    phoneNumber: ""
+    certificates: [array, len=1]
+    name: "Vaibhav Shukla"
+    specialization: "incometax"
+    quietHoursEnd: "07:00"
+    blockedUsers: [array, len=0]
+    priceRange: null
+    online: true
+    clientCount: 6
+
+CA user found: 62Tcd3JPSYTQ6X2QXcR6dT4ai0r2
+
+============================================================
+COLLECTION: conversations
+============================================================
+  Total docs sampled: 1
+
+  Doc ID: 8RjVObJwk9b8N0KNspDtUiqKKxc2_ACbf5EjP7UN0vhWhxqqNZEA1oZk2
+  Fields present (15):
+    otherUserEmail: null
+    serviceCycleSequence: 0
+    currentServiceCycleId: null
+    conversationId: "8RjVObJwk9b8N0KNspDtUiqKKxc2_ACbf5EjP7UN0vhWhxqqNZEA1oZk2"
+    videoCallAllowed: false
+    lastServiceCompletedAt: 0
+    callStatus: null
+    otherUserName: null
+    participantIds: [array, len=2]
+    otherUserProfileImage: null
+    unreadCounts: {object: 8RjVObJwk9b8N0KNspDtUiqKKxc2, ACbf5EjP7UN0vhWhxqqNZEA1oZk2}
+    lastMessageTimestamp: 1772572034836
+    lastMessage: "Hula"
+    unreadCounts.ACbf5EjP7UN0vhWhxqqNZEA1oZk2: 2
+    workflowState: "Advance Payment"
+
+Messages subcollection audit:
+
+  Messages in conversation 8RjVObJwk9b8N0KNspDtUiqKKxc2_ACbf5EjP7UN0vhWhxqqNZEA1oZk2:
+    type=PROPOSAL, senderId=8RjVObJw..., msg="New Booking: tax filling
+Date: 04/03/202"
+    type=TEXT, senderId=8RjVObJw..., msg="Heyy"
+    type=TEXT, senderId=8RjVObJw..., msg="Hula"
+    type=TEXT, senderId=8RjVObJw..., msg="Heyy"
+
+============================================================
+COLLECTION: services
+============================================================
+  Total docs sampled: 1
+
+  Doc ID: c94426d4-f361-4fa3-b5ab-b68562e169a0
+  Fields present (6):
+    estimatedTime: "3 days"
+    price: "200"
+    caId: "ACbf5EjP7UN0vhWhxqqNZEA1oZk2"
+    description: "hhe"
+    id: "c94426d4-f361-4fa3-b5ab-b68562e169a0"
+    title: "tax filling"
+
+============================================================
+COLLECTION: notifications
+============================================================
+  [EMPTY ΓÇö no documents found]
+
+
+Audit complete!

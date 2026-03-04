@@ -103,10 +103,6 @@ class ProfileActivity : BaseActivity<ActivityProfileBinding>() {
         binding.btnChangePhoto.setOnClickListener { pickImageLauncher.launch("image/*") }
         binding.tvChangePhoto.setOnClickListener { pickImageLauncher.launch("image/*") }
 
-        binding.btnOrderHistory.setOnClickListener {
-            startActivity(Intent(this, OrderHistoryActivity::class.java))
-        }
-        
         binding.btnChangeVideo.setOnClickListener { pickVideoLauncher.launch("video/*") }
         
         binding.btnViewPublicProfile.setOnClickListener {

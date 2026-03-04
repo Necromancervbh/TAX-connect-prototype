@@ -244,7 +244,7 @@
                 android:id="@+id/btnCompleteJob"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Complete Job"
+                android:text="Complete Booking"
                 android:backgroundTint="@color/emerald_600"
                 android:layout_marginEnd="8dp"
                 android:visibility="gone"
@@ -275,7 +275,7 @@
                 android:id="@+id/btnRequestAgain"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Request Assistance Again"
+                android:text="Book Again"
                 android:layout_marginEnd="8dp"
                 android:visibility="gone"
                 android:textColor="@color/primary"
@@ -408,24 +408,26 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="💬"
+            android:text="📋"
             android:textSize="48sp" />
 
         <TextView
+            android:id="@+id/tvChatEmptyTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Start the conversation"
+            android:text="Start a conversation"
             android:textColor="@color/text_main"
             android:textSize="18sp"
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/tvChatEmptySubtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
             android:gravity="center"
-            android:text="Describe your tax concern and the CA will respond shortly."
+            android:text="Introduce yourself and share any documents the CA may need."
             android:textColor="@color/text_muted"
             android:textSize="13sp" />
 
@@ -442,7 +444,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:text="👋 Hello, I need help with my ITR"
+                android:text="👋 Hello! I'm ready to get started"
                 android:textSize="13sp"
                 android:textColor="@color/primary"
                 app:backgroundTint="@color/primary_container"
@@ -454,7 +456,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:text="📊 I need help with GST filing"
+                android:text="📎 I have some documents to share"
                 android:textSize="13sp"
                 android:textColor="@color/primary"
                 app:backgroundTint="@color/primary_container"
@@ -465,7 +467,7 @@
                 android:id="@+id/chipSuggestion3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="📄 I received a tax notice"
+                android:text="❓ I have a few questions first"
                 android:textSize="13sp"
                 android:textColor="@color/primary"
                 app:backgroundTint="@color/primary_container"

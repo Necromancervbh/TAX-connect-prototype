@@ -30,9 +30,12 @@
 ### 🏆 Trust & Verification
 *   **Verified Badges:** Manual verification system for CAs (`isVerified` status).
 *   **Secure Certificates:** CAs can showcase credentials that are view-only and protected from downloading.
+*   **Rating System:** Robust client feedback mechanism that updates CA profiles in real-time.
 
-### 📈 Service Milestones
+### 📈 Service Milestones & Completion
 *   **Escrow-Style Tracking:** Transparently track service deliverables via `MilestonesActivity`.
+*   **Professional Invoice Flow:** Automated generation of itemized invoices (Advance + Final payments) sent directly in chat.
+*   **One-Click Completion:** CA-specific "Complete Booking" action that closes the loop and prompts for client feedback.
 *   **Progress Monitoring:** Visual progress bars and status updates (Pending -> In Progress -> Completed).
 
 ---

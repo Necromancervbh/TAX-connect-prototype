@@ -20,7 +20,7 @@
     <string name="upcoming_bookings">Upcoming Bookings</string>
     <string name="error_loading_bookings">Error loading bookings</string>
     <string name="dashboard_help_title">Dashboard Guide</string>
-    <string name="dashboard_help_message"><b>Status Toggle:</b>\nSwitch between Online (visible to clients) and Offline.\n\n<b>Quick Actions:</b>\n• Requests: View and manage new client requests.\n• Bookings: Check upcoming and past sessions.\n• Messages: Chat with clients.\n<i>Red badges indicate unread items.</i>\n\n<b>Business Overview:</b>\nTrack your revenue, wallet balance, and client stats in real-time.\n\n<b>Documents:</b>\nSecurely manage and share tax documents with your clients.\n\n<b>Priority:</b>\nImportant tasks requiring your immediate attention.\n\n<b>Settings:</b>\nConfigure notifications, themes, and security preferences.</string>
+    <string name="dashboard_help_message"><b>Status Toggle:</b>\nSwitch between Online (visible to clients) and Offline.\n\n<b>Quick Actions:</b>\n• Bookings: View and manage new client bookings.\n• Sessions: Check upcoming and past sessions.\n• Messages: Chat with clients.\n<i>Red badges indicate unread items.</i>\n\n<b>Business Overview:</b>\nTrack your revenue, wallet balance, and client stats in real-time.\n\n<b>Documents:</b>\nSecurely manage and share tax documents with your clients.\n\n<b>Priority:</b>\nImportant tasks requiring your immediate attention.\n\n<b>Settings:</b>\nConfigure notifications, themes, and security preferences.</string>
     <string name="got_it">Got it</string>
 
     <!-- Profile -->
@@ -31,8 +31,8 @@
 
     <!-- General UI -->
     <string name="please_enter_query">Please enter your query</string>
-    <string name="request_sent_success">Request Sent Successfully</string>
-    <string name="failed_to_send_request">Failed to send request: %1$s</string>
+    <string name="booking_sent_success">Booking Sent Successfully</string>
+    <string name="failed_to_send_booking">Failed to send booking: %1$s</string>
     <string name="please_select_rating">Please select a rating</string>
     <string name="review_limit_exceeded">Review must be at most 10 words</string>
     <string name="no_cas_available">No CAs available yet.</string>
@@ -78,9 +78,6 @@
     <string name="payment_failed">Payment Failed: %1$s</string>
     <string name="booking_status_updated">Booking %1$s</string>
     <string name="failed_to_update_booking">Failed to update: %1$s</string>
-    <string name="service_requested_success">Service Requested Successfully!</string>
-    <string name="service_requested_message_pending">Service Requested (Message Pending)</string>
-    <string name="failed_to_request_service">Failed to request service</string>
 
     <!-- Community & Posts -->
     <string name="loading_user_profile">Please wait, loading user profile...</string>
@@ -121,7 +118,7 @@
 
     <!-- Chat & Workflow -->
     <string name="current_status">Current: %1$s</string>
-    <string name="next_accept_request">Next: Accept request</string>
+    <string name="next_accept_booking">Next: Accept booking</string>
     <string name="next_agree_price">Next: Agree on price</string>
     <string name="video_call_started">📞 Video Call Started</string>
     <string name="incoming_video_call">📞 Incoming Video Call\nTap to Join</string>
@@ -138,9 +135,8 @@
     <string name="revenue_today">Today: %1$s</string>
     <string name="revenue_week">This Week: %1$s</string>
     <string name="revenue_month">This Month: %1$s</string>
-    <string name="new_requests_count_dynamic">%1$d New Requests</string>
-    <string name="returning_clients_count">%1$d Returning Clients</string>
     <string name="new_bookings_count_dynamic">%1$d New Bookings</string>
+    <string name="returning_clients_count">%1$d Returning Clients</string>
     <string name="online">Online</string>
     <string name="offline">Offline</string>
     <string name="status_online">Online</string>
@@ -150,14 +146,12 @@
     <string name="loading_dots">Loading…</string>
     <string name="price_time_payment_message">Price: ₹ %1$s\nTime: %2$s\n\nProceed to payment?</string>
     <string name="request_assistance">Request assistance</string>
-    <string name="request_pending">Request pending</string>
-    <string name="request_pending_approval">Request pending approval.</string>
-    <string name="request_pending_approval_msg">Your request is pending approval from the CA.</string>
+    <string name="booking_pending">Booking Pending</string>
     <string name="message">Message</string>
     <string name="pricing_on_request">Pricing on request</string>
 
     <!-- Tabs & Lists -->
-    <string name="tab_requests">Requests</string>
+    <string name="tab_pending">Pending</string>
     <string name="tab_upcoming">Upcoming</string>
     <string name="tab_declined">Declined</string>
     <string name="clear">Clear</string>
@@ -283,7 +277,7 @@
     <string name="apply">Apply</string>
     <string name="confirm_identity_finance">Please confirm your identity to view financial records</string>
     <string name="error_loading_revenue">Error loading revenue data</string>
-    <string name="pending_requests_count">Pending Requests: %1$d</string>
+    <string name="pending_bookings_count">Pending Bookings: %1$d</string>
     <string name="error_loading_transactions">Error loading transactions</string>
     <string name="rating_count_format">(%1$d)</string>
 
@@ -353,8 +347,8 @@
     <string name="notification_header_older">Older</string>
     <string name="notification_call_from">Call from %1$s</string>
     <string name="notification_default_title">Notification</string>
-    <string name="no_requests_title">No Requests</string>
-    <string name="no_requests_desc">You have no pending requests to show here.</string>
+    <string name="no_pending_bookings_title">No Pending Bookings</string>
+    <string name="no_pending_bookings_desc">You have no pending bookings to show here.</string>
 
     <!-- Notification bar strings (calls + messages) -->
     <string name="notification_incoming_call">Incoming Call</string>
@@ -369,4 +363,29 @@
     <!-- Booking reminder notifications -->
     <string name="reminder_notif_title">Upcoming Appointment</string>
     <string name="reminder_notif_body">You have an appointment with %1$s in %2$s.</string>
+
+    <!-- Chat action buttons -->
+    <string name="no_pending_payment">No accepted proposal with final payment pending</string>
+    <string name="video_call_enabled">Video calls enabled — client can now join</string>
+
+    <!-- Payment and error strings -->
+    <string name="error_chat_open">Could not open chat. Please try again.</string>
+    <string name="error_unknown">Unknown error</string>
+    <string name="payment_failed_message">Payment failed: %1$s</string>
+    <string name="payment_status_update_failed">Failed to update payment status: %1$s</string>
+    <string name="payment_successful_gateway">Payment successful!</string>
+    <string name="error_loading_notifications">Failed to load notifications. Please check your connection.</string>
+
+    <!-- Video Call -->
+    <string name="call_declined">Call Declined</string>
+    <string name="user_is_busy">User is busy</string>
+    <string name="error_video_engine">Failed to initialize video engine</string>
+
+
+    <!-- Availability Settings -->
+    <string name="availability_saved">Availability saved!</string>
+    <string name="availability_save_partial">Some days failed to save. Please try again.</string>
+    <string name="saving">Saving…</string>
+    <string name="save_availability">Save Availability</string>
+    <string name="system_msg_video_enabled">📹 Video call has been enabled</string>
 </resources>

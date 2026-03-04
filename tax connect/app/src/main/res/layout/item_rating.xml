@@ -36,7 +36,7 @@
                 android:layout_width="14dp"
                 android:layout_height="14dp"
                 android:src="@drawable/ic_star_material3"
-                app:tint="#F59E0B"
+                app:tint="@color/amber_500"
                 android:layout_marginEnd="4dp"/>
 
             <TextView
@@ -45,7 +45,7 @@
                 android:layout_height="wrap_content"
                 android:text="5.0"
                 android:textStyle="bold"
-                android:textColor="#F59E0B"
+                android:textColor="@color/amber_500"
                 android:textSize="14sp"/>
         </LinearLayout>
 

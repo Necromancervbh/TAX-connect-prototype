@@ -82,9 +82,9 @@ class BalanceSheetActivity : BaseActivity<ActivityBalanceSheetBinding>() {
                     val uniqueCustomers = transactions.mapNotNull { it.userId }.distinct().count()
                     binding.tvTotalCustomers.text = uniqueCustomers.toString()
 
-                    // Count pending requests
+                    // Count pending transactions
                     val pendingCount = transactions.count { "PENDING".equals(it.status, ignoreCase = true) }
-                    binding.tvPendingCount.text = getString(R.string.pending_requests_count, pendingCount)
+                    binding.tvPendingCount.text = getString(R.string.pending_bookings_count, pendingCount)
                 }
             }
 

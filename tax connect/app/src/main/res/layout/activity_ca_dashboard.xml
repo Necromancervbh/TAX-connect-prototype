@@ -439,60 +439,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/space_2x"
                     android:orientation="horizontal"
-                    android:weightSum="4">
+                    android:weightSum="3">
 
-                    <!-- Requests -->
-                    <FrameLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginEnd="4dp">
-                        <com.google.android.material.card.MaterialCardView
-                            android:id="@+id/cardQuickRequests"
-                            style="@style/Widget.Material3.CardView.Elevated"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:clickable="true"
-                            android:focusable="true"
-                            android:foreground="?attr/selectableItemBackground"
-                            app:cardCornerRadius="12dp"
-                            app:cardBackgroundColor="?attr/colorSurface">
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="vertical"
-                                android:padding="12dp"
-                                android:gravity="center">
-                                <ImageView
-                                    android:layout_width="28dp"
-                                    android:layout_height="28dp"
-                                    android:src="@drawable/ic_work"
-                                    app:tint="?attr/colorPrimary" />
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginTop="6dp"
-                                    android:text="Requests"
-                                    android:textAppearance="?attr/textAppearanceLabelSmall"
-                                    android:maxLines="1" />
-                            </LinearLayout>
-                        </com.google.android.material.card.MaterialCardView>
-                        <TextView
-                            android:id="@+id/badgeRequests"
-                            android:layout_width="18dp"
-                            android:layout_height="18dp"
-                            android:layout_gravity="top|end"
-                            android:layout_margin="4dp"
-                            android:background="@drawable/bg_circle_light_primary"
-                            android:backgroundTint="@color/error_color"
-                            android:gravity="center"
-                            android:text="0"
-                            android:textColor="@android:color/white"
-                            android:textSize="9sp"
-                            android:textStyle="bold"
-                            android:visibility="gone"
-                            tools:visibility="visible" />
-                    </FrameLayout>
+
 
                     <!-- Bookings -->
                     <FrameLayout
@@ -651,98 +600,19 @@
                     android:textAppearance="?attr/textAppearanceTitleMedium"
                     android:textStyle="bold" />
 
-                <!-- Pending Requests Card -->
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cardPendingRequests"
-                    style="@style/Widget.Material3.CardView.Outlined"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:strokeColor="?attr/colorOutline"
-                    app:cardCornerRadius="12dp"
-                    app:cardBackgroundColor="?attr/colorSurface"
-                    android:tooltipText="Review client requests">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:padding="16dp">
 
-                        <ImageView
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:src="@drawable/ic_email"
-                            app:tint="?attr/colorPrimary"
-                            android:background="@drawable/bg_circle_gray"
-                            android:padding="8dp"
-                            android:layout_marginEnd="16dp" />
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Pending Requests"
-                                android:textAppearance="?attr/textAppearanceTitleSmall"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:id="@+id/tvPendingRequestsCount"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="0 New Requests"
-                                android:textAppearance="?attr/textAppearanceBodySmall"
-                                android:textColor="?attr/colorOnSurfaceVariant"
-                                android:layout_marginTop="2dp" />
-
-                            <TextView
-                                android:id="@+id/tvPriorityBadge"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="HIGH PRIORITY"
-                                android:textAppearance="?attr/textAppearanceLabelSmall"
-                                android:textColor="@color/error_color"
-                                android:textStyle="bold"
-                                android:layout_marginTop="2dp"
-                                android:visibility="gone"
-                                tools:visibility="visible" />
-
-                            <TextView
-                                android:id="@+id/tvReturningRequestsCount"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="0 Returning Clients"
-                                android:textAppearance="?attr/textAppearanceLabelSmall"
-                                android:textColor="?attr/colorOnSurfaceVariant"
-                                android:layout_marginTop="2dp" />
-                        </LinearLayout>
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnViewAllRequests"
-                            android:layout_width="wrap_content"
-                            android:layout_height="36dp"
-                            android:text="View"
-                            style="@style/Widget.Material3.Button.TonalButton"
-                            android:textColor="?attr/colorPrimary" />
-                    </LinearLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-                <!-- Pending Bookings Card -->
+                <!-- Pending Bookings Card — Primary Action -->
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/cardPendingBookings"
                     style="@style/Widget.Material3.CardView.Outlined"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/space_2x"
-                    app:strokeColor="?attr/colorOutline"
+                    app:strokeColor="?attr/colorPrimary"
+                    app:strokeWidth="2dp"
                     app:cardCornerRadius="12dp"
-                    app:cardBackgroundColor="?attr/colorSurface"
-                    android:tooltipText="Review booking requests">
+                    app:cardBackgroundColor="?attr/colorPrimaryContainer"
+                    android:tooltipText="Review pending bookings">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -755,7 +625,7 @@
                             android:layout_width="40dp"
                             android:layout_height="40dp"
                             android:src="@drawable/ic_calendar"
-                            app:tint="@color/secondary"
+                            app:tint="?attr/colorOnPrimaryContainer"
                             android:background="@drawable/bg_circle_gray"
                             android:padding="8dp"
                             android:layout_marginEnd="16dp" />
@@ -769,8 +639,9 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Booking Requests"
+                                android:text="New Bookings"
                                 android:textAppearance="?attr/textAppearanceTitleSmall"
+                                android:textColor="?attr/colorOnPrimaryContainer"
                                 android:textStyle="bold" />
 
                             <TextView
@@ -779,7 +650,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="0 New Bookings"
                                 android:textAppearance="?attr/textAppearanceBodySmall"
-                                android:textColor="?attr/colorOnSurfaceVariant"
+                                android:textColor="?attr/colorOnPrimaryContainer"
                                 android:layout_marginTop="2dp" />
                         </LinearLayout>
 
@@ -787,9 +658,9 @@
                             android:id="@+id/btnViewAllBookings"
                             android:layout_width="wrap_content"
                             android:layout_height="36dp"
-                            android:text="View"
-                            style="@style/Widget.Material3.Button.TonalButton"
-                            android:textColor="?attr/colorPrimary" />
+                            android:text="Review"
+                            style="@style/Widget.Material3.Button"
+                            android:backgroundTint="?attr/colorPrimary" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
@@ -1020,8 +891,7 @@
                         <ImageView
                             android:layout_width="20dp"
                             android:layout_height="20dp"
-                            android:src="@drawable/ic_arrow_back"
-                            android:rotation="180"
+                            android:src="@drawable/ic_arrow_forward"
                             app:tint="?attr/colorOnSurfaceVariant" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
@@ -1131,7 +1001,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Track requests, bookings, and revenue in one place."
+                            android:text="Track bookings, revenue and clients in one place."
                             android:textAppearance="?attr/textAppearanceBodyMedium"
                             android:textColor="?attr/colorOnSurfaceVariant"
                             android:layout_marginTop="@dimen/space_1x" />

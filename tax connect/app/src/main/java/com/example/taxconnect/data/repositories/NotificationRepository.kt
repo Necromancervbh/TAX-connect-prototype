@@ -23,7 +23,10 @@ class NotificationRepository(private val context: android.content.Context? = nul
         analytics?.log(event, mapOf("notification_type" to type))
     }
 
-    fun getNotifications(callback: (List<NotificationModel>) -> Unit) {
+    fun getNotifications(
+        callback: (List<NotificationModel>) -> Unit,
+        onError: ((String) -> Unit)? = null
+    ) {
         val userId = auth.uid ?: return
         firestore.collection("users").document(userId)
             .collection("notifications")
@@ -31,10 +34,10 @@ class NotificationRepository(private val context: android.content.Context? = nul
             .limit(50)
             .addSnapshotListener { snapshot, e ->
                 if (e != null) {
-                    callback(emptyList())
+                    onError?.invoke(e.message ?: "Failed to load notifications")
                     return@addSnapshotListener
                 }
-                val notifications = snapshot?.documents?.mapNotNull { 
+                val notifications = snapshot?.documents?.mapNotNull {
                     it.toObject(NotificationModel::class.java)?.copy(id = it.id)
                 } ?: emptyList()
                 callback(notifications)

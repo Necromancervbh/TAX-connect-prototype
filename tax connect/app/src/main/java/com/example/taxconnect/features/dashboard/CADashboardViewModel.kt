@@ -1,4 +1,4 @@
-package com.example.taxconnect.features.dashboard
+﻿package com.example.taxconnect.features.dashboard
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -34,12 +34,6 @@ class CADashboardViewModel @Inject constructor(
     private val _clientStatsState = MutableStateFlow(ClientStats())
     val clientStatsState: StateFlow<ClientStats> = _clientStatsState.asStateFlow()
 
-    private val _requestStatsState = MutableStateFlow(RequestStats())
-    val requestStatsState: StateFlow<RequestStats> = _requestStatsState.asStateFlow()
-
-    private val _priorityRequestsState = MutableStateFlow<List<ConversationModel>>(emptyList())
-    val priorityRequestsState: StateFlow<List<ConversationModel>> = _priorityRequestsState.asStateFlow()
-
     private val _messageStatsState = MutableStateFlow(MessageStats())
     val messageStatsState: StateFlow<MessageStats> = _messageStatsState.asStateFlow()
 
@@ -53,7 +47,6 @@ class CADashboardViewModel @Inject constructor(
     val statusUpdateState: StateFlow<Resource<Boolean>> = _statusUpdateState.asStateFlow()
     
     data class ClientStats(val active: Int = 0, val returning: Int = 0)
-    data class RequestStats(val pending: Int = 0, val returning: Int = 0)
     data class MessageStats(val unread: Int = 0)
 
     private val _errorState = MutableStateFlow<String?>(null)
@@ -64,10 +57,17 @@ class CADashboardViewModel @Inject constructor(
         fetchUser(uid)
         fetchRevenue(uid)
         fetchClientStats(uid)
-        fetchRequests(uid)
-        fetchBookings(uid)
+        listenToBookings(uid)
         fetchWallet(uid)
         listenToUnreadMessages(uid)
+    }
+
+    /** Re-fetches lightweight data on resume without restarting live listeners. */
+    fun refreshData(uid: String) {
+        fetchUser(uid)
+        fetchRevenue(uid)
+        fetchClientStats(uid)
+        fetchWallet(uid)
     }
 
     private fun listenToUnreadMessages(uid: String) {
@@ -129,37 +129,14 @@ class CADashboardViewModel @Inject constructor(
         }
     }
 
-    private fun fetchRequests(uid: String) {
-        viewModelScope.launch {
-            try {
-                val requests = repository.getRequests(uid)
-                var returning = 0
-                for (req in requests) {
-                    if (req.serviceCycleSequence > 1) returning++
-                }
-                _requestStatsState.value = RequestStats(requests.size, returning)
-                
-                // Priority = Returning clients OR recent (last 24h)
-                val now = System.currentTimeMillis()
-                val dayMs = 24 * 60 * 60 * 1000L
-                val priority = requests.filter { 
-                    it.serviceCycleSequence > 1 || (now - it.lastMessageTimestamp) < dayMs 
-                }.sortedByDescending { it.lastMessageTimestamp }
-                _priorityRequestsState.value = priority
-                
-            } catch (e: Exception) {
-                _requestStatsState.value = RequestStats(0, 0)
-                _priorityRequestsState.value = emptyList()
-            }
-        }
-    }
 
-    fun fetchBookings(uid: String) {
+    fun listenToBookings(uid: String) {
         viewModelScope.launch {
             _bookingsState.value = Resource.Loading()
             try {
-                val bookings = repository.getBookingsForCA(uid)
-                _bookingsState.value = Resource.Success(bookings)
+                repository.getBookingsForCaFlow(uid).collect { bookings ->
+                    _bookingsState.value = Resource.Success(bookings)
+                }
             } catch (e: Exception) {
                 _bookingsState.value = Resource.Error(e.message ?: "Failed to load bookings")
             }
@@ -200,15 +177,76 @@ class CADashboardViewModel @Inject constructor(
                 val bookingId = booking.id ?: return@launch
                 val caId = booking.caId ?: return@launch
                 val userId = booking.userId ?: return@launch
-                
+
                 repository.updateBookingStatus(bookingId, status)
                 if (status == "ACCEPTED") {
                     repository.incrementClientCount(caId, userId)
                 }
-                fetchBookings(caId) // Refresh list
+                // Live listener in listenToBookings() handles refresh automatically
             } catch (e: Exception) {
                 // Handle error
             }
         }
     }
+
+    private val _acceptBookingState = MutableStateFlow<Resource<String?>>(Resource.Success(null))
+    val acceptBookingState: StateFlow<Resource<String?>> = _acceptBookingState.asStateFlow()
+
+    fun acceptBookingWithChat(booking: BookingModel, onConvId: (String) -> Unit, onError: (String) -> Unit) {
+        val caId = booking.caId ?: return
+        viewModelScope.launch {
+            _acceptBookingState.value = Resource.Loading()
+            try {
+                val convId = repository.acceptBookingWithChat(booking)
+                _acceptBookingState.value = Resource.Success(convId)
+                if (convId != null) onConvId(convId)
+                // Live listener in listenToBookings() handles refresh automatically
+            } catch (e: Exception) {
+                _acceptBookingState.value = Resource.Error(e.message ?: "Failed to accept booking")
+                onError(e.message ?: "Failed to accept booking")
+            }
+        }
+    }
+
+    fun rejectBooking(booking: BookingModel, reason: String?) {
+        val bookingId = booking.id ?: return
+        viewModelScope.launch {
+            try {
+                repository.rejectBooking(bookingId, reason)
+                // Live listener in listenToBookings() handles refresh automatically
+            } catch (_: Exception) { }
+        }
+    }
+
+    fun autoExpirePendingBookings(caUid: String) {
+        viewModelScope.launch {
+            try { repository.autoExpirePendingBookings(caUid) } catch (_: Exception) { }
+        }
+    }
+
+    /**
+     * Marks the booking as COMPLETED and also transitions the linked conversation
+     * to STATE_COMPLETED so the client sees the stepper finish and gets the rating prompt.
+     */
+    fun completeBookingAndConversation(booking: BookingModel) {
+        val bookingId = booking.id ?: return
+        val chatId   = booking.chatId
+        viewModelScope.launch {
+            try {
+                repository.updateBookingStatus(bookingId, "COMPLETED")
+                if (!chatId.isNullOrBlank()) {
+                    // Directly update conversation state to COMPLETED to trigger client's
+                    // workflow stepper and rating dialog in ChatActivity.
+                    com.google.firebase.firestore.FirebaseFirestore.getInstance()
+                        .collection("conversations")
+                        .document(chatId)
+                        .update("workflowState", ConversationModel.STATE_COMPLETED)
+                }
+            } catch (_: Exception) { }
+        }
+    }
+
+
+
+
 }
