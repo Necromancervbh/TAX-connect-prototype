@@ -522,7 +522,7 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(), PaymentResultListener 
         }
         // CA: complete the booking; sends invoice summary to client and marks conversation COMPLETED
         binding.btnCompleteJob.setOnClickListener {
-            val proposal = adapter.getLatestAcceptedProposal()
+            val proposal = adapter.getLatestProposalForSummary()
             val advance = proposal?.proposalAdvanceAmount ?: "0"
             val final   = proposal?.proposalFinalAmount   ?: "0"
             // Pull service name from the proposal description (e.g. "ITR Filing – Basic")
@@ -570,8 +570,12 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(), PaymentResultListener 
 
         // View History — expand/collapse the past-bookings card
         binding.btnViewHistory.setOnClickListener {
-            binding.layoutServiceHistory.visibility =
-                if (binding.layoutServiceHistory.visibility == View.VISIBLE) View.GONE else View.VISIBLE
+            toggleServiceHistory()
+        }
+
+        // Header click listener for collapsible service history
+        binding.layoutServiceHistoryHeader.setOnClickListener {
+            toggleServiceHistory()
         }
     }
 
@@ -1101,11 +1105,25 @@ class ChatActivity : BaseActivity<ActivityChatBinding>(), PaymentResultListener 
                         binding.layoutServiceHistory.addView(row)
                     }
                     binding.cardServiceHistory.visibility = View.VISIBLE
+                    // By default, keep it collapsed until user clicks "View History" or the header
+                    binding.layoutServiceHistoryContent.visibility = View.GONE
+                    binding.ivServiceHistoryChevron.setImageResource(R.drawable.ic_chevron_down)
                 }
             }
             .addOnFailureListener { e ->
                 Timber.e(e, "Failed to load service history")
             }
+    }
+
+    private fun toggleServiceHistory() {
+        val isVisible = binding.layoutServiceHistoryContent.visibility == View.VISIBLE
+        if (isVisible) {
+            binding.layoutServiceHistoryContent.visibility = View.GONE
+            binding.ivServiceHistoryChevron.setImageResource(R.drawable.ic_chevron_down)
+        } else {
+            binding.layoutServiceHistoryContent.visibility = View.VISIBLE
+            binding.ivServiceHistoryChevron.setImageResource(R.drawable.ic_chevron_up)
+        }
     }
 
     /**

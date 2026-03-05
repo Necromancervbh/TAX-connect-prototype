@@ -470,7 +470,7 @@ class CADashboardActivity : BaseActivity<ActivityCaDashboardBinding>() {
                 R.id.nav_docs -> startActivity(Intent(this, MyDocumentsActivity::class.java))
                 R.id.nav_community -> startActivity(Intent(this, CommunityActivity::class.java))
                 R.id.nav_settings -> startActivity(Intent(this, NotificationSettingsActivity::class.java))
-                R.id.nav_help -> showDashboardHelpDialog()
+                R.id.nav_help -> showFeedbackDialog()
                 R.id.nav_logout -> {
                     val uid = FirebaseAuth.getInstance().uid
                     if (uid != null) {

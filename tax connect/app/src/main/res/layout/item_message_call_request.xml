@@ -3,107 +3,126 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    app:cardCornerRadius="@dimen/corner_radius_medium"
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginVertical="8dp"
+    app:cardCornerRadius="20dp"
     app:cardElevation="2dp"
-    app:strokeWidth="0dp"
-    app:cardBackgroundColor="@color/surface">
+    app:strokeWidth="1dp"
+    app:strokeColor="#F1F5F9"
+    app:cardBackgroundColor="@color/white">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="0dp">
+        android:padding="20dp">
 
-        <!-- Header -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/primary"
-            android:padding="12dp">
-            
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_video_call_material3"
-                app:tint="?attr/colorOnPrimary"
-                android:layout_marginEnd="8dp"/>
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Video Call Request"
-                android:textColor="?attr/colorOnPrimary"
-                android:textStyle="bold"
-                android:textSize="16sp" />
-        </LinearLayout>
-
-        <!-- Content -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
-
-            <TextView
-                android:id="@+id/tvMessage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Client requested a video call."
-                android:textColor="@color/text_main"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+            <FrameLayout
+                android:layout_width="52dp"
+                android:layout_height="52dp"
+                android:background="@drawable/bg_circle_primary_light">
+                
+                <ImageView
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_video_call_material3"
+                    app:tint="@color/primaryMain" />
+            </FrameLayout>
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginTop="8dp">
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_marginStart="16dp">
 
                 <TextView
-                    android:id="@+id/tvStatus"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="PENDING"
-                    android:paddingHorizontal="12dp"
-                    android:paddingVertical="4dp"
-                    android:background="@drawable/bg_rounded_chip"
-                    android:textColor="@color/text_main"
-                    android:textSize="12sp"
+                    android:text="Video Call"
+                    android:textColor="@color/slate_900"
+                    android:textAppearance="?attr/textAppearanceTitleMedium"
                     android:textStyle="bold" />
 
+                <TextView
+                    android:id="@+id/tvMessage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="Requested a video session"
+                    android:textColor="@color/slate_500"
+                    android:textAppearance="?attr/textAppearanceBodyMedium" />
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/layoutActions"
-                android:layout_width="match_parent"
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="20dp"
+            android:background="#F1F5F9" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="12dp">
+
+            <TextView
+                android:id="@+id/tvStatus"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:orientation="horizontal">
+                android:text="PENDING"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="4dp"
+                android:background="@drawable/bg_status_chip"
+                android:textColor="@color/slate_600"
+                android:textAppearance="?attr/textAppearanceLabelLarge"
+                android:textStyle="bold"
+                android:textAllCaps="true" />
 
-                <Button
-                    android:id="@+id/btnReject"
-                    style="@style/Widget.Material3.Button.OutlinedButton"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="8dp"
-                    android:text="Decline"
-                    android:textColor="@color/error"
-                    app:strokeColor="@color/error" />
+        </LinearLayout>
 
-                <Button
-                    android:id="@+id/btnAccept"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginStart="8dp"
-                    android:text="Accept &amp; Call"
-                    android:backgroundTint="@color/emerald_600"
-                    android:textColor="@color/white" />
+        <LinearLayout
+            android:id="@+id/layoutActions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
 
-            </LinearLayout>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnReject"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="0dp"
+                android:layout_height="52dp"
+                android:layout_weight="1"
+                android:layout_marginEnd="8dp"
+                android:text="Decline"
+                android:textColor="@color/errorMain"
+                app:backgroundTint="#FFF1F2"
+                app:cornerRadius="12dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnAccept"
+                style="@style/Widget.Material3.Button"
+                android:layout_width="0dp"
+                android:layout_height="52dp"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:text="Answer"
+                app:backgroundTint="@color/primaryMain"
+                app:cornerRadius="12dp"
+                app:icon="@drawable/ic_videocam_on"
+                app:iconGravity="textStart"
+                app:iconTint="@color/white" />
 
         </LinearLayout>
 

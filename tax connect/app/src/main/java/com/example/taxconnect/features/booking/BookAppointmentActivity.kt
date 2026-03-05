@@ -387,12 +387,62 @@ class BookAppointmentActivity : BaseActivity<ActivityBookAppointmentBinding>() {
             appointmentDate = displayDate,
             appointmentTime = selectedTimeSlot,
             status = "PENDING",
-            message = note.ifBlank { null }
+            message = note.ifBlank { null },
+            totalAmount = svc.price?.toDoubleOrNull() ?: 0.0,
+            advanceAmount = 0.0
         )
 
         lifecycleScope.launch {
             try {
                 com.example.taxconnect.data.repositories.BookingRepository().saveBooking(booking)
+                
+                // --- ADDED: Send Push to CA and save notification locally for real-time updates ---
+                try {
+                    // 1. Send push to CA via Render backend
+                    val targetCaId = ca?.uid ?: ""
+                    val targetCaName = ca?.name ?: "Chartered Accountant"
+                    val currentUserName = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser?.displayName ?: "A user"
+                    
+                    if (targetCaId.isNotEmpty()) {
+                        val req = com.example.taxconnect.data.remote.BookingNotificationRequest(
+                            recipientId = targetCaId,
+                            status = "PENDING",
+                            bookingId = booking.id ?: "",
+                            chatId = "", // no chat initialized yet
+                            otherUserId = uid,
+                            otherUserName = currentUserName,
+                            serviceName = svc.title ?: "Service",
+                            date = displayDate,
+                            time = selectedTimeSlot ?: ""
+                        )
+                        com.example.taxconnect.data.remote.ApiClient.notificationService.sendBookingNotification(req)
+
+                        // 2. Save notification to CA's Firestore immediately for real-time listener (nav_notifications)
+                        val firestore = com.google.firebase.firestore.FirebaseFirestore.getInstance()
+                        val notificationRef = firestore.collection("users").document(targetCaId)
+                            .collection("notifications").document()
+                        
+                        val notifData = hashMapOf(
+                            "id" to notificationRef.id,
+                            "userId" to targetCaId,
+                            "type" to "booking",
+                            "title" to "New Booking Request",
+                            "body" to "$currentUserName needs assistance with ${svc.title ?: "a service"}.",
+                            "timestamp" to System.currentTimeMillis(),
+                            "read" to false,
+                            "data" to mapOf(
+                                "bookingId" to (booking.id ?: ""),
+                                "status" to "PENDING",
+                                "type" to "booking" // So NotificationHistoryActivity handles click natively
+                            )
+                        )
+                        notificationRef.set(notifData)
+                    }
+                } catch (e: Exception) {
+                    android.util.Log.e("BookAppointment", "Failed to notify CA: ${e.message}")
+                }
+                // -----------------------------------------------------------------------------------
+
                 showBookingSuccessDialog()
             } catch (e: Exception) {
                 binding.btnNext.isEnabled = true

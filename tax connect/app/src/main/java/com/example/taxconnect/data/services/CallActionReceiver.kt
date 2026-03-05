@@ -145,7 +145,7 @@ class CallActionReceiver : BroadcastReceiver() {
             putExtra("CALLER_AVATAR", callerAvatar)
             putExtra("INCOMING_CALL", true)
             putExtra("ACTION", "ANSWER")
-            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
         context.startActivity(callIntent)
         AnalyticsRepository.getInstance(context).log("call_answered", mapOf("channelName" to (channelName ?: "")))

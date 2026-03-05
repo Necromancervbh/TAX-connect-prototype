@@ -139,7 +139,7 @@ class NotificationHistoryActivity : BaseActivity<ActivityNotificationHistoryBind
         inner class NotificationViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             val ivIcon:    ImageView = view.findViewById(R.id.ivIcon)
             val iconBg:    View      = view.findViewById(R.id.iconBg)
-            val unreadBar: View      = view.findViewById(R.id.unreadBar)
+            val unreadDot: View      = view.findViewById(R.id.unreadDot)
             val tvTitle:   TextView  = view.findViewById(R.id.tvTitle)
             val tvBody:    TextView  = view.findViewById(R.id.tvBody)
             val tvTime:    TextView  = view.findViewById(R.id.tvTime)
@@ -177,6 +177,11 @@ class NotificationHistoryActivity : BaseActivity<ActivityNotificationHistoryBind
                         ?.takeIf { it.isNotEmpty() }?.let {
                             displayTitle = getString(R.string.notification_call_from, it)
                         }
+                    "booking" -> {
+                        if (displayTitle.isNullOrBlank()) {
+                            displayTitle = "Booking Update"
+                        }
+                    }
                 }
             }
             holder.tvTitle.text = displayTitle ?: getString(R.string.notification_default_title)
@@ -184,49 +189,48 @@ class NotificationHistoryActivity : BaseActivity<ActivityNotificationHistoryBind
             holder.tvTime.text  = relativeTime(notification.timestamp)
 
             // --- Icon + tinted background per notification type ---
-            data class TypeStyle(val icon: Int, val bgColor: Int, val iconColor: Int)
+            data class TypeStyle(val icon: Int, val bgColorRes: Int = 0, val iconColorRes: Int = 0, val manualBg: Int? = null, val manualIcon: Int? = null)
+            
             val style = when (notification.type) {
-                "message"  -> TypeStyle(R.drawable.ic_chat_bubble_material3,
-                                        R.color.md_theme_light_secondaryContainer, R.color.secondary)
-                "call"     -> TypeStyle(R.drawable.ic_video_call_material3,
-                                        R.color.md_theme_light_secondaryContainer, R.color.secondary)
-                "request"  -> TypeStyle(R.drawable.ic_person_add_material3,
-                                        R.color.error_container, R.color.error)
-                "booking"  -> TypeStyle(R.drawable.ic_event_material3, 0, 0) // orange handled below
-                else       -> TypeStyle(R.drawable.ic_notifications_material3,
-                                        R.color.surface_variant, R.color.text_muted)
+                "message"  -> TypeStyle(R.drawable.ic_chat_bubble_material3, 
+                                      R.color.md_theme_light_secondaryContainer, R.color.secondary)
+                "call"     -> TypeStyle(R.drawable.ic_video_call_material3, 
+                                      R.color.md_theme_light_secondaryContainer, R.color.secondary)
+                "request"  -> TypeStyle(R.drawable.ic_person_add_material3, 
+                                      R.color.error_container, R.color.error)
+                "booking"  -> TypeStyle(R.drawable.ic_event_material3, manualBg = 0xFFFFF3E0.toInt(), manualIcon = 0xFFF97316.toInt())
+                else       -> TypeStyle(R.drawable.ic_notifications_material3, 
+                                      R.color.surface_variant, R.color.text_muted)
             }
 
             holder.ivIcon.setImageResource(style.icon)
-            if (notification.type == "booking") {
-                holder.iconBg.backgroundTintList =
-                    android.content.res.ColorStateList.valueOf(0xFFFFF3E0.toInt()) // amber 50
-                holder.ivIcon.imageTintList =
-                    android.content.res.ColorStateList.valueOf(0xFFF97316.toInt()) // orange 500
+            if (style.manualBg != null && style.manualIcon != null) {
+                holder.iconBg.backgroundTintList = android.content.res.ColorStateList.valueOf(style.manualBg)
+                holder.ivIcon.imageTintList = android.content.res.ColorStateList.valueOf(style.manualIcon)
             } else {
-                holder.iconBg.backgroundTintList  = ContextCompat.getColorStateList(ctx, style.bgColor)
-                holder.ivIcon.imageTintList        = ContextCompat.getColorStateList(ctx, style.iconColor)
+                holder.iconBg.backgroundTintList = ContextCompat.getColorStateList(ctx, style.bgColorRes)
+                holder.ivIcon.imageTintList = ContextCompat.getColorStateList(ctx, style.iconColorRes)
             }
 
-            // --- Unread accent bar visibility ---
-            holder.unreadBar.visibility = if (!notification.read) View.VISIBLE else View.GONE
+            // --- Unread dot visibility ---
+            holder.unreadDot.visibility = if (!notification.read) View.VISIBLE else View.GONE
 
-            // --- Unread title emphasis: full opacity + main color; read: dimmed ---
+            // --- Title & Body emphasis based on read state ---
             if (!notification.read) {
-                holder.tvTitle.setTextColor(ContextCompat.getColor(ctx, R.color.text_main))
                 holder.tvTitle.alpha = 1f
+                holder.tvBody.alpha = 1f
             } else {
-                holder.tvTitle.setTextColor(ContextCompat.getColor(ctx, R.color.text_secondary))
-                holder.tvTitle.alpha = 0.75f
+                holder.tvTitle.alpha = 0.6f
+                holder.tvBody.alpha = 0.6f
             }
 
             // --- Click: mark read + deep link ---
             holder.itemView.setOnClickListener {
                 if (!notification.read) {
                     notification.read = true
-                    holder.unreadBar.visibility = View.GONE
-                    holder.tvTitle.setTextColor(ContextCompat.getColor(ctx, R.color.text_secondary))
-                    holder.tvTitle.alpha = 0.75f
+                    holder.unreadDot.visibility = View.GONE
+                    holder.tvTitle.alpha = 0.6f
+                    holder.tvBody.alpha = 0.6f
                     notification.id?.let { id -> repository.markAsRead(id) }
                 }
                 notification.type?.let { type ->
@@ -240,6 +244,7 @@ class NotificationHistoryActivity : BaseActivity<ActivityNotificationHistoryBind
                 }
             }
         }
+
 
         override fun getItemCount() = items.size
     }

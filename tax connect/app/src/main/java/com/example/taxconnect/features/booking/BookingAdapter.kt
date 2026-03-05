@@ -133,10 +133,10 @@ class BookingAdapter(
                         
                         // Show rejection reason if provided (visible to the user/client)
                         if (!isCaView && !booking.rejectionReason.isNullOrBlank()) {
-                            binding.llRejectionReason.visibility = View.VISIBLE
+                            binding.tvRejectionReason.visibility = View.VISIBLE
                             binding.tvRejectionReason.text = "Reason: ${booking.rejectionReason}"
                         } else {
-                            binding.llRejectionReason.visibility = View.GONE
+                            binding.tvRejectionReason.visibility = View.GONE
                         }
 
                         booking.id?.let {
@@ -158,7 +158,7 @@ class BookingAdapter(
             }
 
             if (status != "REJECTED") {
-                binding.llRejectionReason.visibility = View.GONE
+                binding.tvRejectionReason.visibility = View.GONE
             }
             if (status != "COMPLETED") {
                 binding.layoutTimeline.visibility = View.GONE

@@ -88,9 +88,9 @@ class MessageAdapter(
 
     override fun getItemViewType(position: Int): Int {
         val message = messages[position]
-        return when (message.type) {
+        return when (message.type?.uppercase()) {
             "PROPOSAL" -> VIEW_TYPE_PROPOSAL
-            "CALL_REQUEST" -> VIEW_TYPE_CALL_REQUEST
+            "CALL", "CALL_REQUEST" -> VIEW_TYPE_CALL_REQUEST
             "PAYMENT_REQUEST" -> VIEW_TYPE_PAYMENT_REQUEST
             "SYSTEM" -> VIEW_TYPE_SYSTEM
             "SERVICE_SUMMARY" -> VIEW_TYPE_SERVICE_SUMMARY
@@ -288,20 +288,68 @@ class MessageAdapter(
         private val layoutActions: LinearLayout = itemView.findViewById(R.id.layoutActions)
 
         fun bind(message: MessageModel) {
-            tvMessage.text = message.message
-            tvStatus.text = itemView.context.getString(R.string.status_format, message.proposalStatus ?: "PENDING")
+            val senderId = message.senderId
+            val isSender = senderId != null && senderId == currentUserId
+            val type = message.type?.uppercase()
+            val status = message.proposalStatus ?: "PENDING"
+            
+            // UI setup based on session type
+            if (type == "CALL") {
+                if (status == "ENDED") {
+                    tvStatus.text = "VC DONE"
+                    tvStatus.setBackgroundResource(R.drawable.bg_status_chip)
+                    tvStatus.setTextColor(ContextCompat.getColor(itemView.context, R.color.slate_500))
+                    tvMessage.text = "Video session completed"
+                } else {
+                    tvStatus.text = "ACTIVE SESSION"
+                    tvStatus.setBackgroundResource(R.drawable.bg_status_chip)
+                    tvStatus.setTextColor(ContextCompat.getColor(itemView.context, R.color.emerald_600))
+                    tvMessage.text = if (isSender) "You started a video session" else "Incoming video session"
+                }
+            } else {
+                tvStatus.text = status
+                tvStatus.setBackgroundResource(R.drawable.bg_status_chip)
+                tvStatus.setTextColor(ContextCompat.getColor(itemView.context, R.color.slate_600))
+                tvMessage.text = message.message ?: "Requested a video session"
+            }
 
-            // Show actions only if PENDING and current user is the RECEIVER (CA)
-            val isReceiver = message.receiverId == currentUserId
-            val isPending = "PENDING" == message.proposalStatus
-
-            if (isReceiver && isPending) {
+            // Action Visibility & Labels
+            if (status == "ENDED") {
+                // If the call is ended, hide all action buttons regardless of role
+                layoutActions.visibility = View.GONE
+            } else if (!isSender && type == "CALL") {
+                // Incoming call for receiver: Answer/Decline
                 layoutActions.visibility = View.VISIBLE
+                btnReject.visibility = View.VISIBLE
+                btnReject.text = "Decline"
+                btnReject.setOnClickListener {
+                    callListener?.onRequestReject(message)
+                }
+                
+                btnAccept.text = "Answer"
+                btnAccept.setOnClickListener {
+                    callListener?.onJoinCall(message)
+                }
+            } else if (!isSender && status == "PENDING" && type != "CALL") {
+                // Incoming permission request (not active call yet)
+                layoutActions.visibility = View.VISIBLE
+                btnReject.visibility = View.VISIBLE
+                btnReject.text = "Decline"
+                btnReject.setOnClickListener {
+                    callListener?.onRequestReject(message)
+                }
+                
+                btnAccept.text = "Accept"
                 btnAccept.setOnClickListener {
                     callListener?.onRequestAccept(message)
                 }
-                btnReject.setOnClickListener {
-                    callListener?.onRequestReject(message)
+            } else if (type == "CALL" || status == "ACCEPTED") {
+                // Active session (for sender) or accepted request: Join
+                layoutActions.visibility = View.VISIBLE
+                btnReject.visibility = View.GONE
+                btnAccept.text = "Join Call"
+                btnAccept.setOnClickListener {
+                    callListener?.onJoinCall(message)
                 }
             } else {
                 layoutActions.visibility = View.GONE
@@ -441,14 +489,12 @@ class MessageAdapter(
         private val layoutDocument: LinearLayout? = itemView.findViewById(R.id.layoutDocument)
         private val tvDocName: TextView? = itemView.findViewById(R.id.tvDocName)
         private val ivDocThumbnail: ImageView? = itemView.findViewById(R.id.ivDocThumbnail)
-        private val layoutCallActions: View? = itemView.findViewById(R.id.layoutCallActions)
 
         fun bind(message: MessageModel, callListener: OnCallActionListener?) {
             // Reset visibilities
             tvMessage.visibility = View.GONE
             cardPreview.visibility = View.GONE
             layoutDocument?.visibility = View.GONE
-            layoutCallActions?.visibility = View.GONE
 
             // Read Status and Upload Status
             when (message.uploadStatus) {
@@ -483,12 +529,7 @@ class MessageAdapter(
                 }
             }
 
-            if ("CALL" == message.type || "call" == message.type) {
-            layoutCallActions?.visibility = View.VISIBLE
-            layoutCallActions?.setOnClickListener {
-                callListener?.onJoinCall(message)
-            }
-        } else if ("DOCUMENT" == message.type) {
+            if ("DOCUMENT" == message.type) {
                 if (layoutDocument != null) {
                     layoutDocument.visibility = View.VISIBLE
                     var docName = itemView.context.getString(R.string.document)
@@ -553,38 +594,14 @@ class MessageAdapter(
         private val layoutDocument: LinearLayout? = itemView.findViewById(R.id.layoutDocument)
         private val tvDocName: TextView? = itemView.findViewById(R.id.tvDocName)
         private val ivDocThumbnail: ImageView? = itemView.findViewById(R.id.ivDocThumbnail)
-        private val layoutCallActions: View? = itemView.findViewById(R.id.layoutCallActions)
-        private val btnAnswerCall: View? = itemView.findViewById(R.id.btnAnswerCall)
-        private val btnDeclineCall: View? = itemView.findViewById(R.id.btnDeclineCall)
 
         fun bind(message: MessageModel, callListener: OnCallActionListener?) {
             // Reset visibilities
             tvMessage.visibility = View.GONE
             cardPreview.visibility = View.GONE
             layoutDocument?.visibility = View.GONE
-            layoutCallActions?.visibility = View.GONE
 
-            if ("CALL" == message.type || "call" == message.type) {
-                tvMessage.visibility = View.VISIBLE
-                tvMessage.text = itemView.context.getString(R.string.incoming_video_call)
-                tvMessage.typeface = Typeface.DEFAULT_BOLD
-                tvMessage.setTextColor(ContextCompat.getColor(itemView.context, R.color.secondary))
-                tvMessage.setOnClickListener(null)
-                
-                layoutCallActions?.visibility = View.VISIBLE
-                btnAnswerCall?.setOnClickListener {
-                    callListener?.onJoinCall(message)
-                }
-                btnDeclineCall?.setOnClickListener {
-                    message.chatId?.let { chatId ->
-                        ConversationRepository.getInstance().updateCallStatus(chatId, "REJECTED", null)
-                        androidx.core.app.NotificationManagerCompat.from(itemView.context).cancel(chatId.hashCode())
-                    }
-                    layoutCallActions?.visibility = View.GONE
-                    tvMessage.text = "Call Declined"
-                    tvMessage.setTextColor(ContextCompat.getColor(itemView.context, R.color.text_muted))
-                }
-            } else if ("DOCUMENT" == message.type) {
+            if ("DOCUMENT" == message.type) {
                 if (layoutDocument != null) {
                     layoutDocument.visibility = View.VISIBLE
                     var docName = itemView.context.getString(R.string.document)
@@ -649,6 +666,17 @@ class MessageAdapter(
     fun getLatestAcceptedProposal(): MessageModel? {
         return messages
             .filter { it.type == "PROPOSAL" && it.proposalStatus == "ACCEPTED" && it.proposalFinalPaid != true }
+            .maxByOrNull { it.timestamp }
+    }
+
+    /**
+     * Returns the most recent PROPOSAL message that has been ACCEPTED,
+     * regardless of whether final payment was made.
+     * Used for creating the Service Summary.
+     */
+    fun getLatestProposalForSummary(): MessageModel? {
+        return messages
+            .filter { it.type == "PROPOSAL" && (it.proposalStatus == "ACCEPTED" || it.proposalStatus == "COMPLETED") }
             .maxByOrNull { it.timestamp }
     }
 

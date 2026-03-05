@@ -20,5 +20,7 @@ data class BookingModel(
     var message: String? = null,
     var rejectionReason: String? = null,  // Reason provided by CA when rejecting
     var appointmentHour: Int = -1,        // 24-hour component of the slot (0-23); -1 = not set
-    var appointmentMinute: Int = 0        // Minute component of the slot
+    var appointmentMinute: Int = 0,       // Minute component of the slot
+    var totalAmount: Double = 0.0,
+    var advanceAmount: Double = 0.0
 ) : Serializable

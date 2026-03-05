@@ -21,8 +21,18 @@ push_debug.txt
 local.properties
 keystore.properties
 google-services.json
+*-firebase-adminsdk-*.json
 *.jks
 *.keystore
+
+# Logs and Temp Files
+*.log
+*.txt
+tax connect/log*.txt
+tax connect/push_*.txt
+
+# Project Specific
+uni-db-backend/
 
 # Dependencies
 node_modules/

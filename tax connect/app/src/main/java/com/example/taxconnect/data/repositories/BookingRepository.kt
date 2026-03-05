@@ -38,29 +38,85 @@ class BookingRepository @Inject constructor() {
     }
 
     fun getBookingsForCaFlow(caId: String): Flow<List<BookingModel>> = callbackFlow {
-        val listener = firestore.collection("bookings")
-            .whereEqualTo("caId", caId)
-            .orderBy("appointmentTimestamp", Query.Direction.DESCENDING)
-            .addSnapshotListener { snapshot, error ->
-                if (error != null || snapshot == null) return@addSnapshotListener
+        var listener: com.google.firebase.firestore.ListenerRegistration? = null
+        
+        val setupListener = { useOrderBy: Boolean ->
+            var query: com.google.firebase.firestore.Query = firestore.collection("bookings")
+                .whereEqualTo("caId", caId)
+            if (useOrderBy) {
+                query = query.orderBy("appointmentTimestamp", Query.Direction.DESCENDING)
+            }
+            
+            listener = query.addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    if (useOrderBy && (error.code == com.google.firebase.firestore.FirebaseFirestoreException.Code.FAILED_PRECONDITION || error.message?.contains("index") == true)) {
+                        // Fallback: missing index, try without orderBy
+                        listener?.remove()
+                        
+                        var fallbackQuery: com.google.firebase.firestore.Query = firestore.collection("bookings")
+                            .whereEqualTo("caId", caId)
+                        listener = fallbackQuery.addSnapshotListener { fbSnapshot, fbError ->
+                            if (fbError != null || fbSnapshot == null) return@addSnapshotListener
+                            val list = fbSnapshot.documents
+                                .mapNotNull { it.toObject(BookingModel::class.java) }
+                                .sortedByDescending { it.appointmentTimestamp }
+                            launch {
+                                try { trySend(populateBookingUserDetails(list)) } catch (_: Exception) { trySend(list) }
+                            }
+                        }
+                    }
+                    return@addSnapshotListener
+                }
+                if (snapshot == null) return@addSnapshotListener
+                
                 val list = snapshot.documents.mapNotNull { it.toObject(BookingModel::class.java) }
                 launch {
                     try { trySend(populateBookingUserDetails(list)) } catch (_: Exception) { trySend(list) }
                 }
             }
-        awaitClose { listener.remove() }
+        }
+
+        setupListener(true)
+        awaitClose { listener?.remove() }
     }
 
     fun getBookingsForUserFlow(userId: String): Flow<List<BookingModel>> = callbackFlow {
-        val listener = firestore.collection("bookings")
-            .whereEqualTo("userId", userId)
-            .orderBy("appointmentTimestamp", Query.Direction.DESCENDING)
-            .addSnapshotListener { snapshot, error ->
-                if (error != null || snapshot == null) return@addSnapshotListener
+        var listener: com.google.firebase.firestore.ListenerRegistration? = null
+        
+        val setupListener = { useOrderBy: Boolean ->
+            var query: com.google.firebase.firestore.Query = firestore.collection("bookings")
+                .whereEqualTo("userId", userId)
+            if (useOrderBy) {
+                query = query.orderBy("appointmentTimestamp", Query.Direction.DESCENDING)
+            }
+            
+            listener = query.addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    if (useOrderBy && (error.code == com.google.firebase.firestore.FirebaseFirestoreException.Code.FAILED_PRECONDITION || error.message?.contains("index") == true)) {
+                        // Fallback: missing index, try without orderBy
+                        listener?.remove()
+                        
+                        var fallbackQuery: com.google.firebase.firestore.Query = firestore.collection("bookings")
+                            .whereEqualTo("userId", userId)
+                        listener = fallbackQuery.addSnapshotListener { fbSnapshot, fbError ->
+                            if (fbError != null || fbSnapshot == null) return@addSnapshotListener
+                            val list = fbSnapshot.documents
+                                .mapNotNull { it.toObject(BookingModel::class.java) }
+                                .sortedByDescending { it.appointmentTimestamp }
+                            trySend(list)
+                        }
+                    }
+                    return@addSnapshotListener
+                }
+                if (snapshot == null) return@addSnapshotListener
+                
                 val list = snapshot.documents.mapNotNull { it.toObject(BookingModel::class.java) }
                 trySend(list)
             }
-        awaitClose { listener.remove() }
+        }
+
+        setupListener(true)
+        awaitClose { listener?.remove() }
     }
 
     suspend fun getBookingsForUserPage(
@@ -243,9 +299,37 @@ class BookingRepository @Inject constructor() {
             )
             firestore.collection("conversations").document(convId)
                 .collection("messages").add(msg).await()
+            
+            // --- NEW: Automatically create an ACCEPTED PROPOSAL from the booking details ---
+            val totalAmount = booking.totalAmount
+            val advanceAmount = booking.advanceAmount
+            val finalAmount = totalAmount - advanceAmount
+
+            val proposalMsg = hashMapOf(
+                "senderId" to caId,
+                "receiverId" to userId,
+                "chatId" to convId,
+                "message" to "📄 Service Proposal for $serviceName",
+                "timestamp" to now + 10, // slightly after system message
+                "type" to "PROPOSAL",
+                "proposalDescription" to "Direct Booking: $serviceName",
+                "proposalAmount" to totalAmount.toString(),
+                "proposalStatus" to "ACCEPTED", // Auto-accepted since it's a direct booking
+                "proposalAdvanceAmount" to advanceAmount.toString(),
+                "proposalFinalAmount" to finalAmount.toString(),
+                "proposalAdvancePaid" to (advanceAmount == 0.0),
+                "proposalFinalPaid" to false,
+                "proposalPaymentStage" to (if (advanceAmount > 0) "ADVANCE_DUE" else "FINAL_DUE"),
+                "bookingId" to bookingId
+            )
+            firestore.collection("conversations").document(convId)
+                .collection("messages").add(proposalMsg).await()
+            // --------------------------------------------------------------------------------
+
             firestore.collection("conversations").document(convId).update(mapOf(
                 "lastMessage" to "✅ Booking for $serviceName confirmed",
-                "lastMessageTimestamp" to now
+                "lastMessageTimestamp" to now + 10,
+                "workflowState" to (if (advanceAmount > 0) "ADVANCE_PAYMENT" else "DISCUSSION")
             )).await()
         } catch (e: Exception) {
             android.util.Log.w("BookingRepo", "System message failed (non-fatal): ${e.message}")
@@ -266,6 +350,29 @@ class BookingRepository @Inject constructor() {
             )
             com.example.taxconnect.data.remote.ApiClient.notificationService
                 .sendBookingNotification(req)
+
+            // --- ADDED: Save notification to User's Firestore immediately for real-time listener ---
+            val notificationRef = firestore.collection("users").document(userId)
+                .collection("notifications").document()
+            
+            val notifData = hashMapOf(
+                "id" to notificationRef.id,
+                "userId" to userId,
+                "type" to "booking",
+                "title" to "Booking Accepted",
+                "body" to "${caName ?: "Chartered Accountant"} has accepted your booking request.",
+                "timestamp" to System.currentTimeMillis(),
+                "read" to false,
+                "data" to mapOf(
+                    "bookingId" to bookingId,
+                    "status" to "ACCEPTED",
+                    "chatId" to convId,
+                    "type" to "booking"
+                )
+            )
+            notificationRef.set(notifData)
+            // ---------------------------------------------------------------------------------------
+
         } catch (e: Exception) {
             android.util.Log.w("BookingRepo", "FCM push to client failed (non-fatal): ${e.message}")
         }
@@ -275,9 +382,56 @@ class BookingRepository @Inject constructor() {
 
     suspend fun rejectBooking(bookingId: String, reason: String?) {
         val ref = firestore.collection("bookings").document(bookingId)
+        
+        // Fetch booking to get user details for notification
+        val bookingSnap = ref.get().await()
+        val booking = bookingSnap.toObject(BookingModel::class.java)
+
         val updates = mutableMapOf<String, Any>("status" to "REJECTED", "updatedAt" to System.currentTimeMillis())
         if (!reason.isNullOrBlank()) updates["rejectionReason"] = reason
         ref.update(updates).await()
+
+        // --- ADDED: Send Push to Client and save notification locally for real-time updates ---
+        if (booking != null && booking.userId != null) {
+            try {
+                // 1. Send push via Render backend
+                val req = com.example.taxconnect.data.remote.BookingNotificationRequest(
+                    recipientId = booking.userId!!,
+                    status = "REJECTED",
+                    bookingId = bookingId,
+                    chatId = "",
+                    otherUserId = booking.caId ?: "",
+                    otherUserName = booking.caName ?: "Chartered Accountant",
+                    serviceName = booking.serviceName ?: "a service",
+                    date = booking.appointmentDate ?: "",
+                    time = booking.appointmentTime ?: ""
+                )
+                com.example.taxconnect.data.remote.ApiClient.notificationService.sendBookingNotification(req)
+
+                // 2. Save notification to User's Firestore immediately for real-time listener
+                val notificationRef = firestore.collection("users").document(booking.userId!!)
+                    .collection("notifications").document()
+                
+                val notifData = hashMapOf(
+                    "id" to notificationRef.id,
+                    "userId" to booking.userId!!,
+                    "type" to "booking",
+                    "title" to "Booking Declined",
+                    "body" to "${booking.caName ?: "Chartered Accountant"} has declined your booking request.",
+                    "timestamp" to System.currentTimeMillis(),
+                    "read" to false,
+                    "data" to mapOf(
+                        "bookingId" to bookingId,
+                        "status" to "REJECTED",
+                        "type" to "booking"
+                    )
+                )
+                notificationRef.set(notifData)
+            } catch (e: Exception) {
+                android.util.Log.e("BookingRepo", "Failed to notify client on reject: ${e.message}")
+            }
+        }
+        // -----------------------------------------------------------------------------------
     }
 
     suspend fun autoExpirePendingBookingsForCA(caUid: String) {

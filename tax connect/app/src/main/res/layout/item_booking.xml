@@ -4,12 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="@dimen/space_2x"
-    android:layout_marginVertical="@dimen/space_1x"
-    app:cardCornerRadius="@dimen/card_corner_radius"
-    app:cardElevation="@dimen/card_elevation"
-    app:strokeColor="?attr/colorOutlineVariant"
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginVertical="8dp"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="2dp"
     app:strokeWidth="1dp"
+    app:strokeColor="?attr/colorOutlineVariant"
     app:cardBackgroundColor="?attr/colorSurface"
     android:clickable="true"
     android:focusable="true">
@@ -17,16 +17,16 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/space_3x">
+        android:padding="20dp">
 
-        <!-- Header Row: Avatar, Name, Status -->
+        <!-- Header: Avatar, Name & Status -->
         <ImageView
             android:id="@+id/ivAvatar"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:src="@drawable/ic_person"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:src="@drawable/ic_person_material3"
             android:background="@drawable/bg_circle_gray"
-            android:padding="8dp"
+            android:padding="12dp"
             app:tint="?attr/colorOnSurfaceVariant"
             android:contentDescription="@null"
             app:layout_constraintStart_toStartOf="parent"
@@ -36,190 +36,176 @@
             android:id="@+id/tvName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/space_2x"
-            android:layout_marginEnd="@dimen/space_2x"
-            android:text="Client Name"
-            android:textAppearance="?attr/textAppearanceTitleMedium"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="12dp"
+            android:textAppearance="?attr/textAppearanceTitleLarge"
             android:textColor="?attr/colorOnSurface"
             android:maxLines="1"
             android:ellipsize="end"
+            tools:text="Rajesh Kumar"
             app:layout_constraintStart_toEndOf="@id/ivAvatar"
             app:layout_constraintTop_toTopOf="@id/ivAvatar"
-            app:layout_constraintEnd_toStartOf="@id/chipStatus"
-            app:layout_constraintBottom_toTopOf="@id/tvRoleLabel"
-            app:layout_constraintVertical_chainStyle="packed" />
+            app:layout_constraintEnd_toStartOf="@id/chipStatus" />
 
         <TextView
             android:id="@+id/tvRoleLabel"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Tax Consultation"
-            android:textAppearance="?attr/textAppearanceBodySmall"
+            android:textAppearance="?attr/textAppearanceBodyMedium"
             android:textColor="?attr/colorOnSurfaceVariant"
-            android:maxLines="1"
-            android:ellipsize="end"
+            tools:text="Chartered Accountant"
             app:layout_constraintStart_toStartOf="@id/tvName"
             app:layout_constraintTop_toBottomOf="@id/tvName"
-            app:layout_constraintEnd_toStartOf="@id/chipStatus"
-            app:layout_constraintBottom_toBottomOf="@id/ivAvatar" />
+            app:layout_constraintEnd_toStartOf="@id/chipStatus" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/chipStatus"
             style="@style/Widget.Material3.Chip.Assist"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Pending"
-            android:textColor="@color/amber_700"
-            app:chipBackgroundColor="@color/amber_50"
+            app:chipCornerRadius="12dp"
             app:chipStrokeWidth="0dp"
             app:chipMinTouchTargetSize="32dp"
             android:clickable="false"
+            tools:text="Pending"
+            tools:textColor="@color/amber_700"
+            tools:chipBackgroundColor="@color/amber_50"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toTopOf="@id/ivAvatar"
             app:layout_constraintBottom_toBottomOf="@id/ivAvatar" />
 
-        <!-- Service Name -->
-        <TextView
-            android:id="@+id/tvServiceName"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="Tax Consultation"
-            android:textAppearance="?attr/textAppearanceLabelMedium"
-            android:textColor="?attr/colorPrimary"
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:layout_marginTop="2dp"
-            android:visibility="gone"
-            app:layout_constraintStart_toStartOf="@id/tvName"
-            app:layout_constraintTop_toBottomOf="@id/tvRoleLabel"
-            app:layout_constraintEnd_toStartOf="@id/chipStatus" />
-
-        <!-- Divider -->
-        <com.google.android.material.divider.MaterialDivider
-            android:id="@+id/divider"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_2x"
-            app:layout_constraintTop_toBottomOf="@id/tvServiceName" />
-
-        <!-- Date & Time Section -->
+        <!-- Service Details Row -->
         <LinearLayout
-            android:id="@+id/layoutDateTime"
+            android:id="@+id/llServiceRow"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_2x"
+            android:layout_marginTop="16dp"
             android:orientation="horizontal"
             android:gravity="center_vertical"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/divider">
+            app:layout_constraintTop_toBottomOf="@id/ivAvatar">
+
+            <TextView
+                android:id="@+id/tvServiceName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_rounded_primary_light"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="4dp"
+                android:textAppearance="?attr/textAppearanceLabelLarge"
+                android:textColor="?attr/colorPrimary"
+                tools:text="Income Tax Filing"
+                tools:visibility="visible" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="16dp"
+                android:layout_marginHorizontal="12dp"
+                android:background="?attr/colorOutlineVariant" />
 
             <ImageView
-                android:layout_width="18dp"
-                android:layout_height="18dp"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
                 android:src="@drawable/ic_calendar"
-                app:tint="?attr/colorPrimary"
-                android:contentDescription="@null" />
+                app:tint="?attr/colorOnSurfaceVariant" />
 
             <TextView
                 android:id="@+id/tvDateTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/space_2x"
-                android:text="Mon, 12 Oct • 10:00 AM"
-                android:textAppearance="?attr/textAppearanceBodyMedium"
-                android:textColor="?attr/colorOnSurface"
-                android:textStyle="bold" />
+                android:layout_marginStart="6dp"
+                android:textAppearance="?attr/textAppearanceBodySmall"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                tools:text="Sat, 15 Mar • 11:30 AM" />
+
         </LinearLayout>
 
-        <!-- Message Preview -->
+        <!-- Dynamic Message Box -->
         <TextView
             android:id="@+id/tvMessage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_2x"
+            android:layout_marginTop="12dp"
+            android:padding="12dp"
             android:background="@drawable/bg_rounded_surface_variant"
-            android:padding="@dimen/space_2x"
-            android:text="Looking for assistance with GST filing for my new business..."
-            android:textAppearance="?attr/textAppearanceBodySmall"
+            android:textAppearance="?attr/textAppearanceBodyMedium"
             android:textColor="?attr/colorOnSurfaceVariant"
             android:maxLines="2"
             android:ellipsize="end"
-            app:layout_constraintTop_toBottomOf="@id/layoutDateTime" />
+            tools:text="I need help with my quarterly GST returns for my startup..."
+            app:layout_constraintTop_toBottomOf="@id/llServiceRow" />
 
-        <!-- Rejection Reason (shown to client on rejected bookings) -->
-        <LinearLayout
-            android:id="@+id/llRejectionReason"
+        <!-- Rejection Message (if any) -->
+        <TextView
+            android:id="@+id/tvRejectionReason"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_1x"
-            android:orientation="horizontal"
+            android:layout_marginTop="8dp"
+            android:padding="12dp"
             android:background="?attr/colorErrorContainer"
-            android:padding="@dimen/space_2x"
+            android:textAppearance="?attr/textAppearanceBodySmall"
+            android:textColor="?attr/colorError"
             android:visibility="gone"
-            app:layout_constraintTop_toBottomOf="@id/tvMessage">
+            tools:visibility="visible"
+            tools:text="Reason: Fully booked for this slot"
+            app:layout_constraintTop_toBottomOf="@id/tvMessage" />
 
-            <TextView
-                android:id="@+id/tvRejectionReason"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Reason: Not available at this time"
-                android:textAppearance="?attr/textAppearanceBodySmall"
-                android:textColor="?attr/colorError" />
+        <!-- Non-visible legacy container for compatibility -->
+        <LinearLayout
+            android:id="@+id/llRejectionReason"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
-        </LinearLayout>
-
-        <!-- Action Buttons -->
+        <!-- Actions Section -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layoutActions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_2x"
-            android:visibility="visible"
-            app:layout_constraintTop_toBottomOf="@id/llRejectionReason">
+            android:layout_marginTop="20dp"
+            android:visibility="gone"
+            tools:visibility="visible"
+            app:layout_constraintTop_toBottomOf="@id/tvRejectionReason">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnReject"
                 style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/space_1x"
+                android:layout_marginEnd="8dp"
                 android:text="Decline"
                 android:textColor="?attr/colorError"
                 app:strokeColor="?attr/colorError"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/btnAccept"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnAccept"
                 style="@style/Widget.Material3.Button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/space_1x"
+                android:layout_marginStart="8dp"
                 android:text="Accept"
                 app:layout_constraintStart_toEndOf="@id/btnReject"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent" />
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <!-- Add to Calendar Button -->
+        <!-- Post-Acceptance Actions -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnAddToCalendar"
-            style="@style/Widget.Material3.Button.OutlinedButton.Icon"
+            style="@style/Widget.Material3.Button.TonalButton.Icon"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_2x"
+            android:layout_marginTop="16dp"
             android:text="@string/add_to_calendar"
             android:visibility="gone"
-            tools:visibility="visible"
             app:icon="@drawable/ic_calendar"
-            app:iconGravity="textStart"
-            app:strokeColor="?attr/colorSecondary"
-            android:textColor="?attr/colorSecondary"
             app:layout_constraintTop_toBottomOf="@id/layoutActions" />
 
         <com.google.android.material.button.MaterialButton
@@ -227,121 +213,111 @@
             style="@style/Widget.Material3.Button.TextButton.Icon"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_1x"
-            android:text="View Details"
+            android:layout_marginTop="4dp"
+            android:text="View Chat &amp; Progress"
             android:visibility="gone"
-            tools:visibility="visible"
             app:icon="@drawable/ic_arrow_forward"
             app:iconGravity="textEnd"
             app:layout_constraintTop_toBottomOf="@id/btnAddToCalendar" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnMarkComplete"
-            style="@style/Widget.Material3.Button.TextButton.Icon"
+            style="@style/Widget.Material3.Button.TonalButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="\u2705 Mark as Complete"
+            android:layout_marginTop="8dp"
+            android:text="Finish Service"
             android:textColor="@color/emerald_700"
-            android:visibility="gone"
             app:icon="@drawable/ic_check_circle"
             app:iconTint="@color/emerald_700"
-            app:layout_constraintTop_toBottomOf="@id/btnMilestones"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/btnMilestones" />
 
-        <!-- 3-Step Timeline (shown for COMPLETED bookings) -->
+        <!-- 3-Step Progress Timeline (shown for COMPLETED) -->
         <LinearLayout
             android:id="@+id/layoutTimeline"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_3x"
+            android:layout_marginTop="24dp"
+            android:paddingHorizontal="8dp"
             android:orientation="horizontal"
             android:gravity="center_vertical"
             android:visibility="gone"
+            tools:visibility="visible"
             app:layout_constraintTop_toBottomOf="@id/btnMarkComplete">
 
-            <!-- Step 1: Booked -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="vertical"
                 android:gravity="center">
-                <View
+                <ImageView
                     android:layout_width="32dp"
                     android:layout_height="32dp"
-                    android:background="@drawable/bg_circle_light_primary"
-                    android:backgroundTint="?attr/colorPrimary" />
+                    android:src="@drawable/ic_check_circle"
+                    app:tint="?attr/colorPrimary" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
                     android:text="Booked"
                     android:textAppearance="?attr/textAppearanceLabelSmall"
-                    android:textColor="?attr/colorPrimary"
-                    android:textStyle="bold"
-                    android:layout_marginTop="4dp" />
+                    android:textColor="?attr/colorPrimary" />
             </LinearLayout>
 
-            <!-- Connector -->
             <View
                 android:layout_width="0dp"
                 android:layout_height="2dp"
-                android:layout_weight="0.5"
-                android:backgroundTint="?attr/colorPrimary"
-                android:background="@android:color/darker_gray" />
+                android:layout_weight="0.4"
+                android:background="?attr/colorPrimary" />
 
-            <!-- Step 2: Accepted -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="vertical"
                 android:gravity="center">
-                <View
+                <ImageView
                     android:layout_width="32dp"
                     android:layout_height="32dp"
-                    android:background="@drawable/bg_circle_light_primary"
-                    android:backgroundTint="?attr/colorPrimary" />
+                    android:src="@drawable/ic_check_circle"
+                    app:tint="?attr/colorPrimary" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
                     android:text="Accepted"
                     android:textAppearance="?attr/textAppearanceLabelSmall"
-                    android:textColor="?attr/colorPrimary"
-                    android:textStyle="bold"
-                    android:layout_marginTop="4dp" />
+                    android:textColor="?attr/colorPrimary" />
             </LinearLayout>
 
-            <!-- Connector -->
             <View
                 android:layout_width="0dp"
                 android:layout_height="2dp"
-                android:layout_weight="0.5"
-                android:backgroundTint="?attr/colorPrimary"
-                android:background="@android:color/darker_gray" />
+                android:layout_weight="0.4"
+                android:background="?attr/colorTertiary" />
 
-            <!-- Step 3: Completed -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="vertical"
                 android:gravity="center">
-                <View
+                <ImageView
                     android:layout_width="32dp"
                     android:layout_height="32dp"
-                    android:background="@drawable/bg_circle_light_primary"
-                    android:backgroundTint="?attr/colorTertiary" />
+                    android:src="@drawable/ic_check_circle"
+                    app:tint="?attr/colorTertiary" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="✅ Done"
+                    android:layout_marginTop="4dp"
+                    android:text="Done"
                     android:textAppearance="?attr/textAppearanceLabelSmall"
-                    android:textColor="?attr/colorTertiary"
-                    android:textStyle="bold"
-                    android:layout_marginTop="4dp" />
+                    android:textColor="?attr/colorTertiary" />
             </LinearLayout>
+
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

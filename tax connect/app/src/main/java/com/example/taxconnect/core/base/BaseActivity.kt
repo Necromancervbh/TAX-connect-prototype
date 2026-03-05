@@ -14,9 +14,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.viewbinding.ViewBinding
 import com.example.taxconnect.R
 import com.example.taxconnect.data.models.FeedbackModel
-import com.example.taxconnect.data.repositories.DataRepository
 import com.example.taxconnect.core.ui.ThemeHelper
-import com.example.taxconnect.core.utils.ShakeDetector
+import com.example.taxconnect.data.repositories.DataRepository
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
@@ -26,7 +25,6 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
 
     private var _binding: VB? = null
     protected val binding get() = _binding!!
-    private var shakeDetector: ShakeDetector? = null
 
     companion object {
         private var themeScreenshot: Bitmap? = null
@@ -58,7 +56,6 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
             androidx.core.view.WindowInsetsCompat.CONSUMED
         }
         
-        setupShakeDetection()
         initViews()
         observeViewModel()
         setupListeners()
@@ -83,19 +80,8 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
         }
     }
 
-    private fun setupShakeDetection() {
-        try {
-            val sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
-            shakeDetector = ShakeDetector { onShakeDetected() }
-            shakeDetector?.start(sensorManager)
-        } catch (e: Exception) {
-            // Shake detection not available
-        }
-    }
-
     override fun onDestroy() {
         super.onDestroy()
-        shakeDetector?.stop()
         _binding = null
     }
 
@@ -105,10 +91,6 @@ abstract class BaseActivity<VB : ViewBinding> : AppCompatActivity() {
     protected abstract fun setupListeners()
 
     // Optional lifecycle methods
-    protected open fun onShakeDetected() {
-        showFeedbackDialog()
-    }
-
     protected fun showFeedbackDialog() {
         val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_feedback, null)
         val etFeedback = dialogView.findViewById<EditText>(R.id.etFeedback)

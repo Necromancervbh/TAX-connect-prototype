@@ -53,4 +53,9 @@ class CallQualityBottomSheet : BottomSheetDialogFragment() {
         super.onDismiss(dialog)
         activity?.finish()
     }
+
+    override fun onCancel(dialog: android.content.DialogInterface) {
+        super.onCancel(dialog)
+        activity?.finish()
+    }
 }

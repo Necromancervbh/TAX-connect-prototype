@@ -1,17 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingHorizontal="12dp"
     android:paddingVertical="4dp"
     android:background="?attr/selectableItemBackground">
 
-    <!--
-        Card outer shell: no elevation — flat, modern look.
-        Unread state: slightly tinted surface + left accent bar.
-        Read state:   standard surface card.
-    -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cardRoot"
         android:layout_width="0dp"
@@ -19,8 +15,8 @@
         app:cardCornerRadius="16dp"
         app:cardElevation="0dp"
         app:strokeWidth="1dp"
-        app:strokeColor="@color/stroke"
-        app:cardBackgroundColor="@color/surface"
+        app:strokeColor="?attr/colorOutlineVariant"
+        app:cardBackgroundColor="?attr/colorSurface"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -29,77 +25,61 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingStart="0dp"
-            android:paddingEnd="16dp"
-            android:paddingTop="14dp"
-            android:paddingBottom="14dp">
+            android:padding="16dp">
 
-            <!-- Left unread accent bar -->
-            <View
-                android:id="@+id/unreadBar"
-                android:layout_width="4dp"
-                android:layout_height="0dp"
-                android:background="@color/secondary"
-                android:visibility="gone"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent" />
-
-            <!-- Icon circle with per-type tinted background -->
+            <!-- Icon circle -->
             <FrameLayout
                 android:id="@+id/iconContainer"
-                android:layout_width="44dp"
-                android:layout_height="44dp"
-                android:layout_marginStart="14dp"
-                app:layout_constraintStart_toEndOf="@id/unreadBar"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent">
 
-                <!-- Soft circle background — tinted per type in code -->
                 <View
                     android:id="@+id/iconBg"
-                    android:layout_width="44dp"
-                    android:layout_height="44dp"
-                    android:background="@drawable/circle_background"
-                    android:backgroundTint="@color/primary_container" />
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="@drawable/bg_circle_gray"
+                    android:backgroundTint="?attr/colorSecondaryContainer" />
 
                 <ImageView
                     android:id="@+id/ivIcon"
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:layout_gravity="center"
                     android:src="@drawable/ic_notifications_material3"
-                    app:tint="@color/secondary" />
+                    app:tint="?attr/colorSecondary" />
 
             </FrameLayout>
 
-            <!-- Title -->
+            <!-- Text Content -->
             <TextView
                 android:id="@+id/tvTitle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:textColor="@color/text_main"
+                android:layout_marginStart="14dp"
+                android:layout_marginEnd="8dp"
+                android:textAppearance="?attr/textAppearanceTitleSmall"
+                android:textColor="?attr/colorOnSurface"
                 android:maxLines="1"
                 android:ellipsize="end"
+                tools:text="Notification Title"
                 app:layout_constraintStart_toEndOf="@id/iconContainer"
                 app:layout_constraintEnd_toStartOf="@id/tvTime"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/tvBody" />
+                app:layout_constraintTop_toTopOf="parent" />
 
-            <!-- Body / preview text -->
             <TextView
                 android:id="@+id/tvBody"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
-                android:textSize="13sp"
-                android:textColor="@color/text_muted"
+                android:textAppearance="?attr/textAppearanceBodyMedium"
+                android:textColor="?attr/colorOnSurfaceVariant"
                 android:maxLines="2"
                 android:ellipsize="end"
-                android:lineSpacingMultiplier="1.3"
+                android:lineSpacingMultiplier="1.2"
+                tools:text="This is the body of the notification, providing more details about the event."
                 app:layout_constraintStart_toStartOf="@id/tvTitle"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvTitle"
@@ -110,15 +90,39 @@
                 android:id="@+id/tvTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="11sp"
-                android:textColor="@color/text_muted"
-                android:layout_marginStart="8dp"
+                android:textAppearance="?attr/textAppearanceLabelSmall"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                tools:text="10:00 AM"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/tvBody" />
+                app:layout_constraintTop_toTopOf="@id/tvTitle"
+                app:layout_constraintBottom_toBottomOf="@id/tvTitle" />
+
+            <!-- Unread Indicator (Indigo Dot) -->
+            <View
+                android:id="@+id/unreadDot"
+                android:layout_width="8dp"
+                android:layout_height="8dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="2dp"
+                android:background="@drawable/bg_circle_primary"
+                android:backgroundTint="?attr/colorPrimary"
+                android:visibility="gone"
+                tools:visibility="visible"
+                app:layout_constraintTop_toTopOf="@id/iconContainer"
+                app:layout_constraintEnd_toEndOf="@id/iconContainer" />
+
+            <!-- Hidden legacy view for compatibility with existing code during transition -->
+            <View
+                android:id="@+id/unreadBar"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </com.google.android.material.card.MaterialCardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+

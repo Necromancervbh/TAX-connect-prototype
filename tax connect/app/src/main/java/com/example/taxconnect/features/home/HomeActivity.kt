@@ -567,6 +567,7 @@ class HomeActivity : BaseActivity<ActivityHomeBinding>(), CAAdapter.OnRequestAss
                 R.id.nav_docs -> startActivity(Intent(this, MyDocumentsActivity::class.java))
                 R.id.nav_community -> startActivity(Intent(this, CommunityActivity::class.java))
                 R.id.nav_settings -> startActivity(Intent(this, NotificationSettingsActivity::class.java))
+                R.id.nav_help -> showFeedbackDialog()
                 R.id.nav_explore -> startActivity(Intent(this, ExploreCAsActivity::class.java))
                 R.id.nav_logout -> {
                     val uid = FirebaseAuth.getInstance().uid

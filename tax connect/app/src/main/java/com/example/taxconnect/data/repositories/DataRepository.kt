@@ -587,14 +587,15 @@ class DataRepository private constructor() {
         val caId = rating.caId ?: return
         
         firestore.runTransaction { transaction ->
-            // 1. Save rating to CA's ratings subcollection
-            val ratingRef = firestore.collection("users").document(caId).collection("ratings").document()
-            transaction.set(ratingRef, rating)
-
-            // 2. Update CA's overall rating
+            // 1. Get CA's current rating (READ BEFORE WRITES)
             val caRef = firestore.collection("users").document(caId)
             val caSnapshot = transaction.get(caRef)
             
+            // 2. Save rating to CA's ratings subcollection (WRITE)
+            val ratingRef = firestore.collection("users").document(caId).collection("ratings").document()
+            transaction.set(ratingRef, rating)
+
+            // 3. Update CA's overall rating (WRITE)
             val currentRating = caSnapshot.getDouble("rating") ?: 0.0
             val currentCount = caSnapshot.getLong("ratingCount") ?: 0
             
@@ -603,7 +604,7 @@ class DataRepository private constructor() {
             
             transaction.update(caRef, mapOf("rating" to newRating, "ratingCount" to newCount.toInt()))
 
-            // 3. Reset conversation workflow state to Discussion
+            // 4. Reset conversation workflow state to Discussion (WRITE)
             val convRef = firestore.collection("conversations").document(chatId)
             transaction.update(convRef, "workflowState", ConversationModel.STATE_DISCUSSION)
             

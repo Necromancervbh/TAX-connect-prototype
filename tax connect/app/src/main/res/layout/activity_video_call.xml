@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/black"
+    android:background="@drawable/bg_video_call_gradient"
     android:keepScreenOn="true">
 
     <!-- Remote Video Container (Full Screen) -->
@@ -17,26 +17,27 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Top Scrim -->
+    <!-- Top Scrim Overlay -->
     <View
         android:id="@+id/scrimTop"
         android:layout_width="match_parent"
-        android:layout_height="120dp"
-        android:background="#80000000"
+        android:layout_height="140dp"
+        android:background="@drawable/gradient_black_transparent"
+        android:rotation="180"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Local Video Container (Floating PiP) -->
+    <!-- Header Section: Mini PiP & Controls -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/cvLocalVideo"
-        android:layout_width="120dp"
+        android:layout_width="110dp"
         android:layout_height="160dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginTop="48dp"
-        app:cardBackgroundColor="@android:color/black"
-        app:cardCornerRadius="@dimen/corner_radius_small"
-        app:cardElevation="4dp"
-        app:strokeColor="#FFFFFF"
-        app:strokeWidth="1dp"
+        android:layout_marginTop="56dp"
+        app:cardBackgroundColor="#20000000"
+        app:cardCornerRadius="24dp"
+        app:cardElevation="8dp"
+        app:strokeColor="#60FFFFFF"
+        app:strokeWidth="1.5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -47,14 +48,19 @@
             
     </com.google.android.material.card.MaterialCardView>
 
-    <!-- Call Info (Center Top) -->
+
+    <!-- Redesigned Info Pill (Top) -->
     <LinearLayout
         android:id="@+id/infoContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="56dp"
-        android:gravity="center_horizontal"
+        android:layout_marginTop="60dp"
+        android:background="@drawable/bg_pill_glass"
+        android:elevation="4dp"
+        android:gravity="center"
         android:orientation="vertical"
+        android:paddingHorizontal="24dp"
+        android:paddingVertical="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -66,137 +72,108 @@
             android:fontFamily="sans-serif-medium"
             android:text="Connecting..."
             android:textColor="@android:color/white"
-            android:textSize="18sp"
-            android:shadowColor="#80000000"
-            android:shadowDx="1"
-            android:shadowDy="1"
-            android:shadowRadius="2" />
+            android:textSize="15sp" />
 
         <TextView
             android:id="@+id/tvCallDuration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="2dp"
+            android:alpha="0.8"
             android:fontFamily="sans-serif"
             android:text="00:00"
             android:textColor="#E0E0E0"
-            android:textSize="14sp"
+            android:textSize="13sp"
             android:visibility="gone"
-            tools:visibility="visible"
-            android:shadowColor="#80000000"
-            android:shadowDx="1"
-            android:shadowDy="1"
-            android:shadowRadius="2" />
+            tools:visibility="visible" />
     </LinearLayout>
 
     <ImageButton
         android:id="@+id/btnMinimize"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="48dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:padding="12dp"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="56dp"
+        android:background="@drawable/bg_glass_white"
+        android:padding="10dp"
+        android:scaleType="centerInside"
         android:src="@drawable/ic_minimize"
-        app:tint="@android:color/white"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@android:color/white" />
 
-    <!-- Bottom Scrim -->
+    <!-- Bottom Scrim Overlay -->
     <View
         android:id="@+id/scrimBottom"
         android:layout_width="match_parent"
-        android:layout_height="160dp"
-        android:background="#80000000"
+        android:layout_height="240dp"
+        android:background="@drawable/gradient_black_transparent"
         app:layout_constraintBottom_toBottomOf="parent" />
 
-    <!-- Controls Container -->
+    <!-- Redesigned Control Actions Panel -->
     <LinearLayout
         android:id="@+id/controlsContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="48dp"
+        android:layout_marginBottom="56dp"
+        android:background="@drawable/bg_pill_glass"
+        android:elevation="8dp"
         android:gravity="center"
         android:orientation="horizontal"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <com.google.android.material.button.MaterialButton
+        <ImageButton
             android:id="@+id/btnMute"
-            style="@style/Widget.Material3.Button.IconButton"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:layout_marginEnd="16dp"
-            android:insetLeft="0dp"
-            android:insetTop="0dp"
-            android:insetRight="0dp"
-            android:insetBottom="0dp"
-            app:backgroundTint="#33FFFFFF"
-            app:cornerRadius="32dp"
-            app:icon="@drawable/ic_mic_on"
-            app:iconGravity="textStart"
-            app:iconPadding="0dp"
-            app:iconSize="32dp"
-            app:iconTint="@android:color/white"
-            app:rippleColor="@android:color/white" />
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/bg_glass_white"
+            android:padding="14dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_mic_on"
+            app:tint="@android:color/white" />
 
-        <com.google.android.material.button.MaterialButton
+        <ImageButton
             android:id="@+id/btnToggleVideo"
-            style="@style/Widget.Material3.Button.IconButton"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:layout_marginEnd="16dp"
-            android:insetLeft="0dp"
-            android:insetTop="0dp"
-            android:insetRight="0dp"
-            android:insetBottom="0dp"
-            app:backgroundTint="#33FFFFFF"
-            app:cornerRadius="32dp"
-            app:icon="@drawable/ic_videocam_on"
-            app:iconGravity="textStart"
-            app:iconPadding="0dp"
-            app:iconSize="32dp"
-            app:iconTint="@android:color/white"
-            app:rippleColor="@android:color/white" />
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/bg_glass_white"
+            android:padding="14dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_videocam_on"
+            app:tint="@android:color/white" />
 
-         <com.google.android.material.button.MaterialButton
+        <ImageButton
             android:id="@+id/btnSwitchCamera"
-            style="@style/Widget.Material3.Button.IconButton"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
             android:layout_marginEnd="16dp"
-            android:insetLeft="0dp"
-            android:insetTop="0dp"
-            android:insetRight="0dp"
-            android:insetBottom="0dp"
-            app:backgroundTint="#33FFFFFF"
-            app:cornerRadius="32dp"
-            app:icon="@drawable/ic_camera_switch"
-            app:iconGravity="textStart"
-            app:iconPadding="0dp"
-            app:iconSize="32dp"
-            app:iconTint="@android:color/white"
-            app:rippleColor="@android:color/white" />
+            android:background="@drawable/bg_glass_white"
+            android:padding="14dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_camera_switch"
+            app:tint="@android:color/white" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnEndCall"
-            style="@style/Widget.Material3.Button.IconButton"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:insetLeft="0dp"
-            android:insetTop="0dp"
-            android:insetRight="0dp"
-            android:insetBottom="0dp"
-            app:backgroundTint="#FF3B30"
-            app:cornerRadius="32dp"
+            style="@style/Widget.Material3.Button"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:backgroundTint="#FF3B30"
+            android:padding="0dp"
+            app:cornerRadius="30dp"
             app:icon="@drawable/ic_call_end"
             app:iconGravity="textStart"
             app:iconPadding="0dp"
-            app:iconSize="32dp"
-            app:iconTint="@android:color/white"
-            app:rippleColor="@android:color/white" />
+            app:iconSize="30dp"
+            app:iconTint="@android:color/white" />
 
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+

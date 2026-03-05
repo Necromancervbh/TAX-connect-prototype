@@ -213,6 +213,67 @@ class ConversationRepository @Inject constructor() {
         FirestoreExtensions.updateFieldWithRetry(ref, "callStatus", status)
     }
 
+    suspend fun endCallSession(chatId: String) {
+        // 1. Update overall call status in conversation doc
+        updateCallStatus(chatId, "ENDED")
+
+        // 2. Find the most recent "CALL" message and mark it "ENDED"
+        try {
+            val callMessages = firestore.collection("conversations")
+                .document(chatId)
+                .collection("messages")
+                .orderBy("timestamp", com.google.firebase.firestore.Query.Direction.DESCENDING)
+                .limit(20)
+                .get()
+                .await()
+
+            val doc = callMessages.documents.firstOrNull { it.getString("type") == "CALL" }
+            if (doc != null) {
+                doc.reference.update("proposalStatus", "ENDED").await()
+                timber.log.Timber.d("Marked CALL message as ENDED for chat: $chatId")
+            }
+        } catch (e: Exception) {
+            timber.log.Timber.e(e, "Error updating call message during termination")
+        }
+    }
+
+    // Overload for legacy callback-based callers (e.g. Activity termination)
+    fun endCallSession(chatId: String, callback: com.example.taxconnect.data.repositories.DataRepository.DataCallback<Void?>? = null) {
+        // 1. Update overall status
+        updateCallStatus(chatId, "ENDED", object : com.example.taxconnect.data.repositories.DataRepository.DataCallback<Void?> {
+            override fun onSuccess(data: Void?) {
+                // 2. Find and update message
+                firestore.collection("conversations")
+                    .document(chatId)
+                    .collection("messages")
+                    .orderBy("timestamp", com.google.firebase.firestore.Query.Direction.DESCENDING)
+                    .limit(20)
+                    .get()
+                    .addOnSuccessListener { querySnapshot ->
+                        val doc = querySnapshot.documents.firstOrNull { it.getString("type") == "CALL" }
+                        if (doc != null) {
+                            doc.reference.update("proposalStatus", "ENDED")
+                                .addOnSuccessListener { 
+                                    timber.log.Timber.d("Legacy endCallSession: Marked message as ENDED")
+                                    callback?.onSuccess(null) 
+                                }
+                                .addOnFailureListener { e -> 
+                                    timber.log.Timber.e(e, "Legacy endCallSession: FAILED to mark message")
+                                    callback?.onError(e.message) 
+                                }
+                        } else {
+                            callback?.onSuccess(null)
+                        }
+                    }
+                    .addOnFailureListener { e -> callback?.onError(e.message) }
+            }
+
+            override fun onError(error: String?) {
+                callback?.onError(error)
+            }
+        })
+    }
+
      // Overload for legacy callback-based callers (e.g. BroadcastReceivers, Activities)
     fun updateCallStatus(chatId: String, status: String, callback: com.example.taxconnect.data.repositories.DataRepository.DataCallback<Void?>?) {
         firestore.collection("conversations").document(chatId)
@@ -639,6 +700,49 @@ class ConversationRepository @Inject constructor() {
                 android.util.Log.e("PushNotification", "Exception sending push: ${e.message}")
             }
         }
+    }    fun sendCallCancelledNotification(channelName: String) {
+        // To precisely target the receiver, we should fetch the conversation doc
+        // and find the "other" participant.
+        firestore.collection("conversations").document(channelName)
+            .get()
+            .addOnSuccessListener { snapshot ->
+                val conv = snapshot.toObject(ConversationModel::class.java) ?: return@addOnSuccessListener
+                val currentUid = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser?.uid ?: return@addOnSuccessListener
+                val targetUid = conv.participantIds?.firstOrNull { it != currentUid } ?: return@addOnSuccessListener
+                
+                firestore.collection("users").document(targetUid).get().addOnSuccessListener { userDoc ->
+                    val fcmToken = userDoc.getString("fcmToken")
+                    if (fcmToken != null) {
+                        val notification = hashMapOf(
+                            "toToken" to fcmToken,
+                            "type" to "call_cancelled",
+                            "channelName" to channelName,
+                            "sentAt" to System.currentTimeMillis()
+                        )
+                        firestore.collection("notifications_queue").add(notification)
+                        timber.log.Timber.d("Queued silent FCM cancellation for channel: $channelName to $targetUid")
+                    } else {
+                        // Fallback API call if fcmToken is not on the user document directly
+                        // We could use ApiClient but for now log it.
+                        timber.log.Timber.d("No fcmToken found on user doc for $targetUid")
+                    }
+                }
+            }
     }
 
+    fun listenToCallStatus(channelName: String, onStatusChanged: (String) -> Unit): ListenerRegistration {
+        timber.log.Timber.d("ConversationRepository: Starting listenToCallStatus for $channelName")
+        return firestore.collection("conversations")
+            .document(channelName)
+            .addSnapshotListener { snapshot, e ->
+                if (e != null) {
+                    timber.log.Timber.e(e, "ConversationRepository: Error listening to call status for $channelName")
+                    onStatusChanged("ERROR")
+                    return@addSnapshotListener
+                }
+                val status = snapshot?.getString("callStatus") ?: "IDLE"
+                timber.log.Timber.d("ConversationRepository: callStatus updated for $channelName: $status")
+                onStatusChanged(status)
+            }
+    }
 }

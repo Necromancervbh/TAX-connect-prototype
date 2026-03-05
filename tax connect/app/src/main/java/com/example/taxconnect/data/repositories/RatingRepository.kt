@@ -65,10 +65,6 @@ class RatingRepository @Inject constructor() {
         val caId = rating.caId ?: return
 
         firestore.runTransaction { transaction ->
-            val ratingRef = firestore.collection("users").document(caId)
-                .collection("ratings").document()
-            transaction.set(ratingRef, rating)
-
             val caRef = firestore.collection("users").document(caId)
             val caSnapshot = transaction.get(caRef)
 
@@ -78,6 +74,10 @@ class RatingRepository @Inject constructor() {
             val newCount = currentCount + 1
             val newRating = (currentRating * currentCount + rating.rating) / newCount
 
+            val ratingRef = firestore.collection("users").document(caId)
+                .collection("ratings").document()
+            
+            transaction.set(ratingRef, rating)
             transaction.update(caRef, "rating", newRating)
             transaction.update(caRef, "ratingCount", newCount.toInt())
 

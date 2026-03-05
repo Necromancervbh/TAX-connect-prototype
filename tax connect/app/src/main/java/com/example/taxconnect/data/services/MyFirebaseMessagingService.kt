@@ -182,6 +182,15 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
                 }
                 sendCallNotification(title, body, channelName, roomUuid, callerName, callerAvatar)
             }
+            "call_cancelled" -> {
+                val channelName = data["channelName"]
+                if (channelName != null) {
+                    val notificationManager = NotificationManagerCompat.from(this)
+                    // The notification ID is the hashcode of the channelName
+                    notificationManager.cancel(channelName.hashCode())
+                    timber.log.Timber.d("Cancelled ringing notification for channel: $channelName due to call_cancelled FCM")
+                }
+            }
             "request" -> {
                 showRequestNotification(title, body, data)
             }
@@ -295,37 +304,39 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             val bookingId = data["bookingId"] ?: ""
             val isRequest = data["isRequest"] == "true"
             
-            val remoteViews = android.widget.RemoteViews(packageName, R.layout.layout_notification_booking)
-            remoteViews.setTextViewText(R.id.notification_title, title ?: "Booking Update")
-            remoteViews.setTextViewText(R.id.notification_body, body ?: "Check your bookings")
-            remoteViews.setOnClickPendingIntent(R.id.btn_view_details, pendingIntent)
+            val builder = NotificationHelper.getBaseNotificationBuilder(this, channelId, groupKey)
+                .setContentTitle(title ?: "Booking Update")
+                .setContentText(body ?: "Check your bookings")
+                .setStyle(NotificationCompat.BigTextStyle().bigText(body ?: "Check your bookings"))
+                .setContentIntent(pendingIntent)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setAutoCancel(true)
 
             if (isRequest && bookingId.isNotEmpty()) {
-                remoteViews.setViewVisibility(R.id.btn_accept, android.view.View.VISIBLE)
-                remoteViews.setViewVisibility(R.id.btn_decline, android.view.View.VISIBLE)
-                
                 val acceptIntent = Intent(this, CallActionReceiver::class.java).apply {
                     action = CallActionReceiver.ACTION_ACCEPT_BOOKING
                     putExtra("bookingId", bookingId)
                     putExtra("notificationId", notificationId)
                 }
-                val acceptPendingIntent = PendingIntent.getBroadcast(this, notificationId + 3, acceptIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
-                remoteViews.setOnClickPendingIntent(R.id.btn_accept, acceptPendingIntent)
+                val acceptFlags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                else PendingIntent.FLAG_UPDATE_CURRENT
+                val acceptPendingIntent = PendingIntent.getBroadcast(this, notificationId + 3, acceptIntent, acceptFlags)
 
                 val declineIntent = Intent(this, CallActionReceiver::class.java).apply {
                     action = CallActionReceiver.ACTION_DECLINE_BOOKING
                     putExtra("bookingId", bookingId)
                     putExtra("notificationId", notificationId)
                 }
-                val declinePendingIntent = PendingIntent.getBroadcast(this, notificationId + 4, declineIntent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
-                remoteViews.setOnClickPendingIntent(R.id.btn_decline, declinePendingIntent)
+                val declineFlags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                else PendingIntent.FLAG_UPDATE_CURRENT
+                val declinePendingIntent = PendingIntent.getBroadcast(this, notificationId + 4, declineIntent, declineFlags)
+                
+                // Add action buttons using system default styling which ensures proper color palettes
+                builder.addAction(R.drawable.ic_check_circle, "Accept", acceptPendingIntent)
+                builder.addAction(0, "Decline", declinePendingIntent)
             }
-
-            val builder = NotificationHelper.getBaseNotificationBuilder(this, channelId, groupKey)
-                .setCustomContentView(remoteViews)
-                .setCustomBigContentView(remoteViews)
-                .setContentIntent(pendingIntent)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
 
             val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.notify(notificationId, builder.build())

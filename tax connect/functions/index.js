@@ -16,6 +16,24 @@ async function sendAndLogNotification(payload, logData) {
   return result;
 }
 
+async function saveNotificationToFirestore(userId, payloadData) {
+  try {
+    const notificationRef = db.collection("users").doc(userId).collection("notifications").doc();
+    await notificationRef.set({
+      id: notificationRef.id,
+      userId: userId,
+      type: payloadData.type || "notification",
+      title: payloadData.title || "",
+      body: payloadData.body || "",
+      data: payloadData,
+      timestamp: Date.now(),
+      read: false
+    });
+  } catch (error) {
+    console.error("Error saving notification to Firestore:", error);
+  }
+}
+
 /**
  * Triggered when a new message is added to a conversation.
  * Sends a notification to the receiver.
@@ -96,6 +114,8 @@ exports.sendChatNotification = functions.firestore
         payload.data.roomUuid = context.params.chatId;
       }
 
+      await saveNotificationToFirestore(receiverId, payload.data);
+
       return sendAndLogNotification(payload, {
         category: "chat",
         notificationType,
@@ -174,6 +194,8 @@ exports.sendRequestNotification = functions.firestore
             }
           };
 
+          await saveNotificationToFirestore(caId, payload.data);
+
           return sendAndLogNotification(payload, {
             category: "request",
             notificationType: "request",
@@ -235,6 +257,8 @@ exports.sendBookingNotification = functions.firestore
             }
           };
 
+          await saveNotificationToFirestore(caId, payload.data);
+
           return sendAndLogNotification(payload, {
             category: "booking",
             notificationType: "new_booking",
@@ -286,6 +310,8 @@ exports.sendBookingNotification = functions.firestore
               priority: "high"
             }
           };
+
+          await saveNotificationToFirestore(userId, payload.data);
 
           return sendAndLogNotification(payload, {
             category: "booking",
